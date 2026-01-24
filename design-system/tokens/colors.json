@@ -1,0 +1,34 @@
+{
+  "name": "E-Ink Brutalist Palette",
+  "palette": {
+    "primary": {
+      "name": "Deep Charcoal",
+      "hex": "#111111",
+      "rgb": "rgb(17,17,17)",
+      "contrastOnWhite": "21:1",
+      "contrastOnOffWhite": "16:1",
+      "contrastOnGray": "12:1"
+    },
+    "secondary": {
+      "name": "Muted Blue",
+      "hex": "#4A7BAF",
+      "rgb": "rgb(74,123,175)",
+      "contrastOnWhite": "6.0:1",
+      "contrastOnOffWhite": "5.4:1",
+      "contrastOnGray": "4.1:1"
+    },
+    "backgrounds": {
+      "white": { "hex": "#FFFFFF", "rgb": "rgb(255,255,255)" },
+      "offWhite": { "hex": "#F5F5F0", "rgb": "rgb(245,245,240)" },
+      "softGray": { "hex": "#EDEDED", "rgb": "rgb(237,237,237)" }
+    },
+    "eInkMode": {
+      "tone0": { "hex": "#000000", "rgb": "rgb(0,0,0)" },
+      "tone1": { "hex": "#7F7F7F", "rgb": "rgb(127,127,127)" },
+      "tone2": { "hex": "#FFFFFF", "rgb": "rgb(255,255,255)" }
+    }
+  },
+  "notes": {
+    "contrastGuidance": "Aim for at least 4.5:1 contrast for body copy; 3:1 is acceptable for large UI cues on accent colors. E-Ink mode uses only three tones; ensure high-contrast pairings for essential labels and metrics."
+  }
+}
