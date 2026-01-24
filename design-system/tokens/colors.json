@@ -10,12 +10,12 @@
       "contrastOnGray": "12:1"
     },
     "secondary": {
-      "name": "Muted Blue",
-      "hex": "#4A7BAF",
-      "rgb": "rgb(74,123,175)",
-      "contrastOnWhite": "6.0:1",
-      "contrastOnOffWhite": "5.4:1",
-      "contrastOnGray": "4.1:1"
+      "name": "Muted Orange",
+      "hex": "#B56A2C",
+      "rgb": "rgb(181,106,44)",
+      "contrastOnWhite": "4.2:1",
+      "contrastOnOffWhite": "3.9:1",
+      "contrastOnGray": "3.0:1"
     },
     "backgrounds": {
       "white": { "hex": "#FFFFFF", "rgb": "rgb(255,255,255)" },
