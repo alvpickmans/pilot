@@ -1,0 +1,14 @@
+{
+  "name": "design-system-docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npx docusaurus start",
+    "build": "npx docusaurus build",
+    "clear": "rm -rf build"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^2.2.0",
+    "@docusaurus/preset-classic": "^2.2.0"
+  }
+}

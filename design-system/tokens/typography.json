@@ -1,0 +1,30 @@
+{
+  "typography": {
+    "fontFamily": {
+      "industrial": "DIN 1451, Arial, sans-serif",
+      "mono": "IBM Plex Mono, Consolas, monospace"
+    },
+    "fontSize": {
+      "xs": "10px",
+      "sm": "12px",
+      "caption": "12px",
+      "base": "14px",
+      "lg": "18px",
+      "xl": "20px",
+      "2xl": "24px",
+      "3xl": "32px",
+      "4xl": "40px",
+      "5xl": "48px"
+    },
+    "lineHeight": {
+      "tight": 1.25,
+      "normal": 1.5,
+      "loose": 1.75
+    },
+    "letterSpacing": {
+      "tight": "-0.02em",
+      "normal": "0em",
+      "wide": "0.02em"
+    }
+  }
+}
