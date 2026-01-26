@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Brand Mark Emblem">
-  <!-- Outer ring -->
-  <circle cx="60" cy="60" r="46" fill="none" stroke="#0A0A0A" stroke-width="6" />
-  <!-- Gear-like spokes (industrial symbol) -->
-  <circle cx="60" cy="60" r="22" fill="none" stroke="#0A0A0A" stroke-width="4" />
-  <path d="M60 14 L60 26 M60 94 L60 106 M14 60 L26 60 M94 60 L106 60" stroke="#0A0A0A" stroke-width="4" stroke-linecap="round"/>
-  <!-- Center dot as datum -->
-  <circle cx="60" cy="60" r="4" fill="#0A0A0A" />
-</svg>
