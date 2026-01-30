@@ -633,11 +633,17 @@ export class PilotSelect extends HTMLElement {
       trigger.addEventListener('click', () => this._toggleDropdown());
     }
 
-    options.forEach((option, index) => {
+    options.forEach((option) => {
       option.addEventListener('click', () => {
-        this._selectOption(this._filteredOptions[index]);
+        const value = option.getAttribute('data-value');
+        const optionData = this._filteredOptions.find(o => o.value === value);
+        if (optionData) {
+          this._selectOption(optionData);
+        }
       });
       option.addEventListener('mouseenter', () => {
+        const value = option.getAttribute('data-value');
+        const index = this._filteredOptions.findIndex(o => o.value === value);
         this._highlightedIndex = index;
         this.render();
       });
