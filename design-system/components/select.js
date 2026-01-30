@@ -510,7 +510,8 @@ export class PilotSelect extends HTMLElement {
       }
     } else {
       this._selectedValues = [option.value];
-      this._closeDropdown();
+      // Defer closing to allow click event to complete before DOM is destroyed
+      setTimeout(() => this._closeDropdown(), 0);
     }
 
     const value = multiple ? this._selectedValues.join(',') : this._selectedValues[0];
