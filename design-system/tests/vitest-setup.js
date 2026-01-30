@@ -6,8 +6,7 @@
  */
 
 import '@testing-library/jest-dom';
-import { cleanup } from '@testing-library/dom';
-import { installMocks } from '../utils/web-components.js';
+import { installMocks, cleanup } from './web-components.js';
 
 // Install common mocks
 installMocks();
@@ -15,7 +14,6 @@ installMocks();
 // Clean up DOM after each test
 afterEach(() => {
   cleanup();
-  document.body.innerHTML = '';
   
   // Reset any global state
   document.body.style.cssText = '';

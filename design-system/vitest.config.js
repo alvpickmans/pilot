@@ -9,12 +9,12 @@ export default defineConfig({
     globals: true,
     
     // Setup files to run before tests
-    setupFiles: ['./tests/setup/vitest-setup.js'],
+    setupFiles: ['./tests/vitest-setup.js'],
     
-    // Test file patterns
+    // Test file patterns - co-located with components
     include: [
-      'tests/unit/**/*.test.js',
-      'tests/unit/**/*.spec.js'
+      'components/**/*.test.js',
+      'components/**/*.spec.js'
     ],
     
     // Exclude patterns
