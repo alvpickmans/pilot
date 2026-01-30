@@ -290,43 +290,66 @@ export class PilotSelect extends HTMLElement {
   _setupEventListeners() {
     this._clickOutsideHandler = this._handleClickOutside.bind(this);
     this._keydownHandler = this._handleKeydown.bind(this);
+    this._slotChangeHandler = this._handleSlotChange.bind(this);
     
     document.addEventListener('click', this._clickOutsideHandler);
     this.addEventListener('keydown', this._keydownHandler);
+    
+    // Listen for slot changes to re-parse options when they change dynamically
+    const slot = this.shadowRoot.querySelector('slot');
+    if (slot) {
+      slot.addEventListener('slotchange', this._slotChangeHandler);
+    }
   }
 
   _removeEventListeners() {
     document.removeEventListener('click', this._clickOutsideHandler);
     this.removeEventListener('keydown', this._keydownHandler);
+    
+    const slot = this.shadowRoot.querySelector('slot');
+    if (slot) {
+      slot.removeEventListener('slotchange', this._slotChangeHandler);
+    }
+  }
+
+  _handleSlotChange() {
+    this._parseOptions();
+    this.render();
   }
 
   _parseOptions() {
-    const slot = this.shadowRoot.querySelector('slot');
-    if (!slot) return;
-
-    const assignedElements = slot.assignedElements ? slot.assignedElements() : [];
+    // Query light DOM directly instead of using slot.assignedElements()
+    // since the slot is hidden with display: none
+    const lightDomOptions = this.querySelectorAll('option');
+    const lightDomOptgroups = this.querySelectorAll('optgroup');
+    
     this._options = [];
 
-    assignedElements.forEach(element => {
-      if (element.tagName === 'OPTION') {
+    // Process standalone options (not in optgroups)
+    lightDomOptions.forEach(option => {
+      // Skip options that are inside optgroups - we'll process those separately
+      if (!option.closest('optgroup')) {
         this._options.push({
-          value: element.getAttribute('value') || element.textContent,
-          label: element.textContent,
-          disabled: element.hasAttribute('disabled'),
+          value: option.getAttribute('value') || option.textContent.trim(),
+          label: option.textContent.trim(),
+          disabled: option.hasAttribute('disabled'),
           group: null
         });
-      } else if (element.tagName === 'OPTGROUP') {
-        const groupLabel = element.getAttribute('label') || '';
-        const options = element.querySelectorAll('option');
-        options.forEach(option => {
-          this._options.push({
-            value: option.getAttribute('value') || option.textContent,
-            label: option.textContent,
-            disabled: option.hasAttribute('disabled'),
-            group: groupLabel
-          });
-        });
       }
+    });
+
+    // Process optgroups and their options
+    lightDomOptgroups.forEach(optgroup => {
+      const groupLabel = optgroup.getAttribute('label') || '';
+      const options = optgroup.querySelectorAll('option');
+      options.forEach(option => {
+        this._options.push({
+          value: option.getAttribute('value') || option.textContent.trim(),
+          label: option.textContent.trim(),
+          disabled: option.hasAttribute('disabled'),
+          group: groupLabel
+        });
+      });
     });
 
     this._filteredOptions = [...this._options];
