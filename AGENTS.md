@@ -200,8 +200,6 @@ Always test in demo.html before committing.
 If you encounter "Permission denied (publickey)" when pushing:
 1. The remote uses SSH authentication (`git@github.com:...`)
 2. SSH keys are not configured in this environment
-3. Ask the user how to proceed:
-   - Option A: Switch to HTTPS remote (requires user credentials)
-   - Option B: Skip push and user will push manually later
-   - Option C: Configure SSH keys (requires user intervention)
-4. Document the situation in your handoff summary
+3. DO NOT ask the user how to proceed
+4. Simply skip the push and inform the user that manual push is required
+5. Document the situation in your handoff summary
