@@ -1,0 +1,38 @@
+{
+  "name": "pilot-design-system",
+  "version": "1.0.0",
+  "description": "Pure HTML/CSS/JS design system with Web Components",
+  "type": "module",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:unit:ui": "vitest --ui",
+    "test:integration": "web-test-runner",
+    "test:integration:watch": "web-test-runner --watch",
+    "test:coverage": "vitest run --coverage",
+    "test:a11y": "web-test-runner --group a11y",
+    "demo": "npx serve .",
+    "demo:python": "python3 -m http.server 8000"
+  },
+  "keywords": [
+    "design-system",
+    "web-components",
+    "css",
+    "ui"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@open-wc/semantic-dom-diff": "^0.20.0",
+    "@open-wc/testing": "^4.0.0",
+    "@testing-library/dom": "^9.3.0",
+    "@testing-library/jest-dom": "^6.1.0",
+    "@vitest/ui": "^1.0.0",
+    "@web/test-runner": "^0.18.0",
+    "@web/test-runner-playwright": "^0.11.0",
+    "chai-a11y-axe": "^1.4.0",
+    "happy-dom": "^12.0.0",
+    "vitest": "^1.0.0"
+  }
+}

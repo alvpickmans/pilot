@@ -31,8 +31,14 @@ python3 -m http.server 8000
 
 ### Testing
 ```bash
-# Manual testing - open demo.html and verify components render
-# No automated test suite exists yet
+# Run unit tests (Vitest + happy-dom - no browser required)
+bun run test:unit
+
+# Run tests in watch mode during development
+bun run test:unit:watch
+
+# Run tests with coverage report
+bun run test:coverage
 ```
 
 ### Linting
