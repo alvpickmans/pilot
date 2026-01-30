@@ -280,6 +280,77 @@
     </div>
   </section>
 
+  <!-- Select Component Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Select Components</h2>
+    <p class="demo-subtitle">Dropdown selection with technical bracket styling</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <pilot-select 
+          label="System Type"
+          placeholder="Select system type"
+        >
+          <option value="production">Production</option>
+          <option value="staging">Staging</option>
+          <option value="development">Development</option>
+          <option value="testing">Testing</option>
+        </pilot-select>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-select 
+          label="Environment"
+          placeholder="Select environment"
+          searchable
+        >
+          <option value="us-east-1">US East 1</option>
+          <option value="us-west-1">US West 1</option>
+          <option value="eu-west-1">EU West 1</option>
+          <option value="ap-south-1">AP South 1</option>
+          <option value="ap-northeast-1">AP Northeast 1</option>
+        </pilot-select>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-select 
+          label="Services"
+          placeholder="Select services"
+          multiple
+          searchable
+        >
+          <optgroup label="Compute">
+            <option value="ec2">EC2 Instances</option>
+            <option value="lambda">Lambda Functions</option>
+            <option value="ecs">ECS Containers</option>
+          </optgroup>
+          <optgroup label="Storage">
+            <option value="s3">S3 Buckets</option>
+            <option value="rds">RDS Databases</option>
+            <option value="dynamodb">DynamoDB Tables</option>
+          </optgroup>
+          <optgroup label="Network">
+            <option value="vpc">VPC Networks</option>
+            <option value="elb">Load Balancers</option>
+          </optgroup>
+        </pilot-select>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-select 
+          label="Disabled State"
+          placeholder="Cannot select"
+          disabled
+        >
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+        </pilot-select>
+      </div>
+    </div>
+  </section>
+
   <!-- Badges & Labels Section -->
   <section class="demo-section">
     <h2 class="demo-title">Badges & Labels</h2>
