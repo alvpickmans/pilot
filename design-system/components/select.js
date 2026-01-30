@@ -647,7 +647,8 @@ export class PilotSelect extends HTMLElement {
         const value = option.getAttribute('data-value');
         const index = this._filteredOptions.findIndex(o => o.value === value);
         this._highlightedIndex = index;
-        this.render();
+        // Don't re-render on mouseenter - just update the index for keyboard nav
+        // Visual highlighting is handled by CSS :hover
       });
     });
 
