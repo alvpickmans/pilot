@@ -24,7 +24,10 @@ This design system captures the precision and clarity of technical documentation
 # Include the pilot patterns
 <link rel="stylesheet" href="design-system/patterns.css">
 
-# Include the web components
+# Include the web components (modular)
+<script type="module" src="design-system/components/index.js"></script>
+
+# Or use the monolithic bundle (legacy)
 <script type="module" src="design-system/components.js"></script>
 ```
 
@@ -399,6 +402,57 @@ Dialog overlay component with technical corner bracket styling.
 <pilot-modal title="Processing" dismissible="false">
   <pilot-status variant="info" pulse>Processing...</pilot-status>
 </pilot-modal>
+```
+
+### Select (`<pilot-select>`)
+
+Dropdown component with technical bracket styling for choosing from options.
+
+**Attributes:**
+- `multiple`: Boolean - Enable multi-select mode
+- `searchable`: Boolean - Enable search/filter within options
+- `placeholder`: String - Placeholder text when no selection
+- `disabled`: Boolean - Disable the component
+- `value`: String - Selected value(s) - comma-separated for multiple
+- `label`: String - Label text above the select
+
+**Features:**
+- Single and multi-select modes
+- Search/filter within options
+- Keyboard navigation (Arrow keys, Enter, Escape, Home, End)
+- Grouped options support via `<optgroup>` elements
+- Disabled state handling
+- Technical bracket styling matching input component
+- Selected tags display for multi-select
+- Change events with selected values
+
+**Example:**
+```html
+<!-- Single select -->
+<pilot-select label="System Type" placeholder="Select system type">
+  <option value="production">Production</option>
+  <option value="staging">Staging</option>
+  <option value="development">Development</option>
+</pilot-select>
+
+<!-- Searchable single select -->
+<pilot-select label="Environment" placeholder="Select region" searchable>
+  <option value="us-east-1">US East 1</option>
+  <option value="us-west-1">US West 1</option>
+  <option value="eu-west-1">EU West 1</option>
+</pilot-select>
+
+<!-- Multi-select with groups -->
+<pilot-select label="Services" placeholder="Select services" multiple searchable>
+  <optgroup label="Compute">
+    <option value="ec2">EC2 Instances</option>
+    <option value="lambda">Lambda Functions</option>
+  </optgroup>
+  <optgroup label="Storage">
+    <option value="s3">S3 Buckets</option>
+    <option value="rds">RDS Databases</option>
+  </optgroup>
+</pilot-select>
 ```
 
 ## CSS Patterns

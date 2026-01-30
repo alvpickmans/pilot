@@ -31,3 +31,4 @@ export { PilotCodeBlock } from './code-block.js';
 export { PilotAnnotation } from './annotation.js';
 export { PilotMeasurement } from './measurement.js';
 export { PilotModal } from './modal.js';
+export { PilotSelect } from './select.js';

@@ -5,6 +5,11 @@
 ```html
 <link rel="stylesheet" href="design-system/variables.css">
 <link rel="stylesheet" href="design-system/patterns.css">
+
+<!-- Modular components (recommended) -->
+<script type="module" src="design-system/components/index.js"></script>
+
+<!-- Or monolithic bundle (legacy) -->
 <script type="module" src="design-system/components.js"></script>
 ```
 
@@ -118,6 +123,32 @@
 <script>
   document.getElementById('modal-id').open();
 </script>
+```
+
+### Select
+```html
+<!-- Single select -->
+<pilot-select label="Label" placeholder="Select an option">
+  <option value="1">Option 1</option>
+  <option value="2">Option 2</option>
+</pilot-select>
+
+<!-- Searchable -->
+<pilot-select label="Searchable" searchable>
+  <option value="a">Option A</option>
+  <option value="b">Option B</option>
+</pilot-select>
+
+<!-- Multi-select with groups -->
+<pilot-select label="Multi-select" multiple searchable>
+  <optgroup label="Group 1">
+    <option value="g1a">Group 1 A</option>
+    <option value="g1b">Group 1 B</option>
+  </optgroup>
+  <optgroup label="Group 2">
+    <option value="g2a">Group 2 A</option>
+  </optgroup>
+</pilot-select>
 ```
 
 ## CSS Utility Classes
