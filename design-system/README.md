@@ -346,6 +346,61 @@ Technical measurement display with lines.
 <pilot-measurement value="240" unit="px"></pilot-measurement>
 ```
 
+### Modal (`<pilot-modal>`)
+
+Dialog overlay component with technical corner bracket styling.
+
+**Attributes:**
+- `open`: Boolean - controls visibility
+- `size`: sm | md | lg | full - modal width (default: md)
+- `dismissible`: Boolean - allows closing via backdrop/escape (default: true)
+- `title`: String - default header text (can be overridden by header slot)
+
+**Slots:**
+- `header`: Modal title area (overrides title attribute)
+- default: Main content body
+- `footer`: Action buttons area
+
+**Methods:**
+- `open()` - Opens the modal
+- `close()` - Closes the modal
+
+**Features:**
+- Focus trap when modal is open
+- Close on Escape key (when dismissible)
+- Close on backdrop click (when dismissible)
+- Smooth open/close transitions
+- Prevents body scroll when open
+- Technical corner bracket decorations
+- Backdrop overlay with blur effect
+
+**Example:**
+```html
+<!-- Basic modal with title attribute -->
+<pilot-modal id="myModal" title="Confirm Action">
+  <p>Are you sure you want to proceed?</p>
+  <div slot="footer">
+    <pilot-button variant="ghost" onclick="closeModal()">Cancel</pilot-button>
+    <pilot-button variant="primary" onclick="confirm()">Confirm</pilot-button>
+  </div>
+</pilot-modal>
+
+<!-- Large modal with custom header slot -->
+<pilot-modal size="lg">
+  <h2 slot="header">Custom Title</h2>
+  <p>Content here...</p>
+  <div slot="footer">
+    <pilot-button variant="outline">Cancel</pilot-button>
+    <pilot-button variant="primary">Save</pilot-button>
+  </div>
+</pilot-modal>
+
+<!-- Non-dismissible modal (requires explicit close) -->
+<pilot-modal title="Processing" dismissible="false">
+  <pilot-status variant="info" pulse>Processing...</pilot-status>
+</pilot-modal>
+```
+
 ## CSS Patterns
 
 ### Technical Grid Backgrounds

@@ -104,6 +104,22 @@
 <pilot-measurement orientation="horizontal|vertical" value="240" unit="px"></pilot-measurement>
 ```
 
+### Modal
+```html
+<pilot-modal id="modal-id" title="Modal Title" size="sm|md|lg|full" dismissible>
+  <h3 slot="header">Custom Header</h3>
+  Modal content here...
+  <div slot="footer">
+    <pilot-button onclick="document.getElementById('modal-id').close()">Close</pilot-button>
+  </div>
+</pilot-modal>
+
+<!-- Open via JavaScript -->
+<script>
+  document.getElementById('modal-id').open();
+</script>
+```
+
 ## CSS Utility Classes
 
 ### Grid Backgrounds

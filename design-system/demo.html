@@ -160,6 +160,93 @@
     </div>
   </section>
 
+  <!-- Modal Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Modal</h2>
+    <p class="demo-subtitle">Dialog overlays with technical corner brackets</p>
+    
+    <div class="demo-grid demo-grid-3">
+      <div class="component-showcase">
+        <pilot-button variant="primary" onclick="document.getElementById('demoModal1').open()">
+          Open Basic Modal
+        </pilot-button>
+      </div>
+      <div class="component-showcase">
+        <pilot-button variant="technical" onclick="document.getElementById('demoModal2').open()">
+          Open Large Modal
+        </pilot-button>
+      </div>
+      <div class="component-showcase">
+        <pilot-button variant="outline" onclick="document.getElementById('demoModal3').open()">
+          Open Non-Dismissible
+        </pilot-button>
+      </div>
+    </div>
+    
+    <!-- Basic Modal -->
+    <pilot-modal id="demoModal1" title="Confirm Action" size="md">
+      <p style="margin: 0 0 var(--spacing-4) 0; color: var(--color-text-secondary);">
+        Are you sure you want to proceed with this action? This cannot be undone.
+      </p>
+      <pilot-annotation type="warning" style="margin-bottom: 0;">
+        Warning: This action will permanently delete the selected data.
+      </pilot-annotation>
+      <div slot="footer" style="display: flex; gap: var(--spacing-3); justify-content: flex-end;">
+        <pilot-button variant="ghost" size="sm" onclick="document.getElementById('demoModal1').close()">
+          Cancel
+        </pilot-button>
+        <pilot-button variant="primary" size="sm" onclick="document.getElementById('demoModal1').close()">
+          Confirm
+        </pilot-button>
+      </div>
+    </pilot-modal>
+    
+    <!-- Large Modal with Custom Header -->
+    <pilot-modal id="demoModal2" size="lg">
+      <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">
+        System Configuration
+      </h3>
+      <pilot-grid columns="2" gap="4">
+        <pilot-input label="System ID" value="SYS-001" technical></pilot-input>
+        <pilot-input label="Host" value="localhost" technical></pilot-input>
+        <pilot-input label="Port" value="8080" technical></pilot-input>
+        <pilot-input label="Protocol" value="https" technical></pilot-input>
+      </pilot-grid>
+      <pilot-divider variant="dashed" style="margin: var(--spacing-4) 0;"></pilot-divider>
+      <pilot-panel title="Advanced Settings" collapsible collapsed>
+        <pilot-input label="API Key" type="password" placeholder="Enter API key"></pilot-input>
+      </pilot-panel>
+      <div slot="footer" style="display: flex; gap: var(--spacing-3); justify-content: space-between;">
+        <pilot-button variant="ghost" size="sm" onclick="document.getElementById('demoModal2').close()">
+          Reset
+        </pilot-button>
+        <div style="display: flex; gap: var(--spacing-3);">
+          <pilot-button variant="outline" size="sm" onclick="document.getElementById('demoModal2').close()">
+            Cancel
+          </pilot-button>
+          <pilot-button variant="primary" size="sm" onclick="document.getElementById('demoModal2').close()">
+            Save Changes
+          </pilot-button>
+        </div>
+      </div>
+    </pilot-modal>
+    
+    <!-- Non-Dismissible Modal -->
+    <pilot-modal id="demoModal3" title="Processing" size="sm" dismissible="false">
+      <div style="text-align: center; padding: var(--spacing-4) 0;">
+        <pilot-status variant="info" pulse>Processing Request</pilot-status>
+        <p style="margin: var(--spacing-4) 0 0 0; color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+          Please wait while the system processes your request...
+        </p>
+      </div>
+      <div slot="footer" style="display: flex; justify-content: center;">
+        <pilot-button variant="secondary" size="sm" onclick="document.getElementById('demoModal3').close()">
+          Cancel Operation
+        </pilot-button>
+      </div>
+    </pilot-modal>
+  </section>
+
   <!-- Form Elements Section -->
   <section class="demo-section">
     <h2 class="demo-title">Form Elements</h2>
