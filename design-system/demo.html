@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilot Design System - Demo</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Design System -->
+  <link rel="stylesheet" href="variables.css">
+  <link rel="stylesheet" href="patterns.css">
+  <script type="module" src="components.js"></script>
+  
+  <style>
+    body {
+      margin: 0;
+      padding: var(--spacing-8, 2rem);
+      font-family: var(--font-body, 'IBM Plex Sans', sans-serif);
+      background: var(--color-background-primary, #ffffff);
+      color: var(--color-text-primary, #1a1a1a);
+      line-height: var(--line-height-normal, 1.5);
+    }
+    
+    .demo-section {
+      margin-bottom: var(--spacing-16, 4rem);
+    }
+    
+    .demo-title {
+      font-family: var(--font-industrial, 'Chakra Petch', sans-serif);
+      font-size: var(--font-size-3xl, 1.875rem);
+      font-weight: var(--font-weight-bold, 700);
+      letter-spacing: var(--letter-spacing-wider, 0.05em);
+      text-transform: uppercase;
+      margin-bottom: var(--spacing-6, 1.5rem);
+      color: var(--color-text-primary, #1a1a1a);
+    }
+    
+    .demo-subtitle {
+      font-family: var(--font-technical, 'JetBrains Mono', monospace);
+      font-size: var(--font-size-xs, 0.75rem);
+      font-weight: var(--font-weight-medium, 500);
+      letter-spacing: var(--letter-spacing-technical, 0.05em);
+      text-transform: uppercase;
+      color: var(--color-text-tertiary, #6b6b6b);
+      margin-bottom: var(--spacing-4, 1rem);
+    }
+    
+    .demo-grid {
+      display: grid;
+      gap: var(--spacing-6, 1.5rem);
+      margin-bottom: var(--spacing-8, 2rem);
+    }
+    
+    .demo-grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .demo-grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .demo-grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    
+    @media (max-width: 768px) {
+      .demo-grid-2,
+      .demo-grid-3,
+      .demo-grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .component-showcase {
+      padding: var(--spacing-6, 1.5rem);
+      background: var(--color-background-secondary, #f5f5f5);
+      border: 1px solid var(--color-border-secondary, #d4d4d4);
+    }
+    
+    .dark-mode-section {
+      background: var(--color-black-300, #1a1a1a);
+      padding: var(--spacing-8, 2rem);
+      margin: var(--spacing-8, 2rem) calc(-1 * var(--spacing-8, 2rem));
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="demo-section">
+    <h1 class="demo-title" style="font-size: var(--font-size-5xl, 3rem);">
+      Pilot Design System
+    </h1>
+    <p style="font-size: var(--font-size-lg, 1.125rem); color: var(--color-text-secondary, #525252); max-width: 600px;">
+      A retro-technical design system featuring industrial and governmental aesthetics, 
+      machine-readable visual language, and minimalist monochromatic palette.
+    </p>
+    <pilot-divider variant="technical" style="margin-top: var(--spacing-8, 2rem);"></pilot-divider>
+  </header>
+
+  <!-- Buttons Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Buttons</h2>
+    <p class="demo-subtitle">Interactive controls with industrial styling</p>
+    
+    <div class="demo-grid demo-grid-4">
+      <div class="component-showcase">
+        <pilot-button variant="primary" size="md">Primary</pilot-button>
+      </div>
+      <div class="component-showcase">
+        <pilot-button variant="secondary" size="md">Secondary</pilot-button>
+      </div>
+      <div class="component-showcase">
+        <pilot-button variant="outline" size="md">Outline</pilot-button>
+      </div>
+      <div class="component-showcase">
+        <pilot-button variant="ghost" size="md">Ghost</pilot-button>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-3">
+      <div class="component-showcase">
+        <pilot-button variant="technical" size="lg">Technical Variant</pilot-button>
+      </div>
+      <div class="component-showcase">
+        <pilot-button variant="primary" size="sm" disabled>Disabled</pilot-button>
+      </div>
+      <div class="component-showcase">
+        <pilot-button variant="primary" size="md" loading>Loading</pilot-button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Cards</h2>
+    <p class="demo-subtitle">Container components with technical frames</p>
+    
+    <div class="demo-grid demo-grid-3">
+      <pilot-card padding="lg" bordered="true">
+        <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">Standard Card</h3>
+        <p style="margin: 0; color: var(--color-text-secondary);">Basic card component with bordered styling and standard padding.</p>
+        <div slot="footer" style="display: flex; gap: var(--spacing-2);">
+          <pilot-button variant="outline" size="sm">Action</pilot-button>
+        </div>
+      </pilot-card>
+      
+      <pilot-card variant="technical" padding="lg">
+        <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">Technical Card</h3>
+        <p style="margin: 0; color: var(--color-text-secondary);">Card with corner bracket decorations for technical aesthetic.</p>
+        <pilot-badge variant="technical" size="sm" slot="footer">MODULE-01</pilot-badge>
+      </pilot-card>
+      
+      <pilot-card padding="md">
+        <p style="margin: 0; color: var(--color-text-secondary);">Minimal card without header or footer slots.</p>
+      </pilot-card>
+    </div>
+  </section>
+
+  <!-- Form Elements Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Form Elements</h2>
+    <p class="demo-subtitle">Inputs with machine-readable styling</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <pilot-input 
+          label="System Identifier"
+          placeholder="Enter system ID"
+          hint="Format: SYS-XXX-NNN"
+        ></pilot-input>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-input 
+          label="Access Code"
+          type="password"
+          placeholder="••••••••"
+          technical
+        ></pilot-input>
+      </div>
+    </div>
+    
+    <div class="component-showcase" style="margin-top: var(--spacing-6);">
+      <pilot-input 
+        label="Configuration"
+        value="Invalid input"
+        error="System ID format is incorrect"
+      ></pilot-input>
+    </div>
+  </section>
+
+  <!-- Badges & Labels Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Badges & Labels</h2>
+    <p class="demo-subtitle">Status indicators and technical labels</p>
+    
+    <div class="demo-grid demo-grid-4">
+      <div class="component-showcase" style="display: flex; flex-wrap: wrap; gap: var(--spacing-2); align-items: center;">
+        <pilot-badge variant="primary" size="md">Primary</pilot-badge>
+        <pilot-badge variant="success" size="md">Success</pilot-badge>
+        <pilot-badge variant="warning" size="md">Warning</pilot-badge>
+        <pilot-badge variant="error" size="md">Error</pilot-badge>
+      </div>
+      
+      <div class="component-showcase" style="display: flex; flex-wrap: wrap; gap: var(--spacing-2); align-items: center;">
+        <pilot-badge variant="technical" size="sm">&lt;CODE&gt;</pilot-badge>
+        <pilot-badge variant="outline" size="sm">Outline</pilot-badge>
+      </div>
+      
+      <div class="component-showcase" style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+        <pilot-label variant="default" size="md">Default Label</pilot-label>
+        <pilot-label variant="technical" size="md">Technical Label</pilot-label>
+        <pilot-label variant="code" size="md">Code Label</pilot-label>
+      </div>
+      
+      <div class="component-showcase" style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+        <pilot-label variant="industrial" size="md">Industrial</pilot-label>
+        <pilot-label variant="technical" size="sm" prefix="ID:">SYS-001</pilot-label>
+        <pilot-label variant="technical" size="sm" suffix="ms">240</pilot-label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Status Indicators Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Status Indicators</h2>
+    <p class="demo-subtitle">System status with animated indicators</p>
+    
+    <div class="demo-grid demo-grid-4">
+      <div class="component-showcase">
+        <pilot-status variant="success" pulse>Online</pilot-status>
+      </div>
+      <div class="component-showcase">
+        <pilot-status variant="warning">Warning</pilot-status>
+      </div>
+      <div class="component-showcase">
+        <pilot-status variant="error">Error</pilot-status>
+      </div>
+      <div class="component-showcase">
+        <pilot-status variant="neutral">Neutral</pilot-status>
+      </div>
+    </div>
+  </section>
+
+  <!-- Terminal Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Terminal</h2>
+    <p class="demo-subtitle">Console and command-line interfaces</p>
+    
+    <pilot-terminal show-header title="bash" show-prompt style="margin-bottom: var(--spacing-6);">
+      npm install industrial-design-system
+    </pilot-terminal>
+    
+    <pilot-terminal show-header title="system-log">
+      <div style="color: var(--color-amber-400);">[INFO] System initialized</div>
+      <div style="color: var(--color-green-400);">[SUCCESS] Modules loaded: 12/12</div>
+      <div style="color: var(--color-gray-400);">[DEBUG] Connection established</div>
+      <div style="color: var(--color-gray-200);">$ _</div>
+    </pilot-terminal>
+  </section>
+
+  <!-- Code Block Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Code Blocks</h2>
+    <p class="demo-subtitle">Syntax-highlighted code display</p>
+    
+    <pilot-code-block 
+      language="javascript" 
+      filename="config.js" 
+      show-line-numbers
+      style="margin-bottom: var(--spacing-6);"
+    >
+const system = {
+  id: 'SYS-001',
+  name: 'Industrial Design System',
+  version: '1.0.0',
+  status: 'operational',
+  modules: ['core', 'ui', 'patterns']
+};
+
+function initialize(config) {
+  console.log(`Initializing ${config.name}...`);
+  return system;
+}
+    </pilot-code-block>
+    
+    <pilot-code-block language="bash" filename="install.sh">
+#!/bin/bash
+echo "Installing Pilot Design System..."
+npm install
+npm run build
+echo "Installation complete"
+    </pilot-code-block>
+  </section>
+
+  <!-- Panels Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Panels</h2>
+    <p class="demo-subtitle">Collapsible container components</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <pilot-panel title="SYSTEM CONFIGURATION" collapsible>
+        <pilot-grid columns="2" gap="4">
+          <pilot-input label="Host" value="localhost" technical></pilot-input>
+          <pilot-input label="Port" value="8080" technical></pilot-input>
+        </pilot-grid>
+        <pilot-divider variant="dashed" style="margin: var(--spacing-4) 0;"></pilot-divider>
+        <pilot-button variant="technical" size="sm">Save Configuration ›</pilot-button>
+      </pilot-panel>
+      
+      <pilot-panel title="MODULE STATUS" collapsible collapsed>
+        <pilot-status variant="success" pulse>Core Module: Active</pilot-status>
+        <pilot-status variant="success">UI Module: Active</pilot-status>
+        <pilot-status variant="warning">API Module: Maintenance</pilot-status>
+      </pilot-panel>
+    </div>
+  </section>
+
+  <!-- Annotations Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Annotations</h2>
+    <p class="demo-subtitle">Callout boxes for technical notes</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <pilot-annotation type="note">
+        This is a standard note annotation for general information and clarifications.
+      </pilot-annotation>
+      
+      <pilot-annotation type="technical">
+        Technical specifications require precise formatting and validation.
+      </pilot-annotation>
+      
+      <pilot-annotation type="warning">
+        Warning: Modifying these settings may affect system stability.
+      </pilot-annotation>
+      
+      <pilot-annotation type="important">
+        Important: Backup your data before proceeding with system updates.
+      </pilot-annotation>
+    </div>
+  </section>
+
+  <!-- Grid System Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Grid System</h2>
+    <p class="demo-subtitle">Technical grid layouts with optional overlays</p>
+    
+    <pilot-grid columns="4" gap="4" show-grid style="padding: var(--spacing-6); background: var(--color-background-technical); border: 1px solid var(--color-border-secondary);">
+      <pilot-card padding="sm">Grid Item 1</pilot-card>
+      <pilot-card padding="sm">Grid Item 2</pilot-card>
+      <pilot-card padding="sm">Grid Item 3</pilot-card>
+      <pilot-card padding="sm">Grid Item 4</pilot-card>
+      <pilot-card padding="sm">Grid Item 5</pilot-card>
+      <pilot-card padding="sm">Grid Item 6</pilot-card>
+      <pilot-card padding="sm">Grid Item 7</pilot-card>
+      <pilot-card padding="sm">Grid Item 8</pilot-card>
+    </pilot-grid>
+  </section>
+
+  <!-- Dividers Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Dividers</h2>
+    <p class="demo-subtitle">Section separators with technical styling</p>
+    
+    <div class="component-showcase">
+      <p style="margin-bottom: var(--spacing-4);">Standard divider:</p>
+      <pilot-divider></pilot-divider>
+      
+      <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Dashed divider:</p>
+      <pilot-divider variant="dashed"></pilot-divider>
+      
+      <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Technical divider with label:</p>
+      <pilot-divider variant="technical" label="SECTION BREAK"></pilot-divider>
+      
+      <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Vertical divider:</p>
+      <div style="display: flex; gap: var(--spacing-4); align-items: center; height: 60px;">
+        <span>Left content</span>
+        <pilot-divider orientation="vertical" variant="technical"></pilot-divider>
+        <span>Right content</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Measurements Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Measurements</h2>
+    <p class="demo-subtitle">Technical measurement displays</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Horizontal:</p>
+        <pilot-measurement value="240" unit="px"></pilot-measurement>
+        <pilot-measurement value="100" unit="%" style="margin-top: var(--spacing-4);"></pilot-measurement>
+      </div>
+      
+      <div class="component-showcase" style="display: flex; gap: var(--spacing-8); align-items: center; height: 120px;">
+        <p style="font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Vertical:</p>
+        <pilot-measurement orientation="vertical" value="480" unit="px"></pilot-measurement>
+      </div>
+    </div>
+  </section>
+
+  <!-- CSS Patterns Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">CSS Patterns</h2>
+    <p class="demo-subtitle">Utility classes for technical styling</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <p class="pilot-label" style="margin-bottom: var(--spacing-4);">Technical Label</p>
+        <p class="pilot-label-boxed" style="margin-bottom: var(--spacing-4);">Boxed Label</p>
+        <p class="pilot-label-code">Code Label</p>
+      </div>
+      
+      <div class="component-showcase">
+        <div class="pilot-border" style="padding: var(--spacing-4); margin-bottom: var(--spacing-4);">
+          Technical Border
+        </div>
+        <div class="pilot-border-corners" style="padding: var(--spacing-4); margin-bottom: var(--spacing-4);">
+          Border with Corners
+        </div>
+        <div class="pilot-frame">
+          Full Technical Frame
+        </div>
+      </div>
+    </div>
+    
+    <div class="component-showcase" style="margin-top: var(--spacing-6);">
+      <div class="pilot-module" data-id="MOD-01" style="margin-bottom: var(--spacing-4);">
+        <div class="pilot-module-header">Module Header</div>
+        <p>Module content with technical styling and ID label.</p>
+      </div>
+      
+      <div class="pilot-grid-bg" style="padding: var(--spacing-6); height: 100px; display: flex; align-items: center; justify-content: center;">
+        <span class="pilot-text">Grid Background Pattern</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dark Mode Section -->
+  <section class="demo-section dark-mode-section" data-theme="dark">
+    <h2 class="demo-title" style="color: var(--color-text-primary);">Dark Mode</h2>
+    <p class="demo-subtitle" style="color: var(--color-text-secondary);">All components adapt automatically</p>
+    
+    <div class="demo-grid demo-grid-3">
+      <pilot-button variant="primary" size="md">Primary Button</pilot-button>
+      <pilot-button variant="technical" size="md">Technical Button</pilot-button>
+      <pilot-button variant="outline" size="md">Outline Button</pilot-button>
+    </div>
+    
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <pilot-card variant="technical" padding="lg">
+        <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical); color: var(--color-text-primary);">Dark Mode Card</h3>
+        <p style="margin: 0; color: var(--color-text-secondary);">Card component automatically adapts to dark theme.</p>
+      </pilot-card>
+      
+      <pilot-terminal show-header title="console" show-prompt>
+        systemctl status design-system
+      </pilot-terminal>
+    </div>
+    
+    <div style="margin-top: var(--spacing-6);">
+      <pilot-status variant="success" pulse>System Online</pilot-status>
+      <pilot-badge variant="technical" size="md" style="margin-left: var(--spacing-4);">DARK-MODE</pilot-badge>
+    </div>
+  </section>
+
+  <!-- Typography Showcase -->
+  <section class="demo-section">
+    <h2 class="demo-title">Typography</h2>
+    <p class="demo-subtitle">Font families and styling</p>
+    
+    <div class="component-showcase">
+      <p style="font-family: var(--font-display); font-size: var(--font-size-2xl); margin-bottom: var(--spacing-4);">
+        Space Grotesk - Display Font
+      </p>
+      <p style="font-family: var(--font-body); font-size: var(--font-size-lg); margin-bottom: var(--spacing-4);">
+        IBM Plex Sans - Body text font for general content
+      </p>
+      <p style="font-family: var(--font-mono); font-size: var(--font-size-base); margin-bottom: var(--spacing-4);">
+        IBM Plex Mono - Monospace font for code: const x = 42;
+      </p>
+      <p style="font-family: var(--font-technical); font-size: var(--font-size-sm); letter-spacing: var(--letter-spacing-technical); text-transform: uppercase; margin-bottom: var(--spacing-4);">
+        JetBrains Mono - Technical labels and system text
+      </p>
+      <p style="font-family: var(--font-industrial); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase;">
+        Chakra Petch - Industrial headings
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="margin-top: var(--spacing-16); padding-top: var(--spacing-8); border-top: var(--border-width-technical) solid var(--color-border-technical);">
+    <pilot-grid columns="3" gap="6">
+      <div>
+        <pilot-label variant="industrial" size="sm">Industrial Technical DS</pilot-label>
+        <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
+          Version 1.0.0
+        </p>
+      </div>
+      <div>
+        <pilot-label variant="technical" size="sm">Components</pilot-label>
+        <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
+          15 Web Components
+        </p>
+      </div>
+      <div>
+        <pilot-label variant="technical" size="sm">License</pilot-label>
+        <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
+          MIT License
+        </p>
+      </div>
+    </pilot-grid>
+    
+    <pilot-divider variant="technical" label="END OF DOCUMENT" style="margin-top: var(--spacing-8);"></pilot-divider>
+  </footer>
+
+</body>
+</html>

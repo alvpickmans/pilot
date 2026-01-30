@@ -1,0 +1,293 @@
+/**
+ * Pilot Design System - CSS Variables
+ * 
+ * A retro-technical design system with industrial and governmental aesthetics.
+ * Machine-readable visual language with minimalist monochromatic palette.
+ */
+
+:root {
+  /* ============================================
+     PRIMITIVE COLORS
+     ============================================ */
+  
+  /* Black Scale */
+  --color-black-100: #0a0a0a;
+  --color-black-200: #141414;
+  --color-black-300: #1a1a1a;
+  --color-black-400: #242424;
+  --color-black-500: #2d2d2d;
+  --color-black-600: #363636;
+  --color-black-700: #404040;
+  --color-black-800: #4a4a4a;
+  --color-black-900: #545454;
+  --color-black-950: #5e5e5e;
+  
+  /* Gray Scale */
+  --color-gray-50: #f5f5f5;
+  --color-gray-100: #e5e5e5;
+  --color-gray-200: #d4d4d4;
+  --color-gray-300: #b3b3b3;
+  --color-gray-400: #8a8a8a;
+  --color-gray-500: #6b6b6b;
+  --color-gray-600: #525252;
+  --color-gray-700: #404040;
+  --color-gray-800: #2a2a2a;
+  --color-gray-900: #1a1a1a;
+  --color-gray-950: #0d0d0d;
+  
+  /* White Scale */
+  --color-white-100: #ffffff;
+  --color-white-200: #fafafa;
+  --color-white-300: #f5f5f5;
+  --color-white-400: #f0f0f0;
+  --color-white-500: #ebebeb;
+  
+  /* Accent Colors */
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+  --color-amber-800: #92400e;
+  --color-amber-900: #78350f;
+  
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+  --color-red-900: #7f1d1d;
+  
+  --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
+  --color-green-300: #86efac;
+  --color-green-400: #4ade80;
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+  --color-green-800: #166534;
+  --color-green-900: #14532d;
+  
+  /* ============================================
+     SEMANTIC COLORS
+     ============================================ */
+  
+  /* Brand */
+  --color-brand-primary: var(--color-black-300);
+  --color-brand-primary-hover: var(--color-black-400);
+  --color-brand-primary-active: var(--color-black-500);
+  --color-brand-secondary: var(--color-gray-700);
+  --color-brand-accent: var(--color-amber-500);
+  
+  /* Text */
+  --color-text-primary: var(--color-black-300);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-disabled: var(--color-gray-400);
+  --color-text-inverse: var(--color-white-100);
+  --color-text-code: var(--color-gray-800);
+  
+  /* Background */
+  --color-background-primary: var(--color-white-100);
+  --color-background-secondary: var(--color-gray-50);
+  --color-background-tertiary: var(--color-gray-100);
+  --color-background-inverse: var(--color-black-300);
+  --color-background-code: var(--color-gray-100);
+  --color-background-technical: var(--color-gray-50);
+  
+  /* Border */
+  --color-border-primary: var(--color-gray-300);
+  --color-border-secondary: var(--color-gray-200);
+  --color-border-technical: var(--color-black-300);
+  --color-border-dashed: var(--color-gray-400);
+  
+  /* Feedback */
+  --color-feedback-success: var(--color-green-600);
+  --color-feedback-warning: var(--color-amber-600);
+  --color-feedback-error: var(--color-red-600);
+  --color-feedback-info: var(--color-gray-600);
+  
+  /* Technical */
+  --color-pilot-grid: var(--color-gray-200);
+  --color-pilot-measurement: var(--color-gray-400);
+  --color-pilot-annotation: var(--color-gray-600);
+  --color-pilot-highlight: var(--color-amber-300);
+  
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+  
+  /* Font Families */
+  --font-display: 'Space Grotesk', 'Helvetica Neue', sans-serif;
+  --font-body: 'IBM Plex Sans', 'Inter', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', 'Courier New', monospace;
+  --font-technical: 'JetBrains Mono', 'Roboto Mono', monospace;
+  --font-industrial: 'Chakra Petch', 'Rajdhani', sans-serif;
+  
+  /* Font Sizes */
+  --font-size-2xs: 0.625rem;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --font-size-7xl: 4.5rem;
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+  --line-height-technical: 1.2;
+  
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+  --letter-spacing-technical: 0.05em;
+  --letter-spacing-code: 0.01em;
+  
+  /* ============================================
+     SPACING
+     ============================================ */
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-0-5: 0.125rem;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+  --spacing-40: 10rem;
+  --spacing-48: 12rem;
+  --spacing-64: 16rem;
+  --spacing-80: 20rem;
+  --spacing-96: 24rem;
+  
+  /* ============================================
+     BORDERS
+     ============================================ */
+  --border-radius-none: 0;
+  --border-radius-sm: 0.125rem;
+  --border-radius-base: 0.25rem;
+  --border-radius-md: 0.375rem;
+  --border-radius-lg: 0.5rem;
+  --border-radius-xl: 0.75rem;
+  --border-radius-2xl: 1rem;
+  --border-radius-full: 9999px;
+  
+  --border-width-0: 0;
+  --border-width-1: 1px;
+  --border-width-2: 2px;
+  --border-width-3: 3px;
+  --border-width-4: 4px;
+  --border-width-technical: 1.5px;
+  
+  /* ============================================
+     SHADOWS
+     ============================================ */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-technical: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  --shadow-inset: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  
+  /* ============================================
+     ANIMATION
+     ============================================ */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-technical: 200ms;
+  
+  --easing-linear: linear;
+  --easing-ease: ease;
+  --easing-ease-in: ease-in;
+  --easing-ease-out: ease-out;
+  --easing-ease-in-out: ease-in-out;
+  --easing-technical: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* ============================================
+     TECHNICAL SPECIFICATIONS
+     ============================================ */
+  --pilot-grid-size: 8px;
+  --pilot-module-size: 48px;
+  --pilot-border-style: solid;
+  --pilot-line-style: dashed;
+  --pilot-annotation-style: dotted;
+  --pilot-code-block-padding: 1.5rem;
+  --pilot-terminal-padding: 1rem;
+  --pilot-label-offset: 0.5rem;
+}
+
+/* ============================================
+   DARK MODE OVERRIDES
+   ============================================ */
+[data-theme="dark"] {
+  /* Text */
+  --color-text-primary: var(--color-gray-50);
+  --color-text-secondary: var(--color-gray-300);
+  --color-text-tertiary: var(--color-gray-400);
+  --color-text-disabled: var(--color-gray-600);
+  --color-text-inverse: var(--color-black-300);
+  --color-text-code: var(--color-gray-200);
+  
+  /* Background */
+  --color-background-primary: var(--color-black-300);
+  --color-background-secondary: var(--color-black-400);
+  --color-background-tertiary: var(--color-black-500);
+  --color-background-inverse: var(--color-white-100);
+  --color-background-code: var(--color-black-400);
+  --color-background-technical: var(--color-black-400);
+  
+  /* Border */
+  --color-border-primary: var(--color-gray-700);
+  --color-border-secondary: var(--color-gray-800);
+  --color-border-technical: var(--color-gray-500);
+  --color-border-dashed: var(--color-gray-600);
+  
+  /* Technical */
+  --color-pilot-grid: var(--color-gray-800);
+  --color-pilot-measurement: var(--color-gray-600);
+  --color-pilot-annotation: var(--color-gray-400);
+  
+  /* Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+}

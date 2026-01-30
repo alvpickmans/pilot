@@ -1,0 +1,633 @@
+/**
+ * Pilot Design System - Technical Patterns
+ * 
+ * CSS patterns for technical diagrams, system labeling, and
+ * retro-technical visual language.
+ */
+
+/* ============================================
+   TECHNICAL GRID PATTERNS
+   ============================================ */
+
+.pilot-grid-bg {
+  background-image: 
+    linear-gradient(to right, var(--color-pilot-grid, #d4d4d4) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-pilot-grid, #d4d4d4) 1px, transparent 1px);
+  background-size: var(--pilot-grid-size, 8px) var(--pilot-grid-size, 8px);
+}
+
+.pilot-grid-dots {
+  background-image: radial-gradient(circle, var(--color-pilot-grid, #d4d4d4) 1px, transparent 1px);
+  background-size: var(--pilot-grid-size, 8px) var(--pilot-grid-size, 8px);
+}
+
+.pilot-grid-crosses {
+  background-image: 
+    linear-gradient(to right, var(--color-pilot-grid, #d4d4d4) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-pilot-grid, #d4d4d4) 1px, transparent 1px),
+    radial-gradient(circle, var(--color-pilot-grid, #d4d4d4) 1px, transparent 1px);
+  background-size: 
+    var(--pilot-grid-size, 8px) var(--pilot-grid-size, 8px),
+    var(--pilot-grid-size, 8px) var(--pilot-grid-size, 8px),
+    calc(var(--pilot-grid-size, 8px) * 4) calc(var(--pilot-grid-size, 8px) * 4);
+}
+
+/* ============================================
+   TECHNICAL BORDERS & FRAMES
+   ============================================ */
+
+.pilot-border {
+  border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+  position: relative;
+}
+
+.pilot-border-corners::before,
+.pilot-border-corners::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border-technical, #1a1a1a);
+}
+
+.pilot-border-corners::before {
+  top: -2px;
+  left: -2px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.pilot-border-corners::after {
+  bottom: -2px;
+  right: -2px;
+  border-left: none;
+  border-top: none;
+}
+
+.pilot-border-brackets {
+  position: relative;
+  padding: var(--spacing-4, 1rem);
+}
+
+.pilot-border-brackets::before,
+.pilot-border-brackets::after {
+  content: '';
+  position: absolute;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: var(--font-size-2xl, 1.5rem);
+  color: var(--color-border-technical, #1a1a1a);
+  line-height: 1;
+}
+
+.pilot-border-brackets::before {
+  content: '[';
+  top: 0;
+  left: 0;
+}
+
+.pilot-border-brackets::after {
+  content: ']';
+  bottom: 0;
+  right: 0;
+}
+
+.pilot-frame {
+  border: 2px solid var(--color-border-technical, #1a1a1a);
+  position: relative;
+  padding: var(--spacing-6, 1.5rem);
+}
+
+.pilot-frame::before,
+.pilot-frame::after,
+.pilot-frame > *::before,
+.pilot-frame > *::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border-technical, #1a1a1a);
+}
+
+.pilot-frame::before {
+  top: -2px;
+  left: -2px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.pilot-frame::after {
+  top: -2px;
+  right: -2px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.pilot-frame > *::before {
+  bottom: -2px;
+  left: -2px;
+  border-right: none;
+  border-top: none;
+}
+
+.pilot-frame > *::after {
+  bottom: -2px;
+  right: -2px;
+  border-left: none;
+  border-top: none;
+}
+
+/* ============================================
+   TECHNICAL LABELS & ANNOTATIONS
+   ============================================ */
+
+.pilot-label {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-technical, 'JetBrains Mono', monospace);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+  text-transform: uppercase;
+  color: var(--color-pilot-annotation, #525252);
+  background: var(--color-background-primary, #ffffff);
+  padding: var(--spacing-1, 0.25rem) var(--spacing-2, 0.5rem);
+  border: 1px solid var(--color-border-primary, #b3b3b3);
+}
+
+.pilot-label-boxed {
+  border: 2px solid var(--color-border-technical, #1a1a1a);
+  background: var(--color-background-technical, #f5f5f5);
+  position: relative;
+}
+
+.pilot-label-boxed::before,
+.pilot-label-boxed::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--color-border-technical, #1a1a1a);
+}
+
+.pilot-label-boxed::before {
+  top: -2px;
+  left: -2px;
+}
+
+.pilot-label-boxed::after {
+  bottom: -2px;
+  right: -2px;
+}
+
+.pilot-label-code {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  text-transform: none;
+  letter-spacing: var(--letter-spacing-code, 0.01em);
+  background: var(--color-background-code, #e5e5e5);
+  border-radius: var(--border-radius-sm, 0.125rem);
+}
+
+.pilot-label-code::before {
+  content: '<';
+  opacity: 0.5;
+  margin-right: var(--spacing-1, 0.25rem);
+}
+
+.pilot-label-code::after {
+  content: '>';
+  opacity: 0.5;
+  margin-left: var(--spacing-1, 0.25rem);
+}
+
+.pilot-annotation {
+  position: relative;
+  padding: var(--spacing-4, 1rem);
+  border: 1px dashed var(--color-border-dashed, #8a8a8a);
+  background: var(--color-background-technical, #f5f5f5);
+}
+
+.pilot-annotation::before {
+  content: attr(data-label);
+  position: absolute;
+  top: 0;
+  left: var(--spacing-4, 1rem);
+  transform: translateY(-50%);
+  font-family: var(--font-technical, 'JetBrains Mono', monospace);
+  font-size: var(--font-size-2xs, 0.625rem);
+  font-weight: var(--font-weight-semibold, 600);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+  text-transform: uppercase;
+  color: var(--color-pilot-annotation, #525252);
+  background: var(--color-background-primary, #ffffff);
+  padding: 0 var(--spacing-2, 0.5rem);
+}
+
+.pilot-annotation-corners::before,
+.pilot-annotation-corners::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px dashed var(--color-border-dashed, #8a8a8a);
+}
+
+.pilot-annotation-corners::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.pilot-annotation-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+/* ============================================
+   TECHNICAL MEASUREMENT LINES
+   ============================================ */
+
+.pilot-measurement {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2, 0.5rem);
+  font-family: var(--font-technical, 'JetBrains Mono', monospace);
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--color-pilot-measurement, #8a8a8a);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+}
+
+.pilot-measurement-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-pilot-measurement, #8a8a8a);
+  position: relative;
+}
+
+.pilot-measurement-line::before,
+.pilot-measurement-line::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid var(--color-pilot-measurement, #8a8a8a);
+  border-left: 1px solid var(--color-pilot-measurement, #8a8a8a);
+  top: -3px;
+}
+
+.pilot-measurement-line::before {
+  left: 0;
+  transform: rotate(-45deg);
+}
+
+.pilot-measurement-line::after {
+  right: 0;
+  transform: rotate(135deg);
+}
+
+.pilot-measurement-vertical {
+  flex-direction: column;
+}
+
+.pilot-measurement-vertical .pilot-measurement-line {
+  width: 1px;
+  height: 40px;
+  flex: none;
+}
+
+.pilot-measurement-vertical .pilot-measurement-line::before,
+.pilot-measurement-vertical .pilot-measurement-line::after {
+  left: -3px;
+  border-top: none;
+  border-right: 1px solid var(--color-pilot-measurement, #8a8a8a);
+}
+
+.pilot-measurement-vertical .pilot-measurement-line::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.pilot-measurement-vertical .pilot-measurement-line::after {
+  top: auto;
+  bottom: 0;
+  transform: rotate(-135deg);
+}
+
+/* ============================================
+   TECHNICAL CONNECTORS & LINES
+   ============================================ */
+
+.pilot-line {
+  height: 1px;
+  background: var(--color-border-primary, #b3b3b3);
+  position: relative;
+}
+
+.pilot-line-dashed {
+  background: repeating-linear-gradient(
+    to right,
+    var(--color-border-dashed, #8a8a8a) 0,
+    var(--color-border-dashed, #8a8a8a) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+.pilot-line-dotted {
+  background: repeating-linear-gradient(
+    to right,
+    var(--color-border-dashed, #8a8a8a) 0,
+    var(--color-border-dashed, #8a8a8a) 2px,
+    transparent 2px,
+    transparent 8px
+  );
+}
+
+.pilot-connector {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2, 0.5rem);
+}
+
+.pilot-connector-arrow::after {
+  content: '→';
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  color: var(--color-border-technical, #1a1a1a);
+}
+
+.pilot-connector-dots::after {
+  content: '···';
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  letter-spacing: 0.2em;
+  color: var(--color-border-primary, #b3b3b3);
+}
+
+/* ============================================
+   TECHNICAL MODULES & CONTAINERS
+   ============================================ */
+
+.pilot-module {
+  border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+  background: var(--color-background-primary, #ffffff);
+  position: relative;
+  padding: var(--spacing-4, 1rem);
+}
+
+.pilot-module::before {
+  content: attr(data-id);
+  position: absolute;
+  top: 0;
+  left: var(--spacing-3, 0.75rem);
+  transform: translateY(-50%);
+  font-family: var(--font-technical, 'JetBrains Mono', monospace);
+  font-size: var(--font-size-2xs, 0.625rem);
+  font-weight: var(--font-weight-semibold, 600);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary, #6b6b6b);
+  background: var(--color-background-primary, #ffffff);
+  padding: 0 var(--spacing-2, 0.5rem);
+}
+
+.pilot-module-header {
+  border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
+  padding-bottom: var(--spacing-3, 0.75rem);
+  margin-bottom: var(--spacing-3, 0.75rem);
+  font-family: var(--font-technical, 'JetBrains Mono', monospace);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-semibold, 600);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+  text-transform: uppercase;
+  color: var(--color-text-secondary, #525252);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2, 0.5rem);
+}
+
+.pilot-module-header::before {
+  content: '▸';
+  color: var(--color-text-tertiary, #6b6b6b);
+}
+
+/* ============================================
+   TECHNICAL STATUS INDICATORS
+   ============================================ */
+
+.pilot-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2, 0.5rem);
+}
+
+.pilot-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-gray-400, #8a8a8a);
+  border: 2px solid var(--color-background-primary, #ffffff);
+  box-shadow: 0 0 0 1px var(--color-gray-300, #b3b3b3);
+}
+
+.pilot-status-dot.success {
+  background: var(--color-feedback-success, #16a34a);
+  box-shadow: 0 0 0 1px var(--color-green-300, #86efac);
+}
+
+.pilot-status-dot.warning {
+  background: var(--color-feedback-warning, #d97706);
+  box-shadow: 0 0 0 1px var(--color-amber-300, #fcd34d);
+}
+
+.pilot-status-dot.error {
+  background: var(--color-feedback-error, #dc2626);
+  box-shadow: 0 0 0 1px var(--color-red-300, #fca5a5);
+}
+
+.pilot-status-dot.pulse {
+  animation: status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes status-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+}
+
+.pilot-status-label {
+  font-family: var(--font-technical, 'JetBrains Mono', monospace);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+  text-transform: uppercase;
+  color: var(--color-text-secondary, #525252);
+}
+
+/* ============================================
+   TECHNICAL TERMINAL & CODE STYLING
+   ============================================ */
+
+.pilot-terminal {
+  background: var(--color-black-300, #1a1a1a);
+  border: 2px solid var(--color-black-400, #242424);
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  color: var(--color-gray-200, #d4d4d4);
+}
+
+.pilot-terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
+  background: var(--color-black-400, #242424);
+  border-bottom: 1px solid var(--color-black-500, #2d2d2d);
+}
+
+.pilot-terminal-title {
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+  text-transform: uppercase;
+  color: var(--color-gray-500, #6b6b6b);
+}
+
+.pilot-terminal-body {
+  padding: var(--spacing-4, 1rem);
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: var(--line-height-technical, 1.2);
+}
+
+.pilot-terminal-prompt {
+  color: var(--color-amber-500, #f59e0b);
+  user-select: none;
+  margin-right: var(--spacing-2, 0.5rem);
+}
+
+.pilot-terminal-prompt::after {
+  content: '$';
+}
+
+.pilot-code {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: var(--font-size-sm, 0.875rem);
+  background: var(--color-background-code, #e5e5e5);
+  padding: var(--spacing-0-5, 0.125rem) var(--spacing-2, 0.5rem);
+  border-radius: var(--border-radius-sm, 0.125rem);
+  color: var(--color-text-code, #2a2a2a);
+}
+
+.pilot-code-block {
+  background: var(--color-background-code, #e5e5e5);
+  border: 1px solid var(--color-border-secondary, #d4d4d4);
+  border-radius: var(--border-radius-none, 0);
+  overflow: hidden;
+}
+
+.pilot-code-block pre {
+  margin: 0;
+  padding: var(--spacing-6, 1.5rem);
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: var(--line-height-technical, 1.2);
+  overflow-x: auto;
+}
+
+/* ============================================
+   TECHNICAL DIAGRAM ELEMENTS
+   ============================================ */
+
+.pilot-diagram {
+  position: relative;
+  padding: var(--spacing-8, 2rem);
+  background: var(--color-background-technical, #f5f5f5);
+  border: 1px solid var(--color-border-secondary, #d4d4d4);
+}
+
+.pilot-diagram-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, var(--color-pilot-grid, #d4d4d4) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-pilot-grid, #d4d4d4) 1px, transparent 1px);
+  background-size: calc(var(--pilot-grid-size, 8px) * 4) calc(var(--pilot-grid-size, 8px) * 4);
+  opacity: 0.5;
+}
+
+.pilot-node {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
+  background: var(--color-background-primary, #ffffff);
+  border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+  font-family: var(--font-technical, 'JetBrains Mono', monospace);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.pilot-node::before {
+  content: attr(data-id);
+  position: absolute;
+  top: -8px;
+  left: var(--spacing-2, 0.5rem);
+  font-size: var(--font-size-2xs, 0.625rem);
+  color: var(--color-text-tertiary, #6b6b6b);
+  background: var(--color-background-technical, #f5f5f5);
+  padding: 0 var(--spacing-1, 0.25rem);
+}
+
+.pilot-connector-path {
+  stroke: var(--color-border-technical, #1a1a1a);
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.pilot-connector-path.dashed {
+  stroke-dasharray: 8, 4;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.pilot-text {
+  font-family: var(--font-technical, 'JetBrains Mono', monospace);
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+  text-transform: uppercase;
+}
+
+.pilot-mono {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  letter-spacing: var(--letter-spacing-code, 0.01em);
+}
+
+.pilot-industrial {
+  font-family: var(--font-industrial, 'Chakra Petch', sans-serif);
+  font-weight: var(--font-weight-bold, 700);
+  letter-spacing: var(--letter-spacing-wider, 0.05em);
+  text-transform: uppercase;
+}
+
+.pilot-uppercase {
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-technical, 0.05em);
+}
+
+.pilot-number {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-variant-numeric: tabular-nums;
+}
