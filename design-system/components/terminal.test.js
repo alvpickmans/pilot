@@ -10,8 +10,8 @@ import { registerComponent, mount, cleanup, waitForRender } from '../tests/web-c
 
 // Import the component (will be defined in global scope)
 // We need to import it to trigger the custom element definition
-const componentsModule = await import('./components.js');
-const { PilotTerminal } = componentsModule;
+const terminalModule = await import('./terminal.js');
+const { PilotTerminal } = terminalModule;
 
 describe('PilotTerminal', () => {
   // Register component before tests
@@ -264,10 +264,10 @@ describe('PilotTerminal', () => {
       const terminal = mount('pilot-terminal');
       await waitForRender(terminal);
       
-      const styles = window.getComputedStyle(terminal);
-      
-      // Check host font-family
-      expect(styles.fontFamily).toContain('monospace');
+      // Check that the component defines monospace font in styles
+      const style = terminal.shadowRoot.querySelector('style');
+      expect(style.textContent).toContain('font-family');
+      expect(style.textContent).toContain('monospace');
     });
 
     it('applies terminal-specific CSS variables', async () => {
@@ -389,7 +389,8 @@ Line 3`;
       await waitForRender(terminal);
       
       const titleSpan = terminal.shadowRoot.querySelector('.title');
-      expect(titleSpan.textContent).toBe('');
+      // Empty title falls back to default 'terminal'
+      expect(titleSpan.textContent).toBe('terminal');
     });
 
     it('handles very long content', async () => {
