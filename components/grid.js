@@ -86,8 +86,10 @@ export class PilotGrid extends HTMLElement {
     `;
   }
 
-  attributeChangedCallback() {
-    this.render();
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue !== newValue) {
+      this.render();
+    }
   }
 }
 
