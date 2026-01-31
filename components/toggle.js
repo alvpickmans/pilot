@@ -250,13 +250,34 @@ export class PilotToggle extends HTMLElement {
       this.removeAttribute('checked');
     }
     
-    this.render();
+    // Update visual state directly without full re-render
+    this._updateVisualState();
     
     // Dispatch change event
     this.dispatchEvent(new CustomEvent('change', {
       detail: { checked: this._isChecked },
       bubbles: true
     }));
+  }
+
+  _updateVisualState() {
+    const track = this.shadowRoot.querySelector('.toggle-track');
+    const checkbox = this.shadowRoot.querySelector('input[type="checkbox"]');
+    const labels = this.shadowRoot.querySelectorAll('.toggle-label');
+    
+    if (track) {
+      track.classList.toggle('checked', this._isChecked);
+      track.setAttribute('aria-checked', this._isChecked);
+    }
+    
+    if (checkbox) {
+      checkbox.checked = this._isChecked;
+    }
+    
+    if (labels.length === 2) {
+      labels[0].classList.toggle('active', !this._isChecked);
+      labels[1].classList.toggle('active', this._isChecked);
+    }
   }
 
   render() {
@@ -290,9 +311,13 @@ export class PilotToggle extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'checked') {
-      this._updateCheckedState();
-      this.render();
+      const newChecked = this.hasAttribute('checked');
+      if (newChecked !== this._isChecked) {
+        this._isChecked = newChecked;
+        this._updateVisualState();
+      }
     } else if (name === 'disabled') {
+      // Only re-render for disabled/labels as they affect structure
       this.render();
     } else if (name === 'labels') {
       this._parseLabels();
@@ -305,13 +330,16 @@ export class PilotToggle extends HTMLElement {
   }
 
   set checked(value) {
-    this._isChecked = Boolean(value);
-    if (this._isChecked) {
-      this.setAttribute('checked', '');
-    } else {
-      this.removeAttribute('checked');
+    const newValue = Boolean(value);
+    if (newValue !== this._isChecked) {
+      this._isChecked = newValue;
+      if (this._isChecked) {
+        this.setAttribute('checked', '');
+      } else {
+        this.removeAttribute('checked');
+      }
+      this._updateVisualState();
     }
-    this.render();
   }
 
   get labels() {
