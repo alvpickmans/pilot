@@ -684,14 +684,14 @@ export class PilotDatepicker extends HTMLElement {
     }
 
     this._updateValue();
-    this.render();
+    this._updateCalendarGrid();
   }
 
   _clearSelection() {
     this._selectedStartDate = null;
     this._selectedEndDate = null;
     this._updateValue();
-    this.render();
+    this._updateCalendarGrid();
   }
 
   _updateValue() {
