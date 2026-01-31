@@ -401,8 +401,8 @@ describe('PilotLabel', () => {
 
     it('handles special characters in prefix and suffix', async () => {
       const label = mount('pilot-label', { 
-        prefix: '&lt;',
-        suffix: '&gt;'
+        prefix: '<',
+        suffix: '>'
       }, 'HTML');
       await waitForRender(label);
       
@@ -411,8 +411,8 @@ describe('PilotLabel', () => {
       
       expect(prefix).toBeTruthy();
       expect(suffix).toBeTruthy();
-      expect(prefix.textContent).toBe('&lt;');
-      expect(suffix.textContent).toBe('&gt;');
+      expect(prefix.textContent).toBe('<');
+      expect(suffix.textContent).toBe('>');
     });
 
     it('handles long prefix and suffix', async () => {
@@ -465,7 +465,7 @@ describe('PilotLabel', () => {
       const label = mount('pilot-label', { variant: 'default' });
       await waitForRender(label);
       
-      // Multiple consecutive changes
+      // Multiple consecutive changes (0,1,2,3,4) - ends on technical since 4 is even
       for (let i = 0; i < 5; i++) {
         label.setAttribute('variant', i % 2 === 0 ? 'technical' : 'code');
         await waitForRender(label);
@@ -473,7 +473,7 @@ describe('PilotLabel', () => {
       
       const innerLabel = label.shadowRoot.querySelector('.label');
       expect(innerLabel).toBeTruthy();
-      expect(innerLabel.getAttribute('variant')).toBe('code');
+      expect(innerLabel.getAttribute('variant')).toBe('technical');
     });
   });
 
