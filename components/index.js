@@ -36,3 +36,4 @@ export { PilotDatepicker } from './datepicker.js';
 export { PilotSearch } from './search.js';
 export { PilotToggle } from './toggle.js';
 export { PilotCommodityInput } from './commodity-input.js';
+export { PilotTabs, PilotTab } from './tabs.js';

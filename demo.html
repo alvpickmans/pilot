@@ -830,6 +830,42 @@ echo "Installation complete"
     </div>
   </section>
 
+  <!-- Tabs Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Tabs</h2>
+    <p class="demo-subtitle">Tab navigation for content sections</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Default Horizontal:</p>
+        <pilot-tabs>
+          <pilot-tab label="Overview">Account overview content with balance and recent activity.</pilot-tab>
+          <pilot-tab label="Transactions">Transaction history and detailed records.</pilot-tab>
+          <pilot-tab label="Settings">Account settings and preferences.</pilot-tab>
+        </pilot-tabs>
+      </div>
+      
+      <div class="component-showcase">
+        <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Technical Variant:</p>
+        <pilot-tabs variant="technical">
+          <pilot-tab label="Q1" icon="📊">First quarter financial data and analysis.</pilot-tab>
+          <pilot-tab label="Q2" icon="📈">Second quarter performance metrics.</pilot-tab>
+          <pilot-tab label="Q3" icon="📉">Third quarter projections and trends.</pilot-tab>
+        </pilot-tabs>
+      </div>
+    </div>
+    
+    <div class="component-showcase" style="margin-top: var(--spacing-6);">
+      <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Vertical Orientation:</p>
+      <pilot-tabs orientation="vertical" style="height: 200px;">
+        <pilot-tab label="System">System configuration and monitoring.</pilot-tab>
+        <pilot-tab label="Network">Network settings and connectivity.</pilot-tab>
+        <pilot-tab label="Security" disabled>Security settings (restricted).</pilot-tab>
+        <pilot-tab label="Logs">System logs and audit trail.</pilot-tab>
+      </pilot-tabs>
+    </div>
+  </section>
+
   <!-- CSS Patterns Section -->
   <section class="demo-section">
     <h2 class="demo-title">CSS Patterns</h2>
@@ -931,7 +967,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          17 Web Components
+          18 Web Components
         </p>
       </div>
       <div>
