@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pilot Design System - Demo</title>
+  <title>Pilot Design System - Component Explorer</title>
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,37 +16,155 @@
   <script type="module" src="components/index.js"></script>
   
   <style>
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       margin: 0;
-      padding: var(--spacing-8, 2rem);
+      padding: 0;
       font-family: var(--font-body, 'IBM Plex Sans', sans-serif);
       background: var(--color-background-primary, #ffffff);
       color: var(--color-text-primary, #1a1a1a);
       line-height: var(--line-height-normal, 1.5);
+      overflow-x: hidden;
     }
     
-    .demo-section {
-      margin-bottom: var(--spacing-16, 4rem);
+    /* App Layout */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
     }
     
-    .demo-title {
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: var(--color-background-secondary, #f5f5f5);
+      border-right: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    
+    .sidebar-header {
+      padding: var(--spacing-6, 1.5rem);
+      border-bottom: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
+      background: var(--color-background-primary, #ffffff);
+    }
+    
+    .sidebar-brand {
+      font-family: var(--font-industrial, 'Chakra Petch', sans-serif);
+      font-size: var(--font-size-xl, 1.25rem);
+      font-weight: var(--font-weight-bold, 700);
+      letter-spacing: var(--letter-spacing-wider, 0.05em);
+      text-transform: uppercase;
+      color: var(--color-text-primary, #1a1a1a);
+      margin: 0 0 var(--spacing-1, 0.25rem) 0;
+    }
+    
+    .sidebar-version {
+      font-family: var(--font-technical, 'JetBrains Mono', monospace);
+      font-size: var(--font-size-xs, 0.75rem);
+      color: var(--color-text-tertiary, #6b6b6b);
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-technical, 0.05em);
+    }
+    
+    .sidebar-nav {
+      flex: 1;
+      padding: var(--spacing-4, 1rem) 0;
+    }
+    
+    /* Custom styling for pilot-tabs in sidebar */
+    .sidebar-nav pilot-tabs::part(tab-list) {
+      border-right: none;
+    }
+    
+    .sidebar-nav pilot-tabs::part(tab-button) {
+      font-size: var(--font-size-sm, 0.875rem);
+      padding: var(--spacing-3, 0.75rem) var(--spacing-6, 1.5rem);
+      border-right: none;
+      border-left: 3px solid transparent;
+      text-transform: none;
+      font-weight: var(--font-weight-normal, 400);
+    }
+    
+    .sidebar-nav pilot-tabs::part(tab-button-active) {
+      border-left-color: var(--color-brand-primary, #1a1a1a);
+      background: var(--color-background-primary, #ffffff);
+      font-weight: var(--font-weight-medium, 500);
+    }
+    
+    .sidebar-footer {
+      padding: var(--spacing-4, 1rem) var(--spacing-6, 1.5rem);
+      border-top: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
+      font-family: var(--font-technical, 'JetBrains Mono', monospace);
+      font-size: var(--font-size-xs, 0.75rem);
+      color: var(--color-text-tertiary, #6b6b6b);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: var(--spacing-8, 2rem);
+      min-height: 100vh;
+    }
+    
+    .content-header {
+      margin-bottom: var(--spacing-8, 2rem);
+      padding-bottom: var(--spacing-6, 1.5rem);
+      border-bottom: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+    }
+    
+    .content-title {
       font-family: var(--font-industrial, 'Chakra Petch', sans-serif);
       font-size: var(--font-size-3xl, 1.875rem);
       font-weight: var(--font-weight-bold, 700);
       letter-spacing: var(--letter-spacing-wider, 0.05em);
       text-transform: uppercase;
-      margin-bottom: var(--spacing-6, 1.5rem);
+      margin: 0 0 var(--spacing-2, 0.5rem) 0;
       color: var(--color-text-primary, #1a1a1a);
     }
     
-    .demo-subtitle {
+    .content-subtitle {
       font-family: var(--font-technical, 'JetBrains Mono', monospace);
-      font-size: var(--font-size-xs, 0.75rem);
-      font-weight: var(--font-weight-medium, 500);
-      letter-spacing: var(--letter-spacing-technical, 0.05em);
+      font-size: var(--font-size-sm, 0.875rem);
+      color: var(--color-text-secondary, #525252);
+      margin: 0;
+    }
+    
+    /* Component Sections */
+    .component-section {
+      margin-bottom: var(--spacing-12, 3rem);
+    }
+    
+    .component-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .section-header {
+      margin-bottom: var(--spacing-6, 1.5rem);
+    }
+    
+    .section-title {
+      font-family: var(--font-industrial, 'Chakra Petch', sans-serif);
+      font-size: var(--font-size-2xl, 1.5rem);
+      font-weight: var(--font-weight-bold, 700);
+      letter-spacing: var(--letter-spacing-wider, 0.05em);
       text-transform: uppercase;
-      color: var(--color-text-tertiary, #6b6b6b);
-      margin-bottom: var(--spacing-4, 1rem);
+      margin: 0 0 var(--spacing-2, 0.5rem) 0;
+      color: var(--color-text-primary, #1a1a1a);
+    }
+    
+    .section-description {
+      font-family: var(--font-technical, 'JetBrains Mono', monospace);
+      font-size: var(--font-size-sm, 0.875rem);
+      color: var(--color-text-secondary, #525252);
+      margin: 0;
     }
     
     .demo-grid {
@@ -67,7 +185,28 @@
       grid-template-columns: repeat(4, 1fr);
     }
     
+    @media (max-width: 1024px) {
+      .demo-grid-2,
+      .demo-grid-3,
+      .demo-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
     @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 300ms ease-out;
+      }
+      
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
       .demo-grid-2,
       .demo-grid-3,
       .demo-grid-4 {
@@ -86,697 +225,1019 @@
       padding: var(--spacing-8, 2rem);
       margin: var(--spacing-8, 2rem) calc(-1 * var(--spacing-8, 2rem));
     }
+    
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: var(--spacing-4, 1rem);
+      left: var(--spacing-4, 1rem);
+      z-index: 200;
+      background: var(--color-background-primary, #ffffff);
+      border: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
+      padding: var(--spacing-2, 0.5rem);
+      cursor: pointer;
+    }
+    
+    @media (max-width: 768px) {
+      .mobile-menu-toggle {
+        display: block;
+      }
+    }
+    
+    /* Overview Grid */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--spacing-6, 1.5rem);
+    }
+    
+    .overview-card {
+      background: var(--color-background-primary, #ffffff);
+      border: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
+      padding: var(--spacing-6, 1.5rem);
+      cursor: pointer;
+      transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+    }
+    
+    .overview-card:hover {
+      border-color: var(--color-brand-primary, #1a1a1a);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .overview-card-title {
+      font-family: var(--font-technical, 'JetBrains Mono', monospace);
+      font-size: var(--font-size-sm, 0.875rem);
+      font-weight: var(--font-weight-semibold, 600);
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-technical, 0.05em);
+      margin: 0 0 var(--spacing-2, 0.5rem) 0;
+      color: var(--color-text-primary, #1a1a1a);
+    }
+    
+    .overview-card-description {
+      font-size: var(--font-size-sm, 0.875rem);
+      color: var(--color-text-secondary, #525252);
+      margin: 0;
+    }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="demo-section">
-    <h1 class="demo-title" style="font-size: var(--font-size-5xl, 3rem);">
-      Pilot Design System
-    </h1>
-    <p style="font-size: var(--font-size-lg, 1.125rem); color: var(--color-text-secondary, #525252); max-width: 600px;">
-      A retro-technical design system featuring industrial and governmental aesthetics, 
-      machine-readable visual language, and minimalist monochromatic palette.
-    </p>
-    <pilot-divider variant="technical" style="margin-top: var(--spacing-8, 2rem);"></pilot-divider>
-  </header>
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
 
-  <!-- Navigation Menu Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Navigation Menu</h2>
-    <p class="demo-subtitle">Responsive navigation with mobile hamburger menu</p>
-    
-    <div class="component-showcase" style="padding: 0; overflow: hidden;">
-      <pilot-nav-menu>
-        <div slot="brand" style="font-family: var(--font-technical); font-weight: 600; letter-spacing: var(--letter-spacing-technical); text-transform: uppercase;">
-          PILOT NAV
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1 class="sidebar-brand">Pilot DS</h1>
+        <div class="sidebar-version">v1.0.0 · 22 Components</div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <pilot-tabs orientation="vertical" id="nav-tabs" active-tab="0">
+          <pilot-tab label="Overview"></pilot-tab>
+          <pilot-tab label="Navigation Menu"></pilot-tab>
+          <pilot-tab label="Buttons"></pilot-tab>
+          <pilot-tab label="Cards"></pilot-tab>
+          <pilot-tab label="Modal"></pilot-tab>
+          <pilot-tab label="Form Elements"></pilot-tab>
+          <pilot-tab label="Commodity Input"></pilot-tab>
+          <pilot-tab label="Toggle"></pilot-tab>
+          <pilot-tab label="Select"></pilot-tab>
+          <pilot-tab label="Datepicker"></pilot-tab>
+          <pilot-tab label="Search"></pilot-tab>
+          <pilot-tab label="Badges & Labels"></pilot-tab>
+          <pilot-tab label="Status Indicators"></pilot-tab>
+          <pilot-tab label="Terminal"></pilot-tab>
+          <pilot-tab label="Code Blocks"></pilot-tab>
+          <pilot-tab label="Panels"></pilot-tab>
+          <pilot-tab label="Annotations"></pilot-tab>
+          <pilot-tab label="Grid System"></pilot-tab>
+          <pilot-tab label="Dividers"></pilot-tab>
+          <pilot-tab label="Measurements"></pilot-tab>
+          <pilot-tab label="Tabs"></pilot-tab>
+          <pilot-tab label="CSS Patterns"></pilot-tab>
+          <pilot-tab label="Typography"></pilot-tab>
+          <pilot-tab label="Dark Mode"></pilot-tab>
+        </pilot-tabs>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div>Industrial Technical DS</div>
+        <div style="margin-top: var(--spacing-1, 0.25rem);">MIT License</div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="main-content">
+      <!-- Content injected by JavaScript -->
+    </main>
+  </div>
+
+  <script>
+    // Component content definitions
+    const componentContent = {
+      overview: `
+        <div class="content-header">
+          <h1 class="content-title">Component Explorer</h1>
+          <p class="content-subtitle">A retro-technical design system featuring industrial and governmental aesthetics</p>
         </div>
-        <li slot="nav-items"><a href="#buttons">Buttons</a></li>
-        <li slot="nav-items"><a href="#cards">Cards</a></li>
-        <li slot="nav-items"><a href="#inputs">Inputs</a></li>
-        <li slot="nav-items">
-          <a href="#components">Components</a>
-          <ul>
-            <li><a href="#badges">Badges</a></li>
-            <li><a href="#labels">Labels</a></li>
-            <li><a href="#status">Status</a></li>
-          </ul>
-        </li>
-        <li slot="nav-items"><a href="#about">About</a></li>
         
-        <li slot="mobile-nav-items"><a href="#buttons">Buttons</a></li>
-        <li slot="mobile-nav-items"><a href="#cards">Cards</a></li>
-        <li slot="mobile-nav-items"><a href="#inputs">Inputs</a></li>
-        <li slot="mobile-nav-items">
-          <a href="#components">Components</a>
-          <ul>
-            <li><a href="#badges">Badges</a></li>
-            <li><a href="#labels">Labels</a></li>
-            <li><a href="#status">Status</a></li>
-          </ul>
-        </li>
-        <li slot="mobile-nav-items"><a href="#about">About</a></li>
-      </pilot-nav-menu>
-    </div>
-    
-    <p style="margin-top: var(--spacing-4); font-size: var(--font-size-sm); color: var(--color-text-secondary);">
-      Resize your browser window to see the responsive behavior. On mobile (&lt; 768px), the navigation collapses into a hamburger menu.
-    </p>
-  </section>
-
-  <section class="demo-section">
-    <h2 class="demo-title">Navigation Menu - Technical Variant</h2>
-    <p class="demo-subtitle">Technical styling with enhanced borders</p>
-    
-    <div class="component-showcase" style="padding: 0; overflow: hidden;">
-      <pilot-nav-menu variant="technical">
-        <div slot="brand" style="font-family: var(--font-mono); font-weight: 600; letter-spacing: var(--letter-spacing-technical); text-transform: uppercase;">
-          TECHNICAL_NAV
+        <div class="overview-grid">
+          <div class="overview-card" onclick="showComponent(1)">
+            <h3 class="overview-card-title">Navigation Menu</h3>
+            <p class="overview-card-description">Responsive navigation with mobile hamburger menu</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(2)">
+            <h3 class="overview-card-title">Buttons</h3>
+            <p class="overview-card-description">Interactive controls with industrial styling</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(3)">
+            <h3 class="overview-card-title">Cards</h3>
+            <p class="overview-card-description">Container components with technical frames</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(4)">
+            <h3 class="overview-card-title">Modal</h3>
+            <p class="overview-card-description">Dialog overlays with technical corner brackets</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(5)">
+            <h3 class="overview-card-title">Form Elements</h3>
+            <p class="overview-card-description">Inputs with machine-readable styling</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(6)">
+            <h3 class="overview-card-title">Commodity Input</h3>
+            <p class="overview-card-description">Financial input with currency symbol and decimal formatting</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(7)">
+            <h3 class="overview-card-title">Toggle</h3>
+            <p class="overview-card-description">Switch toggle for settings with industrial on/off styling</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(8)">
+            <h3 class="overview-card-title">Select</h3>
+            <p class="overview-card-description">Dropdown selection with technical bracket styling</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(9)">
+            <h3 class="overview-card-title">Datepicker</h3>
+            <p class="overview-card-description">Date selection with grid-based calendar</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(10)">
+            <h3 class="overview-card-title">Search</h3>
+            <p class="overview-card-description">Autocomplete search with keyboard navigation</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(11)">
+            <h3 class="overview-card-title">Badges & Labels</h3>
+            <p class="overview-card-description">Status indicators and technical labels</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(12)">
+            <h3 class="overview-card-title">Status Indicators</h3>
+            <p class="overview-card-description">System status with animated indicators</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(13)">
+            <h3 class="overview-card-title">Terminal</h3>
+            <p class="overview-card-description">Console and command-line interfaces</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(14)">
+            <h3 class="overview-card-title">Code Blocks</h3>
+            <p class="overview-card-description">Syntax-highlighted code display</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(15)">
+            <h3 class="overview-card-title">Panels</h3>
+            <p class="overview-card-description">Collapsible container components</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(16)">
+            <h3 class="overview-card-title">Annotations</h3>
+            <p class="overview-card-description">Callout boxes for technical notes</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(17)">
+            <h3 class="overview-card-title">Grid System</h3>
+            <p class="overview-card-description">Technical grid layouts with optional overlays</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(18)">
+            <h3 class="overview-card-title">Dividers</h3>
+            <p class="overview-card-description">Section separators with technical styling</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(19)">
+            <h3 class="overview-card-title">Measurements</h3>
+            <p class="overview-card-description">Technical measurement displays</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(20)">
+            <h3 class="overview-card-title">Tabs</h3>
+            <p class="overview-card-description">Tab navigation for content sections</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(21)">
+            <h3 class="overview-card-title">CSS Patterns</h3>
+            <p class="overview-card-description">Utility classes for technical styling</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(22)">
+            <h3 class="overview-card-title">Typography</h3>
+            <p class="overview-card-description">Font families and styling</p>
+          </div>
+          <div class="overview-card" onclick="showComponent(23)">
+            <h3 class="overview-card-title">Dark Mode</h3>
+            <p class="overview-card-description">All components adapt automatically</p>
+          </div>
         </div>
-        <li slot="nav-items"><a href="#section1">Section 01</a></li>
-        <li slot="nav-items"><a href="#section2">Section 02</a></li>
-        <li slot="nav-items"><a href="#section3">Section 03</a></li>
-        <li slot="nav-items">
-          <a href="#more">More</a>
-          <ul>
-            <li><a href="#sub1">Submenu 01</a></li>
-            <li><a href="#sub2">Submenu 02</a></li>
-          </ul>
-        </li>
+      `,
+      
+      'navigation-menu': `
+        <div class="content-header">
+          <h1 class="content-title">Navigation Menu</h1>
+          <p class="content-subtitle">Responsive navigation with mobile hamburger menu</p>
+        </div>
         
-        <li slot="mobile-nav-items"><a href="#section1">Section 01</a></li>
-        <li slot="mobile-nav-items"><a href="#section2">Section 02</a></li>
-        <li slot="mobile-nav-items"><a href="#section3">Section 03</a></li>
-        <li slot="mobile-nav-items">
-          <a href="#more">More</a>
-          <ul>
-            <li><a href="#sub1">Submenu 01</a></li>
-            <li><a href="#sub2">Submenu 02</a></li>
-          </ul>
-        </li>
-      </pilot-nav-menu>
-    </div>
-  </section>
-
-  <!-- Buttons Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Buttons</h2>
-    <p class="demo-subtitle">Interactive controls with industrial styling</p>
-    
-    <div class="demo-grid demo-grid-4">
-      <div class="component-showcase">
-        <pilot-button variant="primary" size="md">Primary</pilot-button>
-      </div>
-      <div class="component-showcase">
-        <pilot-button variant="secondary" size="md">Secondary</pilot-button>
-      </div>
-      <div class="component-showcase">
-        <pilot-button variant="outline" size="md">Outline</pilot-button>
-      </div>
-      <div class="component-showcase">
-        <pilot-button variant="ghost" size="md">Ghost</pilot-button>
-      </div>
-    </div>
-    
-    <div class="demo-grid demo-grid-3">
-      <div class="component-showcase">
-        <pilot-button variant="technical" size="lg">Technical Variant</pilot-button>
-      </div>
-      <div class="component-showcase">
-        <pilot-button variant="primary" size="sm" disabled>Disabled</pilot-button>
-      </div>
-      <div class="component-showcase">
-        <pilot-button variant="primary" size="md" loading>Loading</pilot-button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Cards Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Cards</h2>
-    <p class="demo-subtitle">Container components with technical frames</p>
-    
-    <div class="demo-grid demo-grid-3">
-      <pilot-card padding="lg" bordered="true">
-        <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">Standard Card</h3>
-        <p style="margin: 0; color: var(--color-text-secondary);">Basic card component with bordered styling and standard padding.</p>
-        <div slot="footer" style="display: flex; gap: var(--spacing-2);">
-          <pilot-button variant="outline" size="sm">Action</pilot-button>
-        </div>
-      </pilot-card>
-      
-      <pilot-card variant="technical" padding="lg">
-        <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">Technical Card</h3>
-        <p style="margin: 0; color: var(--color-text-secondary);">Card with corner bracket decorations for technical aesthetic.</p>
-        <pilot-badge variant="technical" size="sm" slot="footer">MODULE-01</pilot-badge>
-      </pilot-card>
-      
-      <pilot-card padding="md">
-        <p style="margin: 0; color: var(--color-text-secondary);">Minimal card without header or footer slots.</p>
-      </pilot-card>
-    </div>
-  </section>
-
-  <!-- Modal Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Modal</h2>
-    <p class="demo-subtitle">Dialog overlays with technical corner brackets</p>
-    
-    <div class="demo-grid demo-grid-3">
-      <div class="component-showcase">
-        <pilot-button variant="primary" onclick="document.getElementById('demoModal1').open()">
-          Open Basic Modal
-        </pilot-button>
-      </div>
-      <div class="component-showcase">
-        <pilot-button variant="technical" onclick="document.getElementById('demoModal2').open()">
-          Open Large Modal
-        </pilot-button>
-      </div>
-      <div class="component-showcase">
-        <pilot-button variant="outline" onclick="document.getElementById('demoModal3').open()">
-          Open Non-Dismissible
-        </pilot-button>
-      </div>
-    </div>
-    
-    <!-- Basic Modal -->
-    <pilot-modal id="demoModal1" title="Confirm Action" size="md">
-      <p style="margin: 0 0 var(--spacing-4) 0; color: var(--color-text-secondary);">
-        Are you sure you want to proceed with this action? This cannot be undone.
-      </p>
-      <pilot-annotation type="warning" style="margin-bottom: 0;">
-        Warning: This action will permanently delete the selected data.
-      </pilot-annotation>
-      <div slot="footer" style="display: flex; gap: var(--spacing-3); justify-content: flex-end;">
-        <pilot-button variant="ghost" size="sm" onclick="document.getElementById('demoModal1').close()">
-          Cancel
-        </pilot-button>
-        <pilot-button variant="primary" size="sm" onclick="document.getElementById('demoModal1').close()">
-          Confirm
-        </pilot-button>
-      </div>
-    </pilot-modal>
-    
-    <!-- Large Modal with Custom Header -->
-    <pilot-modal id="demoModal2" size="lg">
-      <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">
-        System Configuration
-      </h3>
-      <pilot-grid columns="2" gap="4">
-        <pilot-input label="System ID" value="SYS-001" technical></pilot-input>
-        <pilot-input label="Host" value="localhost" technical></pilot-input>
-        <pilot-input label="Port" value="8080" technical></pilot-input>
-        <pilot-input label="Protocol" value="https" technical></pilot-input>
-      </pilot-grid>
-      <pilot-divider variant="dashed" style="margin: var(--spacing-4) 0;"></pilot-divider>
-      <pilot-panel title="Advanced Settings" collapsible collapsed>
-        <pilot-input label="API Key" type="password" placeholder="Enter API key"></pilot-input>
-      </pilot-panel>
-      <div slot="footer" style="display: flex; gap: var(--spacing-3); justify-content: space-between;">
-        <pilot-button variant="ghost" size="sm" onclick="document.getElementById('demoModal2').close()">
-          Reset
-        </pilot-button>
-        <div style="display: flex; gap: var(--spacing-3);">
-          <pilot-button variant="outline" size="sm" onclick="document.getElementById('demoModal2').close()">
-            Cancel
-          </pilot-button>
-          <pilot-button variant="primary" size="sm" onclick="document.getElementById('demoModal2').close()">
-            Save Changes
-          </pilot-button>
-        </div>
-      </div>
-    </pilot-modal>
-    
-    <!-- Non-Dismissible Modal -->
-    <pilot-modal id="demoModal3" title="Processing" size="sm" dismissible="false">
-      <div style="text-align: center; padding: var(--spacing-4) 0;">
-        <pilot-status variant="info" pulse>Processing Request</pilot-status>
-        <p style="margin: var(--spacing-4) 0 0 0; color: var(--color-text-secondary); font-size: var(--font-size-sm);">
-          Please wait while the system processes your request...
-        </p>
-      </div>
-      <div slot="footer" style="display: flex; justify-content: center;">
-        <pilot-button variant="secondary" size="sm" onclick="document.getElementById('demoModal3').close()">
-          Cancel Operation
-        </pilot-button>
-      </div>
-    </pilot-modal>
-  </section>
-
-  <!-- Form Elements Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Form Elements</h2>
-    <p class="demo-subtitle">Inputs with machine-readable styling</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <div class="component-showcase">
-        <pilot-input 
-          label="System Identifier"
-          placeholder="Enter system ID"
-          hint="Format: SYS-XXX-NNN"
-        ></pilot-input>
-      </div>
-      
-      <div class="component-showcase">
-        <pilot-input 
-          label="Access Code"
-          type="password"
-          placeholder="••••••••"
-          technical
-        ></pilot-input>
-      </div>
-    </div>
-    
-    <div class="component-showcase" style="margin-top: var(--spacing-6);">
-      <pilot-input 
-        label="Configuration"
-        value="Invalid input"
-        error="System ID format is incorrect"
-      ></pilot-input>
-    </div>
-  </section>
-
-  <!-- Commodity Input Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Commodity Input</h2>
-    <p class="demo-subtitle">Financial input with currency symbol and decimal formatting</p>
-
-    <div class="demo-grid demo-grid-2">
-      <div class="component-showcase">
-        <pilot-commodity-input
-          label="USD Amount"
-          currency="USD"
-          value="1234.56"
-          hint="Enter amount in US Dollars"
-        ></pilot-commodity-input>
-      </div>
-
-      <div class="component-showcase">
-        <pilot-commodity-input
-          label="EUR Budget"
-          currency="EUR"
-          value="50000"
-          decimals="0"
-          hint="Enter budget in Euros (whole numbers only)"
-        ></pilot-commodity-input>
-      </div>
-    </div>
-
-    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
-      <div class="component-showcase">
-        <pilot-commodity-input
-          label="USD Transaction"
-          currency="USD"
-          value="-250.00"
-          allow-negative
-          hint="Negative USD values allowed for expenses"
-        ></pilot-commodity-input>
-      </div>
-
-      <div class="component-showcase">
-        <pilot-commodity-input
-          label="EUR Investment"
-          currency="EUR"
-          value="100000"
-          decimals="2"
-          min="1000"
-          max="1000000"
-          hint="Min: €1,000.00 - Max: €1,000,000.00"
-        ></pilot-commodity-input>
-      </div>
-    </div>
-
-    <div class="component-showcase" style="margin-top: var(--spacing-6);">
-      <pilot-commodity-input
-        label="Transaction Amount"
-        currency="USD"
-        value="invalid"
-        error="Please enter a valid amount"
-      ></pilot-commodity-input>
-    </div>
-  </section>
-
-  <!-- Toggle Component Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Toggle</h2>
-    <p class="demo-subtitle">Switch toggle for settings with industrial on/off styling</p>
-    
-    <div class="demo-grid demo-grid-4">
-      <div class="component-showcase">
-        <pilot-toggle></pilot-toggle>
-      </div>
-      <div class="component-showcase">
-        <pilot-toggle checked></pilot-toggle>
-      </div>
-      <div class="component-showcase">
-        <pilot-toggle disabled></pilot-toggle>
-      </div>
-      <div class="component-showcase">
-        <pilot-toggle checked disabled></pilot-toggle>
-      </div>
-    </div>
-    
-    <div class="demo-grid demo-grid-3" style="margin-top: var(--spacing-6);">
-      <div class="component-showcase">
-        <pilot-toggle labels="Enabled|Disabled"></pilot-toggle>
-      </div>
-      <div class="component-showcase">
-        <pilot-toggle labels="Active|Inactive" checked></pilot-toggle>
-      </div>
-      <div class="component-showcase">
-        <pilot-toggle labels="Yes|No"></pilot-toggle>
-      </div>
-    </div>
-    
-    <div class="component-showcase" style="margin-top: var(--spacing-6);">
-      <pilot-panel title="SYSTEM SETTINGS" collapsible>
-        <div style="display: flex; flex-direction: column; gap: var(--spacing-4);">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">AUTO-SAVE</span>
-            <pilot-toggle labels="ON|OFF" checked></pilot-toggle>
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Standard Navigation</h2>
+            <p class="section-description">Basic navigation with brand slot and nav items</p>
           </div>
-          <pilot-divider variant="dashed"></pilot-divider>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">DEBUG MODE</span>
-            <pilot-toggle labels="ON|OFF"></pilot-toggle>
+          <div class="component-showcase" style="padding: 0; overflow: hidden;">
+            <pilot-nav-menu>
+              <div slot="brand" style="font-family: var(--font-technical); font-weight: 600; letter-spacing: var(--letter-spacing-technical); text-transform: uppercase;">
+                PILOT NAV
+              </div>
+              <li slot="nav-items"><a href="#">Buttons</a></li>
+              <li slot="nav-items"><a href="#">Cards</a></li>
+              <li slot="nav-items"><a href="#">Inputs</a></li>
+              <li slot="nav-items">
+                <a href="#">Components</a>
+                <ul>
+                  <li><a href="#">Badges</a></li>
+                  <li><a href="#">Labels</a></li>
+                  <li><a href="#">Status</a></li>
+                </ul>
+              </li>
+              <li slot="nav-items"><a href="#">About</a></li>
+              
+              <li slot="mobile-nav-items"><a href="#">Buttons</a></li>
+              <li slot="mobile-nav-items"><a href="#">Cards</a></li>
+              <li slot="mobile-nav-items"><a href="#">Inputs</a></li>
+              <li slot="mobile-nav-items">
+                <a href="#">Components</a>
+                <ul>
+                  <li><a href="#">Badges</a></li>
+                  <li><a href="#">Labels</a></li>
+                  <li><a href="#">Status</a></li>
+                </ul>
+              </li>
+              <li slot="mobile-nav-items"><a href="#">About</a></li>
+            </pilot-nav-menu>
           </div>
-          <pilot-divider variant="dashed"></pilot-divider>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">NOTIFICATIONS</span>
-            <pilot-toggle labels="ON|OFF" checked></pilot-toggle>
+          <p style="margin-top: var(--spacing-4); font-size: var(--font-size-sm); color: var(--color-text-secondary);">
+            Resize your browser window to see the responsive behavior. On mobile (&lt; 768px), the navigation collapses into a hamburger menu.
+          </p>
+        </div>
+
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Technical Variant</h2>
+            <p class="section-description">Technical styling with enhanced borders</p>
+          </div>
+          <div class="component-showcase" style="padding: 0; overflow: hidden;">
+            <pilot-nav-menu variant="technical">
+              <div slot="brand" style="font-family: var(--font-mono); font-weight: 600; letter-spacing: var(--letter-spacing-technical); text-transform: uppercase;">
+                TECHNICAL_NAV
+              </div>
+              <li slot="nav-items"><a href="#">Section 01</a></li>
+              <li slot="nav-items"><a href="#">Section 02</a></li>
+              <li slot="nav-items"><a href="#">Section 03</a></li>
+              <li slot="nav-items">
+                <a href="#">More</a>
+                <ul>
+                  <li><a href="#">Submenu 01</a></li>
+                  <li><a href="#">Submenu 02</a></li>
+                </ul>
+              </li>
+              
+              <li slot="mobile-nav-items"><a href="#">Section 01</a></li>
+              <li slot="mobile-nav-items"><a href="#">Section 02</a></li>
+              <li slot="mobile-nav-items"><a href="#">Section 03</a></li>
+              <li slot="mobile-nav-items">
+                <a href="#">More</a>
+                <ul>
+                  <li><a href="#">Submenu 01</a></li>
+                  <li><a href="#">Submenu 02</a></li>
+                </ul>
+              </li>
+            </pilot-nav-menu>
           </div>
         </div>
-      </pilot-panel>
-    </div>
-  </section>
+      `,
+      
+      buttons: `
+        <div class="content-header">
+          <h1 class="content-title">Buttons</h1>
+          <p class="content-subtitle">Interactive controls with industrial styling</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Button Variants</h2>
+            <p class="section-description">Primary, secondary, outline, and ghost variants</p>
+          </div>
+          <div class="demo-grid demo-grid-4">
+            <div class="component-showcase">
+              <pilot-button variant="primary" size="md">Primary</pilot-button>
+            </div>
+            <div class="component-showcase">
+              <pilot-button variant="secondary" size="md">Secondary</pilot-button>
+            </div>
+            <div class="component-showcase">
+              <pilot-button variant="outline" size="md">Outline</pilot-button>
+            </div>
+            <div class="component-showcase">
+              <pilot-button variant="ghost" size="md">Ghost</pilot-button>
+            </div>
+          </div>
+        </div>
 
-  <!-- Select Component Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Select Components</h2>
-    <p class="demo-subtitle">Dropdown selection with technical bracket styling</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <div class="component-showcase">
-        <pilot-select 
-          label="System Type"
-          placeholder="Select system type"
-        >
-          <option value="production">Production</option>
-          <option value="staging">Staging</option>
-          <option value="development">Development</option>
-          <option value="testing">Testing</option>
-        </pilot-select>
-      </div>
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Button States</h2>
+            <p class="section-description">Technical, disabled, and loading states</p>
+          </div>
+          <div class="demo-grid demo-grid-3">
+            <div class="component-showcase">
+              <pilot-button variant="technical" size="lg">Technical Variant</pilot-button>
+            </div>
+            <div class="component-showcase">
+              <pilot-button variant="primary" size="sm" disabled>Disabled</pilot-button>
+            </div>
+            <div class="component-showcase">
+              <pilot-button variant="primary" size="md" loading>Loading</pilot-button>
+            </div>
+          </div>
+        </div>
+      `,
       
-      <div class="component-showcase">
-        <pilot-select 
-          label="Environment"
-          placeholder="Select environment"
-          searchable
-        >
-          <option value="us-east-1">US East 1</option>
-          <option value="us-west-1">US West 1</option>
-          <option value="eu-west-1">EU West 1</option>
-          <option value="ap-south-1">AP South 1</option>
-          <option value="ap-northeast-1">AP Northeast 1</option>
-        </pilot-select>
-      </div>
-    </div>
-    
-    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
-      <div class="component-showcase">
-        <pilot-select 
-          label="Services"
-          placeholder="Select services"
-          multiple
-          searchable
-        >
-          <optgroup label="Compute">
-            <option value="ec2">EC2 Instances</option>
-            <option value="lambda">Lambda Functions</option>
-            <option value="ecs">ECS Containers</option>
-          </optgroup>
-          <optgroup label="Storage">
-            <option value="s3">S3 Buckets</option>
-            <option value="rds">RDS Databases</option>
-            <option value="dynamodb">DynamoDB Tables</option>
-          </optgroup>
-          <optgroup label="Network">
-            <option value="vpc">VPC Networks</option>
-            <option value="elb">Load Balancers</option>
-          </optgroup>
-        </pilot-select>
-      </div>
-      
-      <div class="component-showcase">
-        <pilot-select 
-          label="Disabled State"
-          placeholder="Cannot select"
-          disabled
-        >
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-        </pilot-select>
-      </div>
-    </div>
-  </section>
-
-  <!-- Datepicker Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Datepicker</h2>
-    <p class="demo-subtitle">Date selection with grid-based calendar</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <div class="component-showcase">
-        <pilot-datepicker 
-          label="Deployment Date"
-          placeholder="Select date"
-        ></pilot-datepicker>
-      </div>
-      
-      <div class="component-showcase">
-        <pilot-datepicker 
-          label="Date Range"
-          placeholder="Select date range"
-          mode="range"
-        ></pilot-datepicker>
-      </div>
-    </div>
-    
-    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
-      <div class="component-showcase">
-        <pilot-datepicker 
-          label="Maintenance Window"
-          placeholder="Select maintenance date"
-          min="2026-01-01"
-          max="2026-12-31"
-        ></pilot-datepicker>
-      </div>
-      
-      <div class="component-showcase">
-        <pilot-datepicker 
-          label="Disabled State"
-          placeholder="Cannot select"
-          disabled
-        ></pilot-datepicker>
-      </div>
-    </div>
-  </section>
-
-  <!-- Search Component Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Search</h2>
-    <p class="demo-subtitle">Autocomplete search with keyboard navigation</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <div class="component-showcase">
-        <pilot-search 
-          id="search1"
-          placeholder="Search transactions..."
-          debounce="300"
-          min-length="2"
-        ></pilot-search>
-        <script>
-          // Demo suggestions for search1
-          const search1 = document.getElementById('search1');
-          const transactionData = [
-            { label: 'TRX-2024-001', value: 'TRX-2024-001', meta: '$1,250.00' },
-            { label: 'TRX-2024-002', value: 'TRX-2024-002', meta: '$3,400.00' },
-            { label: 'TRX-2024-003', value: 'TRX-2024-003', meta: '$890.50' },
-            { label: 'TRX-2024-004', value: 'TRX-2024-004', meta: '$12,000.00' },
-            { label: 'ACC-SAVINGS-001', value: 'ACC-SAVINGS-001', meta: 'Account' },
-            { label: 'ACC-CHECKING-001', value: 'ACC-CHECKING-001', meta: 'Account' },
-            { label: 'ACC-INVESTMENT-001', value: 'ACC-INVESTMENT-001', meta: 'Account' }
-          ];
-          
-          search1.addEventListener('search', (e) => {
-            const query = e.detail.query.toLowerCase();
-            search1.setLoading(true);
+      cards: `
+        <div class="content-header">
+          <h1 class="content-title">Cards</h1>
+          <p class="content-subtitle">Container components with technical frames</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Card Variants</h2>
+            <p class="section-description">Standard, technical, and minimal cards</p>
+          </div>
+          <div class="demo-grid demo-grid-3">
+            <pilot-card padding="lg" bordered="true">
+              <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">Standard Card</h3>
+              <p style="margin: 0; color: var(--color-text-secondary);">Basic card component with bordered styling and standard padding.</p>
+              <div slot="footer" style="display: flex; gap: var(--spacing-2);">
+                <pilot-button variant="outline" size="sm">Action</pilot-button>
+              </div>
+            </pilot-card>
             
-            // Simulate API delay
-            setTimeout(() => {
-              const filtered = transactionData.filter(item => 
-                item.label.toLowerCase().includes(query) ||
-                item.value.toLowerCase().includes(query)
-              );
-              search1.setSuggestions(filtered);
-              search1.setLoading(false);
-            }, 200);
-          });
-          
-          search1.addEventListener('select', (e) => {
-            console.log('Selected:', e.detail.suggestion);
-          });
-        </script>
-      </div>
-      
-      <div class="component-showcase">
-        <pilot-search 
-          id="search2"
-          placeholder="Search accounts..."
-          debounce="500"
-          min-length="3"
-        ></pilot-search>
-        <script>
-          // Demo suggestions for search2
-          const search2 = document.getElementById('search2');
-          const accountData = [
-            { label: 'Personal Checking', value: 'CHK-1234', meta: '$5,420.00' },
-            { label: 'Personal Savings', value: 'SAV-5678', meta: '$15,000.00' },
-            { label: 'Business Account', value: 'BUS-9012', meta: '$45,200.00' },
-            { label: 'Investment Portfolio', value: 'INV-3456', meta: '$125,000.00' },
-            { label: 'Credit Card', value: 'CC-7890', meta: '-$1,200.00' }
-          ];
-          
-          search2.addEventListener('search', (e) => {
-            const query = e.detail.query.toLowerCase();
-            search2.setLoading(true);
+            <pilot-card variant="technical" padding="lg">
+              <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">Technical Card</h3>
+              <p style="margin: 0; color: var(--color-text-secondary);">Card with corner bracket decorations for technical aesthetic.</p>
+              <pilot-badge variant="technical" size="sm" slot="footer">MODULE-01</pilot-badge>
+            </pilot-card>
             
-            setTimeout(() => {
-              const filtered = accountData.filter(item => 
-                item.label.toLowerCase().includes(query)
-              );
-              search2.setSuggestions(filtered);
-              search2.setLoading(false);
-            }, 300);
-          });
-        </script>
-      </div>
-    </div>
-    
-    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
-      <div class="component-showcase">
-        <pilot-search 
-          placeholder="Disabled search"
-          disabled
-        ></pilot-search>
-      </div>
+            <pilot-card padding="md">
+              <p style="margin: 0; color: var(--color-text-secondary);">Minimal card without header or footer slots.</p>
+            </pilot-card>
+          </div>
+        </div>
+      `,
       
-      <div class="component-showcase">
-        <pilot-search 
-          id="search3"
-          placeholder="Loading state demo..."
-        ></pilot-search>
+      modal: `
+        <div class="content-header">
+          <h1 class="content-title">Modal</h1>
+          <p class="content-subtitle">Dialog overlays with technical corner brackets</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Modal Examples</h2>
+            <p class="section-description">Click buttons to open different modal variants</p>
+          </div>
+          <div class="demo-grid demo-grid-3">
+            <div class="component-showcase">
+              <pilot-button variant="primary" onclick="document.getElementById('demoModal1').open()">
+                Open Basic Modal
+              </pilot-button>
+            </div>
+            <div class="component-showcase">
+              <pilot-button variant="technical" onclick="document.getElementById('demoModal2').open()">
+                Open Large Modal
+              </pilot-button>
+            </div>
+            <div class="component-showcase">
+              <pilot-button variant="outline" onclick="document.getElementById('demoModal3').open()">
+                Open Non-Dismissible
+              </pilot-button>
+            </div>
+          </div>
+          
+          <!-- Basic Modal -->
+          <pilot-modal id="demoModal1" title="Confirm Action" size="md">
+            <p style="margin: 0 0 var(--spacing-4) 0; color: var(--color-text-secondary);">
+              Are you sure you want to proceed with this action? This cannot be undone.
+            </p>
+            <pilot-annotation type="warning" style="margin-bottom: 0;">
+              Warning: This action will permanently delete the selected data.
+            </pilot-annotation>
+            <div slot="footer" style="display: flex; gap: var(--spacing-3); justify-content: flex-end;">
+              <pilot-button variant="ghost" size="sm" onclick="document.getElementById('demoModal1').close()">
+                Cancel
+              </pilot-button>
+              <pilot-button variant="primary" size="sm" onclick="document.getElementById('demoModal1').close()">
+                Confirm
+              </pilot-button>
+            </div>
+          </pilot-modal>
+          
+          <!-- Large Modal -->
+          <pilot-modal id="demoModal2" size="lg">
+            <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical);">
+              System Configuration
+            </h3>
+            <pilot-grid columns="2" gap="4">
+              <pilot-input label="System ID" value="SYS-001" technical></pilot-input>
+              <pilot-input label="Host" value="localhost" technical></pilot-input>
+              <pilot-input label="Port" value="8080" technical></pilot-input>
+              <pilot-input label="Protocol" value="https" technical></pilot-input>
+            </pilot-grid>
+            <pilot-divider variant="dashed" style="margin: var(--spacing-4) 0;"></pilot-divider>
+            <pilot-panel title="Advanced Settings" collapsible collapsed>
+              <pilot-input label="API Key" type="password" placeholder="Enter API key"></pilot-input>
+            </pilot-panel>
+            <div slot="footer" style="display: flex; gap: var(--spacing-3); justify-content: space-between;">
+              <pilot-button variant="ghost" size="sm" onclick="document.getElementById('demoModal2').close()">
+                Reset
+              </pilot-button>
+              <div style="display: flex; gap: var(--spacing-3);">
+                <pilot-button variant="outline" size="sm" onclick="document.getElementById('demoModal2').close()">
+                  Cancel
+                </pilot-button>
+                <pilot-button variant="primary" size="sm" onclick="document.getElementById('demoModal2').close()">
+                  Save Changes
+                </pilot-button>
+              </div>
+            </div>
+          </pilot-modal>
+          
+          <!-- Non-Dismissible Modal -->
+          <pilot-modal id="demoModal3" title="Processing" size="sm" dismissible="false">
+            <div style="text-align: center; padding: var(--spacing-4) 0;">
+              <pilot-status variant="info" pulse>Processing Request</pilot-status>
+              <p style="margin: var(--spacing-4) 0 0 0; color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                Please wait while the system processes your request...
+              </p>
+            </div>
+            <div slot="footer" style="display: flex; justify-content: center;">
+              <pilot-button variant="secondary" size="sm" onclick="document.getElementById('demoModal3').close()">
+                Cancel Operation
+              </pilot-button>
+            </div>
+          </pilot-modal>
+        </div>
+      `,
+      
+      'form-elements': `
+        <div class="content-header">
+          <h1 class="content-title">Form Elements</h1>
+          <p class="content-subtitle">Inputs with machine-readable styling</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Input Examples</h2>
+            <p class="section-description">Standard, technical, and error states</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <pilot-input 
+                label="System Identifier"
+                placeholder="Enter system ID"
+                hint="Format: SYS-XXX-NNN"
+              ></pilot-input>
+            </div>
+            
+            <div class="component-showcase">
+              <pilot-input 
+                label="Access Code"
+                type="password"
+                placeholder="••••••••"
+                technical
+              ></pilot-input>
+            </div>
+          </div>
+          
+          <div class="component-showcase" style="margin-top: var(--spacing-6);">
+            <pilot-input 
+              label="Configuration"
+              value="Invalid input"
+              error="System ID format is incorrect"
+            ></pilot-input>
+          </div>
+        </div>
+      `,
+      
+      'commodity-input': `
+        <div class="content-header">
+          <h1 class="content-title">Commodity Input</h1>
+          <p class="content-subtitle">Financial input with currency symbol and decimal formatting</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Currency Inputs</h2>
+            <p class="section-description">USD and EUR with various configurations</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <pilot-commodity-input
+                label="USD Amount"
+                currency="USD"
+                value="1234.56"
+                hint="Enter amount in US Dollars"
+              ></pilot-commodity-input>
+            </div>
+
+            <div class="component-showcase">
+              <pilot-commodity-input
+                label="EUR Budget"
+                currency="EUR"
+                value="50000"
+                decimals="0"
+                hint="Enter budget in Euros (whole numbers only)"
+              ></pilot-commodity-input>
+            </div>
+          </div>
+
+          <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+            <div class="component-showcase">
+              <pilot-commodity-input
+                label="USD Transaction"
+                currency="USD"
+                value="-250.00"
+                allow-negative
+                hint="Negative USD values allowed for expenses"
+              ></pilot-commodity-input>
+            </div>
+
+            <div class="component-showcase">
+              <pilot-commodity-input
+                label="EUR Investment"
+                currency="EUR"
+                value="100000"
+                decimals="2"
+                min="1000"
+                max="1000000"
+                hint="Min: €1,000.00 - Max: €1,000,000.00"
+              ></pilot-commodity-input>
+            </div>
+          </div>
+
+          <div class="component-showcase" style="margin-top: var(--spacing-6);">
+            <pilot-commodity-input
+              label="Transaction Amount"
+              currency="USD"
+              value="invalid"
+              error="Please enter a valid amount"
+            ></pilot-commodity-input>
+          </div>
+        </div>
+      `,
+      
+      toggle: `
+        <div class="content-header">
+          <h1 class="content-title">Toggle</h1>
+          <p class="content-subtitle">Switch toggle for settings with industrial on/off styling</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Toggle States</h2>
+            <p class="section-description">Default, checked, disabled, and with labels</p>
+          </div>
+          <div class="demo-grid demo-grid-4">
+            <div class="component-showcase">
+              <pilot-toggle></pilot-toggle>
+            </div>
+            <div class="component-showcase">
+              <pilot-toggle checked></pilot-toggle>
+            </div>
+            <div class="component-showcase">
+              <pilot-toggle disabled></pilot-toggle>
+            </div>
+            <div class="component-showcase">
+              <pilot-toggle checked disabled></pilot-toggle>
+            </div>
+          </div>
+          
+          <div class="demo-grid demo-grid-3" style="margin-top: var(--spacing-6);">
+            <div class="component-showcase">
+              <pilot-toggle labels="Enabled|Disabled"></pilot-toggle>
+            </div>
+            <div class="component-showcase">
+              <pilot-toggle labels="Active|Inactive" checked></pilot-toggle>
+            </div>
+            <div class="component-showcase">
+              <pilot-toggle labels="Yes|No"></pilot-toggle>
+            </div>
+          </div>
+        </div>
+
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Settings Panel</h2>
+            <p class="section-description">Toggles in a system settings context</p>
+          </div>
+          <div class="component-showcase">
+            <pilot-panel title="SYSTEM SETTINGS" collapsible>
+              <div style="display: flex; flex-direction: column; gap: var(--spacing-4);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">AUTO-SAVE</span>
+                  <pilot-toggle labels="ON|OFF" checked></pilot-toggle>
+                </div>
+                <pilot-divider variant="dashed"></pilot-divider>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">DEBUG MODE</span>
+                  <pilot-toggle labels="ON|OFF"></pilot-toggle>
+                </div>
+                <pilot-divider variant="dashed"></pilot-divider>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">NOTIFICATIONS</span>
+                  <pilot-toggle labels="ON|OFF" checked></pilot-toggle>
+                </div>
+              </div>
+            </pilot-panel>
+          </div>
+        </div>
+      `,
+      
+      select: `
+        <div class="content-header">
+          <h1 class="content-title">Select Components</h1>
+          <p class="content-subtitle">Dropdown selection with technical bracket styling</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Basic Select</h2>
+            <p class="section-description">Standard and searchable dropdowns</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <pilot-select 
+                label="System Type"
+                placeholder="Select system type"
+              >
+                <option value="production">Production</option>
+                <option value="staging">Staging</option>
+                <option value="development">Development</option>
+                <option value="testing">Testing</option>
+              </pilot-select>
+            </div>
+            
+            <div class="component-showcase">
+              <pilot-select 
+                label="Environment"
+                placeholder="Select environment"
+                searchable
+              >
+                <option value="us-east-1">US East 1</option>
+                <option value="us-west-1">US West 1</option>
+                <option value="eu-west-1">EU West 1</option>
+                <option value="ap-south-1">AP South 1</option>
+                <option value="ap-northeast-1">AP Northeast 1</option>
+              </pilot-select>
+            </div>
+          </div>
+        </div>
+
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Advanced Select</h2>
+            <p class="section-description">Multiple selection and disabled state</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <pilot-select 
+                label="Services"
+                placeholder="Select services"
+                multiple
+                searchable
+              >
+                <optgroup label="Compute">
+                  <option value="ec2">EC2 Instances</option>
+                  <option value="lambda">Lambda Functions</option>
+                  <option value="ecs">ECS Containers</option>
+                </optgroup>
+                <optgroup label="Storage">
+                  <option value="s3">S3 Buckets</option>
+                  <option value="rds">RDS Databases</option>
+                  <option value="dynamodb">DynamoDB Tables</option>
+                </optgroup>
+                <optgroup label="Network">
+                  <option value="vpc">VPC Networks</option>
+                  <option value="elb">Load Balancers</option>
+                </optgroup>
+              </pilot-select>
+            </div>
+            
+            <div class="component-showcase">
+              <pilot-select 
+                label="Disabled State"
+                placeholder="Cannot select"
+                disabled
+              >
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+              </pilot-select>
+            </div>
+          </div>
+        </div>
+      `,
+      
+      datepicker: `
+        <div class="content-header">
+          <h1 class="content-title">Datepicker</h1>
+          <p class="content-subtitle">Date selection with grid-based calendar</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Datepicker Modes</h2>
+            <p class="section-description">Single date and date range selection</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <pilot-datepicker 
+                label="Deployment Date"
+                placeholder="Select date"
+              ></pilot-datepicker>
+            </div>
+            
+            <div class="component-showcase">
+              <pilot-datepicker 
+                label="Date Range"
+                placeholder="Select date range"
+                mode="range"
+              ></pilot-datepicker>
+            </div>
+          </div>
+          
+          <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+            <div class="component-showcase">
+              <pilot-datepicker 
+                label="Maintenance Window"
+                placeholder="Select maintenance date"
+                min="2026-01-01"
+                max="2026-12-31"
+              ></pilot-datepicker>
+            </div>
+            
+            <div class="component-showcase">
+              <pilot-datepicker 
+                label="Disabled State"
+                placeholder="Cannot select"
+                disabled
+              ></pilot-datepicker>
+            </div>
+          </div>
+        </div>
+      `,
+      
+      search: `
+        <div class="content-header">
+          <h1 class="content-title">Search</h1>
+          <p class="content-subtitle">Autocomplete search with keyboard navigation</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Search Examples</h2>
+            <p class="section-description">Interactive search with suggestions</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <pilot-search 
+                id="search1"
+                placeholder="Search transactions..."
+                debounce="300"
+                min-length="2"
+              ></pilot-search>
+            </div>
+            
+            <div class="component-showcase">
+              <pilot-search 
+                id="search2"
+                placeholder="Search accounts..."
+                debounce="500"
+                min-length="3"
+              ></pilot-search>
+            </div>
+          </div>
+          
+          <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+            <div class="component-showcase">
+              <pilot-search 
+                placeholder="Disabled search"
+                disabled
+              ></pilot-search>
+            </div>
+            
+            <div class="component-showcase">
+              <pilot-search 
+                id="search3"
+                placeholder="Loading state demo..."
+              ></pilot-search>
+            </div>
+          </div>
+        </div>
+        
         <script>
-          const search3 = document.getElementById('search3');
-          search3.addEventListener('search', (e) => {
-            search3.setLoading(true);
-            // Simulate long loading
-            setTimeout(() => {
-              search3.setSuggestions([
-                { label: 'Result 1', value: 'res1' },
-                { label: 'Result 2', value: 'res2' }
-              ]);
-              search3.setLoading(false);
-            }, 1500);
-          });
+          (function() {
+            // Demo suggestions for search1
+            const search1 = document.getElementById('search1');
+            if (search1) {
+              const transactionData = [
+                { label: 'TRX-2024-001', value: 'TRX-2024-001', meta: '$1,250.00' },
+                { label: 'TRX-2024-002', value: 'TRX-2024-002', meta: '$3,400.00' },
+                { label: 'TRX-2024-003', value: 'TRX-2024-003', meta: '$890.50' },
+                { label: 'TRX-2024-004', value: 'TRX-2024-004', meta: '$12,000.00' },
+                { label: 'ACC-SAVINGS-001', value: 'ACC-SAVINGS-001', meta: 'Account' },
+                { label: 'ACC-CHECKING-001', value: 'ACC-CHECKING-001', meta: 'Account' },
+                { label: 'ACC-INVESTMENT-001', value: 'ACC-INVESTMENT-001', meta: 'Account' }
+              ];
+              
+              search1.addEventListener('search', (e) => {
+                const query = e.detail.query.toLowerCase();
+                search1.setLoading(true);
+                
+                setTimeout(() => {
+                  const filtered = transactionData.filter(item => 
+                    item.label.toLowerCase().includes(query) ||
+                    item.value.toLowerCase().includes(query)
+                  );
+                  search1.setSuggestions(filtered);
+                  search1.setLoading(false);
+                }, 200);
+              });
+            }
+            
+            // Demo suggestions for search2
+            const search2 = document.getElementById('search2');
+            if (search2) {
+              const accountData = [
+                { label: 'Personal Checking', value: 'CHK-1234', meta: '$5,420.00' },
+                { label: 'Personal Savings', value: 'SAV-5678', meta: '$15,000.00' },
+                { label: 'Business Account', value: 'BUS-9012', meta: '$45,200.00' },
+                { label: 'Investment Portfolio', value: 'INV-3456', meta: '$125,000.00' },
+                { label: 'Credit Card', value: 'CC-7890', meta: '-$1,200.00' }
+              ];
+              
+              search2.addEventListener('search', (e) => {
+                const query = e.detail.query.toLowerCase();
+                search2.setLoading(true);
+                
+                setTimeout(() => {
+                  const filtered = accountData.filter(item => 
+                    item.label.toLowerCase().includes(query)
+                  );
+                  search2.setSuggestions(filtered);
+                  search2.setLoading(false);
+                }, 300);
+              });
+            }
+            
+            // Demo for search3
+            const search3 = document.getElementById('search3');
+            if (search3) {
+              search3.addEventListener('search', (e) => {
+                search3.setLoading(true);
+                setTimeout(() => {
+                  search3.setSuggestions([
+                    { label: 'Result 1', value: 'res1' },
+                    { label: 'Result 2', value: 'res2' }
+                  ]);
+                  search3.setLoading(false);
+                }, 1500);
+              });
+            }
+          })();
         </script>
-      </div>
-    </div>
-  </section>
-
-  <!-- Badges & Labels Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Badges & Labels</h2>
-    <p class="demo-subtitle">Status indicators and technical labels</p>
-    
-    <div class="demo-grid demo-grid-4">
-      <div class="component-showcase" style="display: flex; flex-wrap: wrap; gap: var(--spacing-2); align-items: center;">
-        <pilot-badge variant="primary" size="md">Primary</pilot-badge>
-        <pilot-badge variant="success" size="md">Success</pilot-badge>
-        <pilot-badge variant="warning" size="md">Warning</pilot-badge>
-        <pilot-badge variant="error" size="md">Error</pilot-badge>
-      </div>
+      `,
       
-      <div class="component-showcase" style="display: flex; flex-wrap: wrap; gap: var(--spacing-2); align-items: center;">
-        <pilot-badge variant="technical" size="sm">&lt;CODE&gt;</pilot-badge>
-        <pilot-badge variant="outline" size="sm">Outline</pilot-badge>
-      </div>
+      'badges-labels': `
+        <div class="content-header">
+          <h1 class="content-title">Badges & Labels</h1>
+          <p class="content-subtitle">Status indicators and technical labels</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Badges</h2>
+            <p class="section-description">Semantic and technical badge variants</p>
+          </div>
+          <div class="demo-grid demo-grid-4">
+            <div class="component-showcase" style="display: flex; flex-wrap: wrap; gap: var(--spacing-2); align-items: center;">
+              <pilot-badge variant="primary" size="md">Primary</pilot-badge>
+              <pilot-badge variant="success" size="md">Success</pilot-badge>
+              <pilot-badge variant="warning" size="md">Warning</pilot-badge>
+              <pilot-badge variant="error" size="md">Error</pilot-badge>
+            </div>
+            
+            <div class="component-showcase" style="display: flex; flex-wrap: wrap; gap: var(--spacing-2); align-items: center;">
+              <pilot-badge variant="technical" size="sm">&lt;CODE&gt;</pilot-badge>
+              <pilot-badge variant="outline" size="sm">Outline</pilot-badge>
+            </div>
+            
+            <div class="component-showcase" style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+              <pilot-label variant="default" size="md">Default Label</pilot-label>
+              <pilot-label variant="technical" size="md">Technical Label</pilot-label>
+              <pilot-label variant="code" size="md">Code Label</pilot-label>
+            </div>
+            
+            <div class="component-showcase" style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+              <pilot-label variant="industrial" size="md">Industrial</pilot-label>
+              <pilot-label variant="technical" size="sm" prefix="ID:">SYS-001</pilot-label>
+              <pilot-label variant="technical" size="sm" suffix="ms">240</pilot-label>
+            </div>
+          </div>
+        </div>
+      `,
       
-      <div class="component-showcase" style="display: flex; flex-direction: column; gap: var(--spacing-2);">
-        <pilot-label variant="default" size="md">Default Label</pilot-label>
-        <pilot-label variant="technical" size="md">Technical Label</pilot-label>
-        <pilot-label variant="code" size="md">Code Label</pilot-label>
-      </div>
+      'status-indicators': `
+        <div class="content-header">
+          <h1 class="content-title">Status Indicators</h1>
+          <p class="content-subtitle">System status with animated indicators</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Status Variants</h2>
+            <p class="section-description">Different status states with optional pulse animation</p>
+          </div>
+          <div class="demo-grid demo-grid-4">
+            <div class="component-showcase">
+              <pilot-status variant="success" pulse>Online</pilot-status>
+            </div>
+            <div class="component-showcase">
+              <pilot-status variant="warning">Warning</pilot-status>
+            </div>
+            <div class="component-showcase">
+              <pilot-status variant="error">Error</pilot-status>
+            </div>
+            <div class="component-showcase">
+              <pilot-status variant="neutral">Neutral</pilot-status>
+            </div>
+          </div>
+        </div>
+      `,
       
-      <div class="component-showcase" style="display: flex; flex-direction: column; gap: var(--spacing-2);">
-        <pilot-label variant="industrial" size="md">Industrial</pilot-label>
-        <pilot-label variant="technical" size="sm" prefix="ID:">SYS-001</pilot-label>
-        <pilot-label variant="technical" size="sm" suffix="ms">240</pilot-label>
-      </div>
-    </div>
-  </section>
-
-  <!-- Status Indicators Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Status Indicators</h2>
-    <p class="demo-subtitle">System status with animated indicators</p>
-    
-    <div class="demo-grid demo-grid-4">
-      <div class="component-showcase">
-        <pilot-status variant="success" pulse>Online</pilot-status>
-      </div>
-      <div class="component-showcase">
-        <pilot-status variant="warning">Warning</pilot-status>
-      </div>
-      <div class="component-showcase">
-        <pilot-status variant="error">Error</pilot-status>
-      </div>
-      <div class="component-showcase">
-        <pilot-status variant="neutral">Neutral</pilot-status>
-      </div>
-    </div>
-  </section>
-
-  <!-- Terminal Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Terminal</h2>
-    <p class="demo-subtitle">Console and command-line interfaces</p>
-    
-    <pilot-terminal show-header title="bash" show-prompt style="margin-bottom: var(--spacing-6);">
-      npm install industrial-design-system
-    </pilot-terminal>
-    
-    <pilot-terminal show-header title="system-log">
-      <div style="color: var(--color-amber-400);">[INFO] System initialized</div>
-      <div style="color: var(--color-green-400);">[SUCCESS] Modules loaded: 12/12</div>
-      <div style="color: var(--color-gray-400);">[DEBUG] Connection established</div>
-      <div style="color: var(--color-gray-200);">$ _</div>
-    </pilot-terminal>
-  </section>
-
-  <!-- Code Block Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Code Blocks</h2>
-    <p class="demo-subtitle">Syntax-highlighted code display</p>
-    
-    <pilot-code-block 
-      language="javascript" 
-      filename="config.js" 
-      show-line-numbers
-      style="margin-bottom: var(--spacing-6);"
-    >
+      terminal: `
+        <div class="content-header">
+          <h1 class="content-title">Terminal</h1>
+          <p class="content-subtitle">Console and command-line interfaces</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Terminal Examples</h2>
+            <p class="section-description">Command line and log displays</p>
+          </div>
+          <pilot-terminal show-header title="bash" show-prompt style="margin-bottom: var(--spacing-6);">
+            npm install industrial-design-system
+          </pilot-terminal>
+          
+          <pilot-terminal show-header title="system-log">
+            <div style="color: var(--color-amber-400);">[INFO] System initialized</div>
+            <div style="color: var(--color-green-400);">[SUCCESS] Modules loaded: 12/12</div>
+            <div style="color: var(--color-gray-400);">[DEBUG] Connection established</div>
+            <div style="color: var(--color-gray-200);">$ _</div>
+          </pilot-terminal>
+        </div>
+      `,
+      
+      'code-blocks': `
+        <div class="content-header">
+          <h1 class="content-title">Code Blocks</h1>
+          <p class="content-subtitle">Syntax-highlighted code display</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Code Examples</h2>
+            <p class="section-description">JavaScript and shell script display</p>
+          </div>
+          <pilot-code-block 
+            language="javascript" 
+            filename="config.js" 
+            show-line-numbers
+            style="margin-bottom: var(--spacing-6);"
+          >
 const system = {
   id: 'SYS-001',
   name: 'Industrial Design System',
@@ -786,277 +1247,422 @@ const system = {
 };
 
 function initialize(config) {
-  console.log(`Initializing ${config.name}...`);
+  console.log(\`Initializing \${config.name}...\`);
   return system;
 }
-    </pilot-code-block>
-    
-    <pilot-code-block language="bash" filename="install.sh">
+          </pilot-code-block>
+          
+          <pilot-code-block language="bash" filename="install.sh">
 #!/bin/bash
 echo "Installing Pilot Design System..."
 npm install
 npm run build
 echo "Installation complete"
-    </pilot-code-block>
-  </section>
-
-  <!-- Panels Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Panels</h2>
-    <p class="demo-subtitle">Collapsible container components</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <pilot-panel title="SYSTEM CONFIGURATION" collapsible>
-        <pilot-grid columns="2" gap="4">
-          <pilot-input label="Host" value="localhost" technical></pilot-input>
-          <pilot-input label="Port" value="8080" technical></pilot-input>
-        </pilot-grid>
-        <pilot-divider variant="dashed" style="margin: var(--spacing-4) 0;"></pilot-divider>
-        <pilot-button variant="technical" size="sm">Save Configuration ›</pilot-button>
-      </pilot-panel>
-      
-      <pilot-panel title="MODULE STATUS" collapsible collapsed>
-        <pilot-status variant="success" pulse>Core Module: Active</pilot-status>
-        <pilot-status variant="success">UI Module: Active</pilot-status>
-        <pilot-status variant="warning">API Module: Maintenance</pilot-status>
-      </pilot-panel>
-    </div>
-  </section>
-
-  <!-- Annotations Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Annotations</h2>
-    <p class="demo-subtitle">Callout boxes for technical notes</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <pilot-annotation type="note">
-        This is a standard note annotation for general information and clarifications.
-      </pilot-annotation>
-      
-      <pilot-annotation type="technical">
-        Technical specifications require precise formatting and validation.
-      </pilot-annotation>
-      
-      <pilot-annotation type="warning">
-        Warning: Modifying these settings may affect system stability.
-      </pilot-annotation>
-      
-      <pilot-annotation type="important">
-        Important: Backup your data before proceeding with system updates.
-      </pilot-annotation>
-    </div>
-  </section>
-
-  <!-- Grid System Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Grid System</h2>
-    <p class="demo-subtitle">Technical grid layouts with optional overlays</p>
-    
-    <pilot-grid columns="4" gap="4" show-grid style="padding: var(--spacing-6); background: var(--color-background-technical); border: 1px solid var(--color-border-secondary);">
-      <pilot-card padding="sm">Grid Item 1</pilot-card>
-      <pilot-card padding="sm">Grid Item 2</pilot-card>
-      <pilot-card padding="sm">Grid Item 3</pilot-card>
-      <pilot-card padding="sm">Grid Item 4</pilot-card>
-      <pilot-card padding="sm">Grid Item 5</pilot-card>
-      <pilot-card padding="sm">Grid Item 6</pilot-card>
-      <pilot-card padding="sm">Grid Item 7</pilot-card>
-      <pilot-card padding="sm">Grid Item 8</pilot-card>
-    </pilot-grid>
-  </section>
-
-  <!-- Dividers Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Dividers</h2>
-    <p class="demo-subtitle">Section separators with technical styling</p>
-    
-    <div class="component-showcase">
-      <p style="margin-bottom: var(--spacing-4);">Standard divider:</p>
-      <pilot-divider></pilot-divider>
-      
-      <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Dashed divider:</p>
-      <pilot-divider variant="dashed"></pilot-divider>
-      
-      <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Technical divider with label:</p>
-      <pilot-divider variant="technical" label="SECTION BREAK"></pilot-divider>
-      
-      <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Vertical divider:</p>
-      <div style="display: flex; gap: var(--spacing-4); align-items: center; height: 60px;">
-        <span>Left content</span>
-        <pilot-divider orientation="vertical" variant="technical"></pilot-divider>
-        <span>Right content</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Measurements Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Measurements</h2>
-    <p class="demo-subtitle">Technical measurement displays</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <div class="component-showcase">
-        <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Horizontal:</p>
-        <pilot-measurement value="240" unit="px"></pilot-measurement>
-        <pilot-measurement value="100" unit="%" style="margin-top: var(--spacing-4);"></pilot-measurement>
-      </div>
-      
-      <div class="component-showcase" style="display: flex; gap: var(--spacing-8); align-items: center; height: 120px;">
-        <p style="font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Vertical:</p>
-        <pilot-measurement orientation="vertical" value="480" unit="px"></pilot-measurement>
-      </div>
-    </div>
-  </section>
-
-  <!-- Tabs Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">Tabs</h2>
-    <p class="demo-subtitle">Tab navigation for content sections</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <div class="component-showcase">
-        <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Default Horizontal:</p>
-        <pilot-tabs>
-          <pilot-tab label="Overview">Account overview content with balance and recent activity.</pilot-tab>
-          <pilot-tab label="Transactions">Transaction history and detailed records.</pilot-tab>
-          <pilot-tab label="Settings">Account settings and preferences.</pilot-tab>
-        </pilot-tabs>
-      </div>
-      
-      <div class="component-showcase">
-        <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Technical Variant:</p>
-        <pilot-tabs variant="technical">
-          <pilot-tab label="Q1" icon="📊">First quarter financial data and analysis.</pilot-tab>
-          <pilot-tab label="Q2" icon="📈">Second quarter performance metrics.</pilot-tab>
-          <pilot-tab label="Q3" icon="📉">Third quarter projections and trends.</pilot-tab>
-        </pilot-tabs>
-      </div>
-    </div>
-    
-    <div class="component-showcase" style="margin-top: var(--spacing-6);">
-      <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Vertical Orientation:</p>
-      <pilot-tabs orientation="vertical" style="height: 200px;">
-        <pilot-tab label="System">System configuration and monitoring.</pilot-tab>
-        <pilot-tab label="Network">Network settings and connectivity.</pilot-tab>
-        <pilot-tab label="Security" disabled>Security settings (restricted).</pilot-tab>
-        <pilot-tab label="Logs">System logs and audit trail.</pilot-tab>
-      </pilot-tabs>
-    </div>
-  </section>
-
-  <!-- CSS Patterns Section -->
-  <section class="demo-section">
-    <h2 class="demo-title">CSS Patterns</h2>
-    <p class="demo-subtitle">Utility classes for technical styling</p>
-    
-    <div class="demo-grid demo-grid-2">
-      <div class="component-showcase">
-        <p class="pilot-label" style="margin-bottom: var(--spacing-4);">Technical Label</p>
-        <p class="pilot-label-boxed" style="margin-bottom: var(--spacing-4);">Boxed Label</p>
-        <p class="pilot-label-code">Code Label</p>
-      </div>
-      
-      <div class="component-showcase">
-        <div class="pilot-border" style="padding: var(--spacing-4); margin-bottom: var(--spacing-4);">
-          Technical Border
+          </pilot-code-block>
         </div>
-        <div class="pilot-border-corners" style="padding: var(--spacing-4); margin-bottom: var(--spacing-4);">
-          Border with Corners
-        </div>
-        <div class="pilot-frame">
-          Full Technical Frame
-        </div>
-      </div>
-    </div>
-    
-    <div class="component-showcase" style="margin-top: var(--spacing-6);">
-      <div class="pilot-module" data-id="MOD-01" style="margin-bottom: var(--spacing-4);">
-        <div class="pilot-module-header">Module Header</div>
-        <p>Module content with technical styling and ID label.</p>
-      </div>
+      `,
       
-      <div class="pilot-grid-bg" style="padding: var(--spacing-6); height: 100px; display: flex; align-items: center; justify-content: center;">
-        <span class="pilot-text">Grid Background Pattern</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Dark Mode Section -->
-  <section class="demo-section dark-mode-section" data-theme="dark">
-    <h2 class="demo-title" style="color: var(--color-text-primary);">Dark Mode</h2>
-    <p class="demo-subtitle" style="color: var(--color-text-secondary);">All components adapt automatically</p>
-    
-    <div class="demo-grid demo-grid-3">
-      <pilot-button variant="primary" size="md">Primary Button</pilot-button>
-      <pilot-button variant="technical" size="md">Technical Button</pilot-button>
-      <pilot-button variant="outline" size="md">Outline Button</pilot-button>
-    </div>
-    
-    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
-      <pilot-card variant="technical" padding="lg">
-        <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical); color: var(--color-text-primary);">Dark Mode Card</h3>
-        <p style="margin: 0; color: var(--color-text-secondary);">Card component automatically adapts to dark theme.</p>
-      </pilot-card>
+      panels: `
+        <div class="content-header">
+          <h1 class="content-title">Panels</h1>
+          <p class="content-subtitle">Collapsible container components</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Panel Examples</h2>
+            <p class="section-description">Collapsible panels with various content</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <pilot-panel title="SYSTEM CONFIGURATION" collapsible>
+              <pilot-grid columns="2" gap="4">
+                <pilot-input label="Host" value="localhost" technical></pilot-input>
+                <pilot-input label="Port" value="8080" technical></pilot-input>
+              </pilot-grid>
+              <pilot-divider variant="dashed" style="margin: var(--spacing-4) 0;"></pilot-divider>
+              <pilot-button variant="technical" size="sm">Save Configuration ›</pilot-button>
+            </pilot-panel>
+            
+            <pilot-panel title="MODULE STATUS" collapsible collapsed>
+              <pilot-status variant="success" pulse>Core Module: Active</pilot-status>
+              <pilot-status variant="success">UI Module: Active</pilot-status>
+              <pilot-status variant="warning">API Module: Maintenance</pilot-status>
+            </pilot-panel>
+          </div>
+        </div>
+      `,
       
-      <pilot-terminal show-header title="console" show-prompt>
-        systemctl status design-system
-      </pilot-terminal>
-    </div>
-    
-    <div style="margin-top: var(--spacing-6);">
-      <pilot-status variant="success" pulse>System Online</pilot-status>
-      <pilot-badge variant="technical" size="md" style="margin-left: var(--spacing-4);">DARK-MODE</pilot-badge>
-    </div>
-  </section>
+      annotations: `
+        <div class="content-header">
+          <h1 class="content-title">Annotations</h1>
+          <p class="content-subtitle">Callout boxes for technical notes</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Annotation Types</h2>
+            <p class="section-description">Note, technical, warning, and important annotations</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <pilot-annotation type="note">
+              This is a standard note annotation for general information and clarifications.
+            </pilot-annotation>
+            
+            <pilot-annotation type="technical">
+              Technical specifications require precise formatting and validation.
+            </pilot-annotation>
+            
+            <pilot-annotation type="warning">
+              Warning: Modifying these settings may affect system stability.
+            </pilot-annotation>
+            
+            <pilot-annotation type="important">
+              Important: Backup your data before proceeding with system updates.
+            </pilot-annotation>
+          </div>
+        </div>
+      `,
+      
+      'grid-system': `
+        <div class="content-header">
+          <h1 class="content-title">Grid System</h1>
+          <p class="content-subtitle">Technical grid layouts with optional overlays</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Grid Example</h2>
+            <p class="section-description">4-column grid with grid overlay visible</p>
+          </div>
+          <pilot-grid columns="4" gap="4" show-grid style="padding: var(--spacing-6); background: var(--color-background-technical); border: 1px solid var(--color-border-secondary);">
+            <pilot-card padding="sm">Grid Item 1</pilot-card>
+            <pilot-card padding="sm">Grid Item 2</pilot-card>
+            <pilot-card padding="sm">Grid Item 3</pilot-card>
+            <pilot-card padding="sm">Grid Item 4</pilot-card>
+            <pilot-card padding="sm">Grid Item 5</pilot-card>
+            <pilot-card padding="sm">Grid Item 6</pilot-card>
+            <pilot-card padding="sm">Grid Item 7</pilot-card>
+            <pilot-card padding="sm">Grid Item 8</pilot-card>
+          </pilot-grid>
+        </div>
+      `,
+      
+      dividers: `
+        <div class="content-header">
+          <h1 class="content-title">Dividers</h1>
+          <p class="content-subtitle">Section separators with technical styling</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Divider Variants</h2>
+            <p class="section-description">Standard, dashed, technical, and vertical dividers</p>
+          </div>
+          <div class="component-showcase">
+            <p style="margin-bottom: var(--spacing-4);">Standard divider:</p>
+            <pilot-divider></pilot-divider>
+            
+            <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Dashed divider:</p>
+            <pilot-divider variant="dashed"></pilot-divider>
+            
+            <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Technical divider with label:</p>
+            <pilot-divider variant="technical" label="SECTION BREAK"></pilot-divider>
+            
+            <p style="margin: var(--spacing-6) 0 var(--spacing-4);">Vertical divider:</p>
+            <div style="display: flex; gap: var(--spacing-4); align-items: center; height: 60px;">
+              <span>Left content</span>
+              <pilot-divider orientation="vertical" variant="technical"></pilot-divider>
+              <span>Right content</span>
+            </div>
+          </div>
+        </div>
+      `,
+      
+      measurements: `
+        <div class="content-header">
+          <h1 class="content-title">Measurements</h1>
+          <p class="content-subtitle">Technical measurement displays</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Measurement Displays</h2>
+            <p class="section-description">Horizontal and vertical measurements</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Horizontal:</p>
+              <pilot-measurement value="240" unit="px"></pilot-measurement>
+              <pilot-measurement value="100" unit="%" style="margin-top: var(--spacing-4);"></pilot-measurement>
+            </div>
+            
+            <div class="component-showcase" style="display: flex; gap: var(--spacing-8); align-items: center; height: 120px;">
+              <p style="font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Vertical:</p>
+              <pilot-measurement orientation="vertical" value="480" unit="px"></pilot-measurement>
+            </div>
+          </div>
+        </div>
+      `,
+      
+      tabs: `
+        <div class="content-header">
+          <h1 class="content-title">Tabs</h1>
+          <p class="content-subtitle">Tab navigation for content sections</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Horizontal Tabs</h2>
+            <p class="section-description">Default and technical variants</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Default:</p>
+              <pilot-tabs>
+                <pilot-tab label="Overview">Account overview content with balance and recent activity.</pilot-tab>
+                <pilot-tab label="Transactions">Transaction history and detailed records.</pilot-tab>
+                <pilot-tab label="Settings">Account settings and preferences.</pilot-tab>
+              </pilot-tabs>
+            </div>
+            
+            <div class="component-showcase">
+              <p style="margin-bottom: var(--spacing-4); font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">Technical Variant:</p>
+              <pilot-tabs variant="technical">
+                <pilot-tab label="Q1" icon="📊">First quarter financial data and analysis.</pilot-tab>
+                <pilot-tab label="Q2" icon="📈">Second quarter performance metrics.</pilot-tab>
+                <pilot-tab label="Q3" icon="📉">Third quarter projections and trends.</pilot-tab>
+              </pilot-tabs>
+            </div>
+          </div>
+        </div>
 
-  <!-- Typography Showcase -->
-  <section class="demo-section">
-    <h2 class="demo-title">Typography</h2>
-    <p class="demo-subtitle">Font families and styling</p>
-    
-    <div class="component-showcase">
-      <p style="font-family: var(--font-display); font-size: var(--font-size-2xl); margin-bottom: var(--spacing-4);">
-        Space Grotesk - Display Font
-      </p>
-      <p style="font-family: var(--font-body); font-size: var(--font-size-lg); margin-bottom: var(--spacing-4);">
-        IBM Plex Sans - Body text font for general content
-      </p>
-      <p style="font-family: var(--font-mono); font-size: var(--font-size-base); margin-bottom: var(--spacing-4);">
-        IBM Plex Mono - Monospace font for code: const x = 42;
-      </p>
-      <p style="font-family: var(--font-technical); font-size: var(--font-size-sm); letter-spacing: var(--letter-spacing-technical); text-transform: uppercase; margin-bottom: var(--spacing-4);">
-        JetBrains Mono - Technical labels and system text
-      </p>
-      <p style="font-family: var(--font-industrial); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase;">
-        Chakra Petch - Industrial headings
-      </p>
-    </div>
-  </section>
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Vertical Tabs</h2>
+            <p class="section-description">Sidebar-style navigation with disabled state</p>
+          </div>
+          <div class="component-showcase">
+            <pilot-tabs orientation="vertical" style="height: 200px;">
+              <pilot-tab label="System">System configuration and monitoring.</pilot-tab>
+              <pilot-tab label="Network">Network settings and connectivity.</pilot-tab>
+              <pilot-tab label="Security" disabled>Security settings (restricted).</pilot-tab>
+              <pilot-tab label="Logs">System logs and audit trail.</pilot-tab>
+            </pilot-tabs>
+          </div>
+        </div>
+      `,
+      
+      'css-patterns': `
+        <div class="content-header">
+          <h1 class="content-title">CSS Patterns</h1>
+          <p class="content-subtitle">Utility classes for technical styling</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Label Patterns</h2>
+            <p class="section-description">Technical, boxed, and code label styles</p>
+          </div>
+          <div class="demo-grid demo-grid-2">
+            <div class="component-showcase">
+              <p class="pilot-label" style="margin-bottom: var(--spacing-4);">Technical Label</p>
+              <p class="pilot-label-boxed" style="margin-bottom: var(--spacing-4);">Boxed Label</p>
+              <p class="pilot-label-code">Code Label</p>
+            </div>
+            
+            <div class="component-showcase">
+              <div class="pilot-border" style="padding: var(--spacing-4); margin-bottom: var(--spacing-4);">
+                Technical Border
+              </div>
+              <div class="pilot-border-corners" style="padding: var(--spacing-4); margin-bottom: var(--spacing-4);">
+                Border with Corners
+              </div>
+              <div class="pilot-frame">
+                Full Technical Frame
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <!-- Footer -->
-  <footer style="margin-top: var(--spacing-16); padding-top: var(--spacing-8); border-top: var(--border-width-technical) solid var(--color-border-technical);">
-    <pilot-grid columns="3" gap="6">
-      <div>
-        <pilot-label variant="industrial" size="sm">Industrial Technical DS</pilot-label>
-        <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          Version 1.0.0
-        </p>
-      </div>
-      <div>
-        <pilot-label variant="technical" size="sm">Components</pilot-label>
-        <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          18 Web Components
-        </p>
-      </div>
-      <div>
-        <pilot-label variant="technical" size="sm">License</pilot-label>
-        <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          MIT License
-        </p>
-      </div>
-    </pilot-grid>
-    
-    <pilot-divider variant="technical" label="END OF DOCUMENT" style="margin-top: var(--spacing-8);"></pilot-divider>
-  </footer>
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Module & Grid Patterns</h2>
+            <p class="section-description">Module containers and grid backgrounds</p>
+          </div>
+          <div class="component-showcase">
+            <div class="pilot-module" data-id="MOD-01" style="margin-bottom: var(--spacing-4);">
+              <div class="pilot-module-header">Module Header</div>
+              <p>Module content with technical styling and ID label.</p>
+            </div>
+            
+            <div class="pilot-grid-bg" style="padding: var(--spacing-6); height: 100px; display: flex; align-items: center; justify-content: center;">
+              <span class="pilot-text">Grid Background Pattern</span>
+            </div>
+          </div>
+        </div>
+      `,
+      
+      typography: `
+        <div class="content-header">
+          <h1 class="content-title">Typography</h1>
+          <p class="content-subtitle">Font families and styling</p>
+        </div>
+        
+        <div class="component-section">
+          <div class="section-header">
+            <h2 class="section-title">Font Families</h2>
+            <p class="section-description">All available font families in the design system</p>
+          </div>
+          <div class="component-showcase">
+            <p style="font-family: var(--font-display); font-size: var(--font-size-2xl); margin-bottom: var(--spacing-4);">
+              Space Grotesk - Display Font
+            </p>
+            <p style="font-family: var(--font-body); font-size: var(--font-size-lg); margin-bottom: var(--spacing-4);">
+              IBM Plex Sans - Body text font for general content
+            </p>
+            <p style="font-family: var(--font-mono); font-size: var(--font-size-base); margin-bottom: var(--spacing-4);">
+              IBM Plex Mono - Monospace font for code: const x = 42;
+            </p>
+            <p style="font-family: var(--font-technical); font-size: var(--font-size-sm); letter-spacing: var(--letter-spacing-technical); text-transform: uppercase; margin-bottom: var(--spacing-4);">
+              JetBrains Mono - Technical labels and system text
+            </p>
+            <p style="font-family: var(--font-industrial); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase;">
+              Chakra Petch - Industrial headings
+            </p>
+          </div>
+        </div>
+      `,
+      
+      'dark-mode': `
+        <div class="content-header">
+          <h1 class="content-title">Dark Mode</h1>
+          <p class="content-subtitle">All components adapt automatically</p>
+        </div>
+        
+        <div class="component-section dark-mode-section" data-theme="dark">
+          <div class="section-header">
+            <h2 class="section-title" style="color: var(--color-text-primary);">Dark Mode Components</h2>
+            <p class="section-description" style="color: var(--color-text-secondary);">Components automatically adapt to dark theme</p>
+          </div>
+          <div class="demo-grid demo-grid-3">
+            <pilot-button variant="primary" size="md">Primary Button</pilot-button>
+            <pilot-button variant="technical" size="md">Technical Button</pilot-button>
+            <pilot-button variant="outline" size="md">Outline Button</pilot-button>
+          </div>
+          
+          <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+            <pilot-card variant="technical" padding="lg">
+              <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical); color: var(--color-text-primary);">Dark Mode Card</h3>
+              <p style="margin: 0; color: var(--color-text-secondary);">Card component automatically adapts to dark theme.</p>
+            </pilot-card>
+            
+            <pilot-terminal show-header title="console" show-prompt>
+              systemctl status design-system
+            </pilot-terminal>
+          </div>
+          
+          <div style="margin-top: var(--spacing-6);">
+            <pilot-status variant="success" pulse>System Online</pilot-status>
+            <pilot-badge variant="technical" size="md" style="margin-left: var(--spacing-4);">DARK-MODE</pilot-badge>
+          </div>
+        </div>
+      `
+    };
 
+    // Navigation mapping
+    const navMap = [
+      'overview',
+      'navigation-menu',
+      'buttons',
+      'cards',
+      'modal',
+      'form-elements',
+      'commodity-input',
+      'toggle',
+      'select',
+      'datepicker',
+      'search',
+      'badges-labels',
+      'status-indicators',
+      'terminal',
+      'code-blocks',
+      'panels',
+      'annotations',
+      'grid-system',
+      'dividers',
+      'measurements',
+      'tabs',
+      'css-patterns',
+      'typography',
+      'dark-mode'
+    ];
+
+    let currentTab = 0;
+
+    function showComponent(index) {
+      const navTabs = document.getElementById('nav-tabs');
+      if (navTabs) {
+        navTabs.setAttribute('active-tab', index);
+      }
+    }
+
+    function renderContent(index) {
+      const mainContent = document.getElementById('main-content');
+      const contentKey = navMap[index];
+      
+      if (mainContent && componentContent[contentKey]) {
+        mainContent.innerHTML = componentContent[contentKey];
+        
+        // Re-execute scripts in the content
+        const scripts = mainContent.querySelectorAll('script');
+        scripts.forEach(script => {
+          const newScript = document.createElement('script');
+          if (script.src) {
+            newScript.src = script.src;
+          } else {
+            newScript.textContent = script.textContent;
+          }
+          script.parentNode.replaceChild(newScript, script);
+        });
+      }
+      
+      currentTab = index;
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      const navTabs = document.getElementById('nav-tabs');
+      
+      // Initial render
+      renderContent(0);
+      
+      // Listen for tab changes
+      if (navTabs) {
+        navTabs.addEventListener('tab-change', (e) => {
+          renderContent(e.detail.index);
+          
+          // Close mobile sidebar after selection
+          if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.remove('open');
+          }
+          
+          // Scroll to top
+          window.scrollTo(0, 0);
+        });
+      }
+      
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          document.getElementById('sidebar').classList.remove('open');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
