@@ -12,7 +12,7 @@ import { baseStyles } from './shared.js';
 
 export class PilotInput extends HTMLElement {
   static get observedAttributes() {
-    return ['type', 'placeholder', 'disabled', 'readonly', 'value', 'label', 'hint', 'error'];
+    return ['type', 'placeholder', 'disabled', 'readonly', 'value', 'label', 'hint', 'error', 'technical'];
   }
 
   constructor() {
