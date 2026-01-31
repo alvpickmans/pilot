@@ -297,12 +297,20 @@ export class PilotModal extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'open') {
       const isOpen = newValue !== null;
-      if (isOpen) {
-        this._setupModal();
-      } else {
-        this._teardownModal();
-      }
+      // Use microtask to ensure DOM is ready (needed for happy-dom test compatibility)
+      // In real browsers this isn't needed, but happy-dom has timing issues with
+      // document.body.style assignments when called synchronously from attributeChangedCallback
+      queueMicrotask(() => {
+        if (isOpen) {
+          this._setupModal();
+        } else {
+          this._teardownModal();
+        }
+      });
+      // Don't re-render on open attribute change - CSS handles visual state
+      return;
     }
+    // Only re-render for other attribute changes (size, dismissible, title)
     this.render();
   }
 
