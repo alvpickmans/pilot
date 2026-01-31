@@ -595,12 +595,66 @@ export class PilotDatepicker extends HTMLElement {
 
   _previousMonth() {
     this._currentDate.setMonth(this._currentDate.getMonth() - 1);
-    this.render();
+    this._updateCalendarGrid();
   }
 
   _nextMonth() {
     this._currentDate.setMonth(this._currentDate.getMonth() + 1);
-    this.render();
+    this._updateCalendarGrid();
+  }
+
+  _updateCalendarGrid() {
+    const mode = this.getAttribute('mode') || 'single';
+    const today = new Date();
+    const days = this._getCalendarDays();
+
+    // Update month/year label
+    const monthYearLabel = this.shadowRoot.querySelector('.month-year');
+    if (monthYearLabel) {
+      monthYearLabel.textContent = this._getMonthYearLabel();
+    }
+
+    // Update calendar grid
+    const calendarGrid = this.shadowRoot.querySelector('.calendar-grid');
+    if (calendarGrid) {
+      calendarGrid.innerHTML = days.map(day => {
+        const dateStr = this._formatDate(day.date);
+        const isDisabled = this._isDateDisabled(day.date);
+        const isSelected = this._isSameDay(day.date, this._selectedStartDate) ||
+                          this._isSameDay(day.date, this._selectedEndDate);
+        const isRangeStart = this._isSameDay(day.date, this._selectedStartDate) && mode === 'range';
+        const isRangeEnd = this._isSameDay(day.date, this._selectedEndDate) && mode === 'range';
+        const isInRange = this._isDateInRange(day.date);
+        const isToday = this._isSameDay(day.date, today);
+
+        return `
+          <button
+            class="day ${day.isOtherMonth ? 'other-month' : ''} ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''} ${isInRange ? 'in-range' : ''} ${isToday ? 'today' : ''}"
+            data-date="${dateStr}"
+            ${isDisabled ? 'disabled' : ''}
+            aria-label="${day.date.toDateString()}${isSelected ? ' (selected)' : ''}${isToday ? ' (today)' : ''}"
+            tabindex="${day.isOtherMonth ? '-1' : '0'}"
+          >
+            ${day.date.getDate()}
+          </button>
+        `;
+      }).join('');
+    }
+
+    // Re-attach event listeners to new day buttons
+    this._attachDayEventListeners();
+  }
+
+  _attachDayEventListeners() {
+    const days = this.shadowRoot.querySelectorAll('.day:not(.disabled)');
+    days.forEach(day => {
+      day.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const dateStr = day.getAttribute('data-date');
+        const date = new Date(dateStr);
+        this._selectDate(date);
+      });
+    });
   }
 
   _selectDate(date) {
@@ -748,22 +802,12 @@ export class PilotDatepicker extends HTMLElement {
 
   _attachEventListeners() {
     const trigger = this.shadowRoot.querySelector('.trigger');
-    const days = this.shadowRoot.querySelectorAll('.day:not(.disabled)');
     const navButtons = this.shadowRoot.querySelectorAll('[data-nav]');
     const clearBtn = this.shadowRoot.querySelector('[data-action="clear"]');
 
     if (trigger && !this.hasAttribute('disabled')) {
       trigger.addEventListener('click', () => this._toggleCalendar());
     }
-
-    days.forEach(day => {
-      day.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const dateStr = day.getAttribute('data-date');
-        const date = new Date(dateStr);
-        this._selectDate(date);
-      });
-    });
 
     navButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -783,6 +827,9 @@ export class PilotDatepicker extends HTMLElement {
         this._clearSelection();
       });
     }
+
+    // Attach day button listeners
+    this._attachDayEventListeners();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
