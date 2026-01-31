@@ -3,14 +3,14 @@
 ## Installation
 
 ```html
-<link rel="stylesheet" href="design-system/variables.css">
-<link rel="stylesheet" href="design-system/patterns.css">
+<link rel="stylesheet" href="styles/variables.css">
+<link rel="stylesheet" href="styles/patterns.css">
 
 <!-- Modular components (recommended) -->
-<script type="module" src="design-system/components/index.js"></script>
+<script type="module" src="components/index.js"></script>
 
 <!-- Or monolithic bundle (legacy) -->
-<script type="module" src="design-system/components.js"></script>
+<script type="module" src="components.js"></script>
 ```
 
 ## Web Components

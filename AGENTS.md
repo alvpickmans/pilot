@@ -7,15 +7,21 @@ Pure HTML/CSS/JS design system with Web Components. No build tools or dependenci
 
 ## Project Structure
 ```
-design-system/
-├── tokens.json          # Design tokens (W3C format)
-├── variables.css        # CSS custom properties
-├── patterns.css         # CSS utility classes
-├── components.js        # Web Components (ES modules)
-├── demo.html           # Interactive demo
-├── README.md           # Documentation
-├── QUICK-REFERENCE.md  # Quick lookup
-└── DESIGN-PHILOSOPHY.md # Design rationale
+├── components/          # Web Components (ES modules)
+│   ├── index.js        # Main entry point
+│   ├── shared.js       # Shared utilities
+│   └── *.js            # Individual components
+├── styles/             # CSS files
+│   ├── variables.css   # CSS custom properties
+│   └── patterns.css    # CSS utility classes
+├── tests/              # Test files
+├── docs/               # Documentation
+│   ├── DESIGN-PHILOSOPHY.md
+│   └── QUICK-REFERENCE.md
+├── tokens.json         # Design tokens (W3C format)
+├── components.js       # Web Components bundle
+├── demo.html          # Interactive demo
+└── README.md          # Documentation
 ```
 
 ## Commands
@@ -23,9 +29,9 @@ design-system/
 ### Development
 ```bash
 # Open demo in browser
-open design-system/demo.html
+open demo.html
 # Serve locally (any static server)
-npx serve design-system/
+npx serve .
 python3 -m http.server 8000
 ```
 

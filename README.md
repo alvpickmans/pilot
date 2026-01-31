@@ -19,16 +19,16 @@ This design system captures the precision and clarity of technical documentation
 
 ```bash
 # Include the CSS variables
-<link rel="stylesheet" href="design-system/variables.css">
+<link rel="stylesheet" href="styles/variables.css">
 
 # Include the pilot patterns
-<link rel="stylesheet" href="design-system/patterns.css">
+<link rel="stylesheet" href="styles/patterns.css">
 
 # Include the web components (modular)
-<script type="module" src="design-system/components/index.js"></script>
+<script type="module" src="components/index.js"></script>
 
 # Or use the monolithic bundle (legacy)
-<script type="module" src="design-system/components.js"></script>
+<script type="module" src="components.js"></script>
 ```
 
 ### Basic Usage
@@ -691,12 +691,30 @@ Enable dark mode by adding `data-theme="dark"` to any element:
 ## File Structure
 
 ```
-design-system/
-├── tokens.json           # Design tokens (JSON format)
-├── variables.css         # CSS custom properties
-├── patterns.css          # CSS utility patterns
-├── components.js         # Web Components (ES modules)
-└── README.md            # This documentation
+├── components/           # Web Components
+├── styles/              # CSS files
+│   ├── variables.css    # CSS custom properties
+│   └── patterns.css     # CSS utility patterns
+├── tests/               # Test files
+├── docs/                # Documentation
+│   ├── DESIGN-PHILOSOPHY.md
+│   └── QUICK-REFERENCE.md
+├── tokens.json          # Design tokens (JSON format)
+├── components.js        # Web Components bundle
+├── demo.html           # Interactive demo
+└── README.md           # This documentation
+```
+├── components/           # Web Components (ES modules)
+├── tests/               # Test files
+├── docs/                # Documentation
+│   ├── DESIGN-PHILOSOPHY.md
+│   └── QUICK-REFERENCE.md
+├── tokens.json          # Design tokens (JSON format)
+├── variables.css        # CSS custom properties
+├── patterns.css         # CSS utility patterns
+├── components.js        # Web Components bundle
+├── demo.html           # Interactive demo
+└── README.md           # This documentation
 ```
 
 ## Contributing
