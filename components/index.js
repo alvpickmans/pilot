@@ -34,3 +34,4 @@ export { PilotModal } from './modal.js';
 export { PilotSelect } from './select.js';
 export { PilotDatepicker } from './datepicker.js';
 export { PilotSearch } from './search.js';
+export { PilotToggle } from './toggle.js';

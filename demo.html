@@ -280,6 +280,60 @@
     </div>
   </section>
 
+  <!-- Toggle Component Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Toggle</h2>
+    <p class="demo-subtitle">Switch toggle for settings with industrial on/off styling</p>
+    
+    <div class="demo-grid demo-grid-4">
+      <div class="component-showcase">
+        <pilot-toggle></pilot-toggle>
+      </div>
+      <div class="component-showcase">
+        <pilot-toggle checked></pilot-toggle>
+      </div>
+      <div class="component-showcase">
+        <pilot-toggle disabled></pilot-toggle>
+      </div>
+      <div class="component-showcase">
+        <pilot-toggle checked disabled></pilot-toggle>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-3" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-toggle labels="Enabled|Disabled"></pilot-toggle>
+      </div>
+      <div class="component-showcase">
+        <pilot-toggle labels="Active|Inactive" checked></pilot-toggle>
+      </div>
+      <div class="component-showcase">
+        <pilot-toggle labels="Yes|No"></pilot-toggle>
+      </div>
+    </div>
+    
+    <div class="component-showcase" style="margin-top: var(--spacing-6);">
+      <pilot-panel title="SYSTEM SETTINGS" collapsible>
+        <div style="display: flex; flex-direction: column; gap: var(--spacing-4);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">AUTO-SAVE</span>
+            <pilot-toggle labels="ON|OFF" checked></pilot-toggle>
+          </div>
+          <pilot-divider variant="dashed"></pilot-divider>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">DEBUG MODE</span>
+            <pilot-toggle labels="ON|OFF"></pilot-toggle>
+          </div>
+          <pilot-divider variant="dashed"></pilot-divider>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-family: var(--font-technical); font-size: var(--font-size-sm);">NOTIFICATIONS</span>
+            <pilot-toggle labels="ON|OFF" checked></pilot-toggle>
+          </div>
+        </div>
+      </pilot-panel>
+    </div>
+  </section>
+
   <!-- Select Component Section -->
   <section class="demo-section">
     <h2 class="demo-title">Select Components</h2>
@@ -817,7 +871,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          16 Web Components
+          17 Web Components
         </p>
       </div>
       <div>
