@@ -280,6 +280,66 @@
     </div>
   </section>
 
+  <!-- Currency Input Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Currency Input</h2>
+    <p class="demo-subtitle">Financial input with currency symbol and decimal formatting</p>
+
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <pilot-currency-input
+          label="Amount"
+          currency="USD"
+          value="1234.56"
+          hint="Enter financial amount"
+        ></pilot-currency-input>
+      </div>
+
+      <div class="component-showcase">
+        <pilot-currency-input
+          label="Budget"
+          currency="EUR"
+          value="50000"
+          decimals="0"
+          hint="Whole numbers only"
+        ></pilot-currency-input>
+      </div>
+    </div>
+
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-currency-input
+          label="Expense"
+          currency="GBP"
+          value="-250.00"
+          allow-negative
+          hint="Negative values allowed for expenses"
+        ></pilot-currency-input>
+      </div>
+
+      <div class="component-showcase">
+        <pilot-currency-input
+          label="Investment"
+          currency="JPY"
+          value="1000000"
+          decimals="0"
+          min="1000"
+          max="10000000"
+          hint="Min: ¥1,000 - Max: ¥10,000,000"
+        ></pilot-currency-input>
+      </div>
+    </div>
+
+    <div class="component-showcase" style="margin-top: var(--spacing-6);">
+      <pilot-currency-input
+        label="Transaction Amount"
+        currency="USD"
+        value="invalid"
+        error="Please enter a valid amount"
+      ></pilot-currency-input>
+    </div>
+  </section>
+
   <!-- Toggle Component Section -->
   <section class="demo-section">
     <h2 class="demo-title">Toggle</h2>
