@@ -5,7 +5,7 @@
  * Supports single/multi-select, search/filter, keyboard navigation, and grouped options.
  */
 
-import { baseStyles } from './shared.js';
+import { baseStyles, formFieldStyles, dropdownBaseStyles } from './shared.js';
 import { DropdownBase } from './dropdown-base.js';
 
 // ============================================
@@ -32,34 +32,21 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
   get styles() {
     return `
       ${baseStyles}
-      
+      ${formFieldStyles}
+      ${dropdownBaseStyles}
+
       :host {
         display: block;
         width: 100%;
         position: relative;
       }
-      
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-2, 0.5rem);
-      }
-      
-      label {
-        font-family: var(--font-technical, 'JetBrains Mono', monospace);
-        font-size: var(--font-size-xs, 0.75rem);
-        font-weight: var(--font-weight-medium, 500);
-        letter-spacing: var(--letter-spacing-technical, 0.05em);
-        text-transform: uppercase;
-        color: var(--color-text-secondary, #525252);
-      }
-      
+
       .select-wrapper {
         position: relative;
         display: flex;
         align-items: center;
       }
-      
+
       /* Technical bracket styling */
       .select-wrapper.technical::before,
       .select-wrapper.technical::after {
@@ -68,96 +55,20 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
         color: var(--color-border-primary, #b3b3b3);
         padding: 0 var(--spacing-2, 0.5rem);
       }
-      
+
       .select-wrapper.technical::before {
         content: '[';
       }
-      
+
       .select-wrapper.technical::after {
         content: ']';
       }
-      
-      .trigger {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
-        font-size: var(--font-size-sm, 0.875rem);
-        padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
-        border: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
-        border-radius: var(--border-radius-none, 0);
-        background: var(--color-background-primary, #ffffff);
-        color: var(--color-text-primary, #1a1a1a);
-        cursor: pointer;
-        transition: all var(--duration-fast, 150ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
-        min-height: 44px;
-      }
-      
+
       .select-wrapper.technical .trigger {
         border-left: none;
         border-right: none;
       }
-      
-      .trigger:hover {
-        border-color: var(--color-brand-primary, #1a1a1a);
-      }
-      
-      .trigger:focus {
-        outline: none;
-        border-color: var(--color-brand-primary, #1a1a1a);
-        box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
-      }
-      
-      .trigger[disabled] {
-        background: var(--color-background-secondary, #f5f5f5);
-        color: var(--color-text-disabled, #8a8a8a);
-        cursor: not-allowed;
-        opacity: 0.6;
-      }
-      
-      .trigger-text {
-        flex: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      
-      .trigger-text.placeholder {
-        color: var(--color-text-tertiary, #6b6b6b);
-      }
-      
-      .trigger-icon {
-        margin-left: var(--spacing-2, 0.5rem);
-        transition: transform var(--duration-fast, 150ms);
-        font-size: var(--font-size-xs, 0.75rem);
-      }
-      
-      .trigger-icon.open {
-        transform: rotate(180deg);
-      }
-      
-      .dropdown {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        margin-top: var(--spacing-1, 0.25rem);
-        background: var(--color-background-primary, #ffffff);
-        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
-        border-radius: var(--border-radius-none, 0);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 1000;
-        max-height: 300px;
-        overflow: hidden;
-        display: none;
-        flex-direction: column;
-      }
-      
-      .dropdown.open {
-        display: flex;
-      }
-      
+
       .search-container {
         padding: var(--spacing-2, 0.5rem);
         border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);

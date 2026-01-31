@@ -5,7 +5,7 @@
  * Features debounced search, keyboard navigation, and highlighted matches.
  */
 
-import { baseStyles } from './shared.js';
+import { baseStyles, formFieldStyles, inputBaseStyles, technicalBracketStyles, dropdownBaseStyles } from './shared.js';
 import { DropdownBase } from './dropdown-base.js';
 
 // ============================================
@@ -32,76 +32,22 @@ export class PilotSearch extends DropdownBase(HTMLElement) {
   get styles() {
     return `
       ${baseStyles}
-      
+      ${formFieldStyles}
+      ${inputBaseStyles}
+      ${technicalBracketStyles}
+      ${dropdownBaseStyles}
+
       :host {
         display: block;
         width: 100%;
         position: relative;
       }
-      
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-2, 0.5rem);
-      }
-      
-      .input-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-      }
-      
-      /* Technical bracket styling */
-      .input-wrapper.technical::before,
-      .input-wrapper.technical::after {
-        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
-        font-size: var(--font-size-lg, 1.125rem);
-        color: var(--color-border-primary, #b3b3b3);
-        padding: 0 var(--spacing-2, 0.5rem);
-      }
-      
-      .input-wrapper.technical::before {
-        content: '[';
-      }
-      
-      .input-wrapper.technical::after {
-        content: ']';
-      }
-      
+
       input {
         flex: 1;
-        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
-        font-size: var(--font-size-sm, 0.875rem);
-        padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
-        border: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
-        border-radius: var(--border-radius-none, 0);
-        background: var(--color-background-primary, #ffffff);
-        color: var(--color-text-primary, #1a1a1a);
-        transition: all var(--duration-fast, 150ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
         min-height: 44px;
       }
-      
-      .input-wrapper.technical input {
-        border-left: none;
-        border-right: none;
-      }
-      
-      input::placeholder {
-        color: var(--color-text-tertiary, #6b6b6b);
-      }
-      
-      input:focus {
-        outline: none;
-        border-color: var(--color-brand-primary, #1a1a1a);
-        box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
-      }
-      
-      input[disabled] {
-        background: var(--color-background-secondary, #f5f5f5);
-        color: var(--color-text-disabled, #8a8a8a);
-        cursor: not-allowed;
-      }
-      
+
       .input-actions {
         position: absolute;
         right: var(--spacing-3, 0.75rem);
@@ -109,7 +55,7 @@ export class PilotSearch extends DropdownBase(HTMLElement) {
         align-items: center;
         gap: var(--spacing-2, 0.5rem);
       }
-      
+
       .clear-button {
         background: none;
         border: none;
@@ -121,15 +67,15 @@ export class PilotSearch extends DropdownBase(HTMLElement) {
         line-height: 1;
         display: none;
       }
-      
+
       .clear-button.visible {
         display: block;
       }
-      
+
       .clear-button:hover {
         color: var(--color-text-primary, #1a1a1a);
       }
-      
+
       .loading-indicator {
         display: none;
         width: 16px;
@@ -139,36 +85,15 @@ export class PilotSearch extends DropdownBase(HTMLElement) {
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
       }
-      
+
       .loading-indicator.visible {
         display: block;
       }
-      
+
       @keyframes spin {
         to { transform: rotate(360deg); }
       }
-      
-      .dropdown {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        margin-top: var(--spacing-1, 0.25rem);
-        background: var(--color-background-primary, #ffffff);
-        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
-        border-radius: var(--border-radius-none, 0);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 1000;
-        max-height: 300px;
-        overflow: hidden;
-        display: none;
-        flex-direction: column;
-      }
-      
-      .dropdown.open {
-        display: flex;
-      }
-      
+
       .suggestions-container {
         flex: 1;
         overflow-y: auto;
