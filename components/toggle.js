@@ -68,8 +68,10 @@ export class PilotToggle extends HTMLElement {
         border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
         border-radius: var(--border-radius-none, 0);
         cursor: pointer;
-        transition: all var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+        transition: background-color 150ms var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1)),
+                    border-color 150ms var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
         overflow: hidden;
+        will-change: background-color, border-color;
       }
       
       /* Technical corner accents */
@@ -124,8 +126,9 @@ export class PilotToggle extends HTMLElement {
         height: 18px;
         background: var(--color-brand-primary, #1a1a1a);
         border-radius: var(--border-radius-none, 0);
-        transition: transform var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+        transition: transform 150ms var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        will-change: transform;
       }
       
       /* Technical accent on thumb */
@@ -197,12 +200,13 @@ export class PilotToggle extends HTMLElement {
     this._clickHandler = this._handleClick.bind(this);
     this._keydownHandler = this._handleKeydown.bind(this);
     
-    this.addEventListener('click', this._clickHandler);
+    // Use capture phase for faster response
+    this.addEventListener('click', this._clickHandler, true);
     this.addEventListener('keydown', this._keydownHandler);
   }
 
   _removeEventListeners() {
-    this.removeEventListener('click', this._clickHandler);
+    this.removeEventListener('click', this._clickHandler, true);
     this.removeEventListener('keydown', this._keydownHandler);
   }
 
@@ -244,20 +248,23 @@ export class PilotToggle extends HTMLElement {
   _toggle() {
     this._isChecked = !this._isChecked;
     
-    if (this._isChecked) {
-      this.setAttribute('checked', '');
-    } else {
-      this.removeAttribute('checked');
-    }
-    
-    // Update visual state directly without full re-render
+    // Update visual state immediately (before setAttribute to avoid lag)
     this._updateVisualState();
     
-    // Dispatch change event
+    // Dispatch change event immediately
     this.dispatchEvent(new CustomEvent('change', {
       detail: { checked: this._isChecked },
       bubbles: true
     }));
+    
+    // Update attribute asynchronously to avoid blocking the UI
+    requestAnimationFrame(() => {
+      if (this._isChecked) {
+        this.setAttribute('checked', '');
+      } else {
+        this.removeAttribute('checked');
+      }
+    });
   }
 
   _updateVisualState() {
