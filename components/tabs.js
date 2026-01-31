@@ -291,6 +291,9 @@ export class PilotTabs extends HTMLElement {
 
   _removeEventListeners() {
     this.removeEventListener('keydown', this._keydownHandler);
+    if (this._resizeHandler) {
+      window.removeEventListener('resize', this._resizeHandler);
+    }
   }
 
   _parseTabs() {
