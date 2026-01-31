@@ -91,8 +91,8 @@ export class PilotNavMenu extends HTMLElement {
           transition: transform 150ms;
         }
         
-        li[slot="nav-items"][data-expanded="true"] > a[data-has-children]::after,
-        li[slot="nav-items"][data-expanded="true"] > button[data-has-children]::after {
+        li[slot="nav-items"].expanded > a[data-has-children]::after,
+        li[slot="nav-items"].expanded > button[data-has-children]::after {
           transform: rotate(180deg);
         }
         
@@ -113,13 +113,13 @@ export class PilotNavMenu extends HTMLElement {
         }
         
         /* Show submenu when parent is expanded */
-        li[slot="nav-items"][data-expanded="true"] > ul,
-        li[slot="nav-items"] > ul[data-expanded="true"] {
+        li[slot="nav-items"].expanded > ul,
+        li[slot="nav-items"] > ul.expanded {
           display: block;
         }
-        
+
         /* Submenu visibility for nested items */
-        li[slot="nav-items"] li[data-expanded="true"] > ul {
+        li[slot="nav-items"] li.expanded > ul {
           display: block;
         }
         
@@ -187,8 +187,8 @@ export class PilotNavMenu extends HTMLElement {
           transition: transform 150ms;
         }
         
-        li[slot="mobile-nav-items"][data-expanded="true"] > a > .expand-icon,
-        li[slot="mobile-nav-items"][data-expanded="true"] > button > .expand-icon {
+        li[slot="mobile-nav-items"].expanded > a > .expand-icon,
+        li[slot="mobile-nav-items"].expanded > button > .expand-icon {
           transform: rotate(180deg);
         }
         
@@ -201,7 +201,7 @@ export class PilotNavMenu extends HTMLElement {
           background: #f5f5f5;
         }
         
-        li[slot="mobile-nav-items"][data-expanded="true"] > ul {
+        li[slot="mobile-nav-items"].expanded > ul {
           display: block;
         }
         
@@ -283,7 +283,7 @@ export class PilotNavMenu extends HTMLElement {
           background: #f5f5f5;
         }
         
-        .mobile-nav-item[data-expanded="true"] > .mobile-nav-submenu {
+        .mobile-nav-item.expanded > .mobile-nav-submenu {
           display: block;
         }
       `;
@@ -397,7 +397,7 @@ export class PilotNavMenu extends HTMLElement {
         transition: transform var(--duration-fast, 150ms);
       }
 
-      .nav-item[data-expanded="true"] > .nav-link[data-has-children]::after {
+      .nav-item.expanded > .nav-link[data-has-children]::after {
         transform: rotate(180deg);
       }
 
@@ -644,7 +644,7 @@ export class PilotNavMenu extends HTMLElement {
         background: var(--color-gray-100, #e5e5e5);
       }
 
-      .mobile-nav-item[data-expanded="true"] > .mobile-nav-submenu {
+      .mobile-nav-item.expanded > .mobile-nav-submenu {
         display: block;
       }
 
@@ -663,7 +663,7 @@ export class PilotNavMenu extends HTMLElement {
         transition: transform var(--duration-fast, 150ms);
       }
 
-      .mobile-nav-item[data-expanded="true"] > .mobile-nav-link .expand-icon {
+      .mobile-nav-item.expanded > .mobile-nav-link .expand-icon {
         transform: rotate(180deg);
       }
 
@@ -861,20 +861,20 @@ export class PilotNavMenu extends HTMLElement {
 
   _closeAllSubmenus() {
     // Close all desktop submenus (nav items are in light DOM, not shadow DOM)
-    // Query all li elements with slot="nav-items" that have data-expanded
-    const navItems = this.querySelectorAll('li[slot="nav-items"][data-expanded="true"]');
+    // Query all li elements with slot="nav-items" that are expanded
+    const navItems = this.querySelectorAll('li[slot="nav-items"].expanded');
     navItems.forEach(item => {
-      item.removeAttribute('data-expanded');
+      item.classList.remove('expanded');
       const link = item.querySelector('a, button');
       if (link) {
         link.setAttribute('aria-expanded', 'false');
       }
     });
-    
+
     // Also close any nested submenus within nav items
-    const nestedItems = this.querySelectorAll('li[slot="nav-items"] li[data-expanded="true"]');
+    const nestedItems = this.querySelectorAll('li[slot="nav-items"] li.expanded');
     nestedItems.forEach(item => {
-      item.removeAttribute('data-expanded');
+      item.classList.remove('expanded');
       const link = item.querySelector('a, button');
       if (link) {
         link.setAttribute('aria-expanded', 'false');
@@ -966,13 +966,13 @@ export class PilotNavMenu extends HTMLElement {
   }
 
   _toggleSubmenu(item, link) {
-    const isExpanded = item.getAttribute('data-expanded') === 'true';
-    
+    const isExpanded = item.classList.contains('expanded');
+
     // Close all other submenus at the same level
-    const siblings = item.parentElement.querySelectorAll(':scope > li[data-expanded="true"]');
+    const siblings = item.parentElement.querySelectorAll(':scope > li.expanded');
     siblings.forEach(sibling => {
       if (sibling !== item) {
-        sibling.removeAttribute('data-expanded');
+        sibling.classList.remove('expanded');
         const siblingLink = sibling.querySelector('a, button');
         if (siblingLink) {
           siblingLink.setAttribute('aria-expanded', 'false');
@@ -982,22 +982,22 @@ export class PilotNavMenu extends HTMLElement {
 
     // Toggle current submenu
     if (isExpanded) {
-      item.removeAttribute('data-expanded');
+      item.classList.remove('expanded');
       link.setAttribute('aria-expanded', 'false');
     } else {
-      item.setAttribute('data-expanded', 'true');
+      item.classList.add('expanded');
       link.setAttribute('aria-expanded', 'true');
     }
   }
 
   _toggleMobileSubmenu(item, link) {
-    const isExpanded = item.getAttribute('data-expanded') === 'true';
+    const isExpanded = item.classList.contains('expanded');
 
     if (isExpanded) {
-      item.removeAttribute('data-expanded');
+      item.classList.remove('expanded');
       link.setAttribute('aria-expanded', 'false');
     } else {
-      item.setAttribute('data-expanded', 'true');
+      item.classList.add('expanded');
       link.setAttribute('aria-expanded', 'true');
     }
   }
