@@ -35,4 +35,4 @@ export { PilotSelect } from './select.js';
 export { PilotDatepicker } from './datepicker.js';
 export { PilotSearch } from './search.js';
 export { PilotToggle } from './toggle.js';
-export { PilotCurrencyInput } from './currency-input.js';
+export { PilotCommodityInput } from './commodity-input.js';

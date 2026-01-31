@@ -1,16 +1,16 @@
 /**
- * Pilot Design System - Currency Input Tests
+ * Pilot Design System - Commodity Input Tests
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { registerComponent, mount, cleanup, waitForRender } from '../tests/web-components.js';
 
-const module = await import('./currency-input.js');
-const { PilotCurrencyInput } = module;
+const module = await import('./commodity-input.js');
+const { PilotCommodityInput } = module;
 
-describe('PilotCurrencyInput', () => {
+describe('PilotCommodityInput', () => {
   beforeEach(() => {
-    registerComponent('pilot-currency-input', PilotCurrencyInput);
+    registerComponent('pilot-commodity-input', PilotCommodityInput);
   });
 
   afterEach(() => {
@@ -19,17 +19,17 @@ describe('PilotCurrencyInput', () => {
 
   describe('Component Definition', () => {
     it('should be defined', () => {
-      expect(customElements.get('pilot-currency-input')).toBeDefined();
+      expect(customElements.get('pilot-commodity-input')).toBeDefined();
     });
 
     it('should have correct class name', () => {
-      expect(PilotCurrencyInput.name).toBe('PilotCurrencyInput');
+      expect(PilotCommodityInput.name).toBe('PilotCommodityInput');
     });
   });
 
   describe('Rendering', () => {
     it('renders with default attributes', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       expect(input.shadowRoot).toBeTruthy();
@@ -38,7 +38,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('renders with USD currency symbol by default', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       const symbol = input.shadowRoot.querySelector('.currency-symbol');
@@ -47,7 +47,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('renders with specified currency symbol', async () => {
-      const input = mount('pilot-currency-input', { currency: 'EUR' });
+      const input = mount('pilot-commodity-input', { currency: 'EUR' });
       await waitForRender(input);
 
       const symbol = input.shadowRoot.querySelector('.currency-symbol');
@@ -55,7 +55,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('renders with GBP symbol', async () => {
-      const input = mount('pilot-currency-input', { currency: 'GBP' });
+      const input = mount('pilot-commodity-input', { currency: 'GBP' });
       await waitForRender(input);
 
       const symbol = input.shadowRoot.querySelector('.currency-symbol');
@@ -63,7 +63,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('renders label when provided', async () => {
-      const input = mount('pilot-currency-input', { label: 'Amount' });
+      const input = mount('pilot-commodity-input', { label: 'Amount' });
       await waitForRender(input);
 
       const label = input.shadowRoot.querySelector('label');
@@ -72,7 +72,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('renders hint when provided', async () => {
-      const input = mount('pilot-currency-input', { hint: 'Enter amount' });
+      const input = mount('pilot-commodity-input', { hint: 'Enter amount' });
       await waitForRender(input);
 
       const hint = input.shadowRoot.querySelector('.hint');
@@ -81,7 +81,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('renders error message when provided', async () => {
-      const input = mount('pilot-currency-input', { error: 'Invalid amount' });
+      const input = mount('pilot-commodity-input', { error: 'Invalid amount' });
       await waitForRender(input);
 
       const error = input.shadowRoot.querySelector('.error');
@@ -90,7 +90,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('does not render hint when error is present', async () => {
-      const input = mount('pilot-currency-input', {
+      const input = mount('pilot-commodity-input', {
         hint: 'This is a hint',
         error: 'This is an error'
       });
@@ -103,7 +103,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('handles disabled state', async () => {
-      const input = mount('pilot-currency-input', { disabled: true });
+      const input = mount('pilot-commodity-input', { disabled: true });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -111,7 +111,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('handles readonly state', async () => {
-      const input = mount('pilot-currency-input', { readonly: true });
+      const input = mount('pilot-commodity-input', { readonly: true });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -121,7 +121,7 @@ describe('PilotCurrencyInput', () => {
 
   describe('Value Formatting', () => {
     it('formats value with thousands separator', async () => {
-      const input = mount('pilot-currency-input', { value: '1234567.89' });
+      const input = mount('pilot-commodity-input', { value: '1234567.89' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -129,7 +129,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('formats value with 2 decimals by default', async () => {
-      const input = mount('pilot-currency-input', { value: '1234.5' });
+      const input = mount('pilot-commodity-input', { value: '1234.5' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -137,7 +137,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('formats value with custom decimals', async () => {
-      const input = mount('pilot-currency-input', { value: '1234.5678', decimals: '4' });
+      const input = mount('pilot-commodity-input', { value: '1234.5678', decimals: '4' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -145,7 +145,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('formats value with 0 decimals', async () => {
-      const input = mount('pilot-currency-input', { value: '1234.56', decimals: '0' });
+      const input = mount('pilot-commodity-input', { value: '1234.56', decimals: '0' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -153,7 +153,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('handles negative values when allow-negative is set', async () => {
-      const input = mount('pilot-currency-input', { value: '-1234.56', 'allow-negative': '' });
+      const input = mount('pilot-commodity-input', { value: '-1234.56', 'allow-negative': '' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -165,7 +165,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('preserves negative value in display when allow-negative is not set', async () => {
-      const input = mount('pilot-currency-input', { value: '-1234.56' });
+      const input = mount('pilot-commodity-input', { value: '-1234.56' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -176,7 +176,7 @@ describe('PilotCurrencyInput', () => {
 
   describe('Validation', () => {
     it('validates min constraint', async () => {
-      const input = mount('pilot-currency-input', { min: '100', value: '50' });
+      const input = mount('pilot-commodity-input', { min: '100', value: '50' });
       await waitForRender(input);
 
       // Trigger blur to validate
@@ -188,7 +188,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('validates max constraint', async () => {
-      const input = mount('pilot-currency-input', { max: '1000', value: '1500' });
+      const input = mount('pilot-commodity-input', { max: '1000', value: '1500' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -199,7 +199,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('validates negative values when not allowed', async () => {
-      const input = mount('pilot-currency-input', { value: '-100' });
+      const input = mount('pilot-commodity-input', { value: '-100' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -210,7 +210,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('passes validation for valid values', async () => {
-      const input = mount('pilot-currency-input', { min: '10', max: '1000', value: '500' });
+      const input = mount('pilot-commodity-input', { min: '10', max: '1000', value: '500' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -223,7 +223,7 @@ describe('PilotCurrencyInput', () => {
 
   describe('Event Handling', () => {
     it('dispatches input event on value change', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -243,7 +243,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('dispatches change event on blur', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -263,7 +263,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('filters invalid characters on input', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -276,7 +276,7 @@ describe('PilotCurrencyInput', () => {
 
   describe('Public API', () => {
     it('getValue returns parsed numeric value', async () => {
-      const input = mount('pilot-currency-input', { value: '1234.56' });
+      const input = mount('pilot-commodity-input', { value: '1234.56' });
       await waitForRender(input);
 
       const value = input.getValue();
@@ -284,7 +284,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('setValue updates the input value', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       input.setValue(9876.54);
@@ -295,7 +295,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('validate returns true for valid values', async () => {
-      const input = mount('pilot-currency-input', { value: '500', min: '100', max: '1000' });
+      const input = mount('pilot-commodity-input', { value: '500', min: '100', max: '1000' });
       await waitForRender(input);
 
       const isValid = input.validate();
@@ -304,7 +304,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('validate returns false for invalid values', async () => {
-      const input = mount('pilot-currency-input', { value: '50', min: '100' });
+      const input = mount('pilot-commodity-input', { value: '50', min: '100' });
       await waitForRender(input);
 
       const isValid = input.validate();
@@ -313,7 +313,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('clear removes value and error', async () => {
-      const input = mount('pilot-currency-input', { value: '1234.56', error: 'Error message' });
+      const input = mount('pilot-commodity-input', { value: '1234.56', error: 'Error message' });
       await waitForRender(input);
 
       input.clear();
@@ -328,7 +328,7 @@ describe('PilotCurrencyInput', () => {
 
   describe('Attribute Changes', () => {
     it('re-renders when currency changes', async () => {
-      const input = mount('pilot-currency-input', { currency: 'USD' });
+      const input = mount('pilot-commodity-input', { currency: 'USD' });
       await waitForRender(input);
 
       input.setAttribute('currency', 'EUR');
@@ -339,7 +339,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('re-renders when decimals changes', async () => {
-      const input = mount('pilot-currency-input', { value: '1234.5678', decimals: '2' });
+      const input = mount('pilot-commodity-input', { value: '1234.5678', decimals: '2' });
       await waitForRender(input);
 
       input.setAttribute('decimals', '4');
@@ -350,7 +350,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('re-renders when value changes', async () => {
-      const input = mount('pilot-currency-input', { value: '100' });
+      const input = mount('pilot-commodity-input', { value: '100' });
       await waitForRender(input);
 
       input.setAttribute('value', '200');
@@ -363,7 +363,7 @@ describe('PilotCurrencyInput', () => {
 
   describe('Shadow DOM', () => {
     it('has open shadow root', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       expect(input.shadowRoot).toBeTruthy();
@@ -371,7 +371,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('contains style element', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       const style = input.shadowRoot.querySelector('style');
@@ -379,7 +379,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('contains input element', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -387,7 +387,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('contains currency symbol element', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       const symbol = input.shadowRoot.querySelector('.currency-symbol');
@@ -397,7 +397,7 @@ describe('PilotCurrencyInput', () => {
 
   describe('Edge Cases', () => {
     it('handles empty value', async () => {
-      const input = mount('pilot-currency-input', { value: '' });
+      const input = mount('pilot-commodity-input', { value: '' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -405,7 +405,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('handles zero value', async () => {
-      const input = mount('pilot-currency-input', { value: '0' });
+      const input = mount('pilot-commodity-input', { value: '0' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -413,7 +413,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('handles very large values', async () => {
-      const input = mount('pilot-currency-input', { value: '999999999.99' });
+      const input = mount('pilot-commodity-input', { value: '999999999.99' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -421,7 +421,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('handles unknown currency code', async () => {
-      const input = mount('pilot-currency-input', { currency: 'XYZ' });
+      const input = mount('pilot-commodity-input', { currency: 'XYZ' });
       await waitForRender(input);
 
       const symbol = input.shadowRoot.querySelector('.currency-symbol');
@@ -429,7 +429,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('handles multiple decimal points', async () => {
-      const input = mount('pilot-currency-input');
+      const input = mount('pilot-commodity-input');
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -441,7 +441,7 @@ describe('PilotCurrencyInput', () => {
     });
 
     it('preserves input value during attribute changes', async () => {
-      const input = mount('pilot-currency-input', { value: '1000' });
+      const input = mount('pilot-commodity-input', { value: '1000' });
       await waitForRender(input);
 
       const innerInput = input.shadowRoot.querySelector('input');
@@ -473,7 +473,7 @@ describe('PilotCurrencyInput', () => {
 
     currencies.forEach(({ code, symbol }) => {
       it(`renders correct symbol for ${code}`, async () => {
-        const input = mount('pilot-currency-input', { currency: code });
+        const input = mount('pilot-commodity-input', { currency: code });
         await waitForRender(input);
 
         const currencySymbol = input.shadowRoot.querySelector('.currency-symbol');

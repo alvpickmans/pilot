@@ -1,5 +1,5 @@
 /**
- * Pilot Design System - Currency Input Component
+ * Pilot Design System - Commodity Input Component
  *
  * Input component with currency symbol and decimal formatting for financial amounts.
  */
@@ -7,7 +7,7 @@
 import { baseStyles } from './shared.js';
 
 // ============================================
-// CURRENCY INPUT COMPONENT
+// COMMODITY INPUT COMPONENT
 // ============================================
 
 const CURRENCY_SYMBOLS = {
@@ -111,7 +111,7 @@ const CURRENCY_SYMBOLS = {
   XDR: 'SDR',
 };
 
-export class PilotCurrencyInput extends HTMLElement {
+export class PilotCommodityInput extends HTMLElement {
   static get observedAttributes() {
     return ['currency', 'decimals', 'min', 'max', 'allow-negative', 'placeholder', 'disabled', 'readonly', 'label', 'hint', 'error', 'value'];
   }
@@ -519,4 +519,4 @@ export class PilotCurrencyInput extends HTMLElement {
   }
 }
 
-customElements.define('pilot-currency-input', PilotCurrencyInput);
+customElements.define('pilot-commodity-input', PilotCommodityInput);
