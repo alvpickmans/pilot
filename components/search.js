@@ -6,12 +6,13 @@
  */
 
 import { baseStyles } from './shared.js';
+import { DropdownBase } from './dropdown-base.js';
 
 // ============================================
 // SEARCH COMPONENT
 // ============================================
 
-export class PilotSearch extends HTMLElement {
+export class PilotSearch extends DropdownBase(HTMLElement) {
   static get observedAttributes() {
     return ['placeholder', 'debounce', 'min-length', 'disabled', 'loading'];
   }
@@ -19,8 +20,6 @@ export class PilotSearch extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this._isOpen = false;
-    this._highlightedIndex = -1;
     this._suggestions = [];
     this._searchQuery = '';
     this._debounceTimer = null;
@@ -279,37 +278,37 @@ export class PilotSearch extends HTMLElement {
       this._updateClearButton();
     }
     
-    this._setupEventListeners();
+    this._setupDropdownListeners();
   }
 
   disconnectedCallback() {
-    this._removeEventListeners();
+    this._cleanupDropdown();
     if (this._debounceTimer) {
       clearTimeout(this._debounceTimer);
       this._debounceTimer = null;
     }
   }
 
-  _setupEventListeners() {
-    this._clickOutsideHandler = this._handleClickOutside.bind(this);
-    this._keydownHandler = this._handleKeydown.bind(this);
-    
-    document.addEventListener('click', this._clickOutsideHandler);
-    this.addEventListener('keydown', this._keydownHandler);
+  /**
+   * Get item count for keyboard navigation (required by DropdownBase)
+   */
+  _getItemCount() {
+    return this._suggestions.length;
   }
 
-  _removeEventListeners() {
-    document.removeEventListener('click', this._clickOutsideHandler);
-    this.removeEventListener('keydown', this._keydownHandler);
-  }
-
-  _handleClickOutside(event) {
-    if (!this.contains(event.target) && !this.shadowRoot.contains(event.target)) {
-      this._closeDropdown();
+  /**
+   * Select highlighted item (required by DropdownBase)
+   */
+  _selectHighlightedItem() {
+    if (this._highlightedIndex >= 0 && this._highlightedIndex < this._suggestions.length) {
+      this._selectSuggestion(this._suggestions[this._highlightedIndex]);
     }
   }
 
-  _handleKeydown(event) {
+  /**
+   * Override _handleDropdownKeydown for search-specific keyboard navigation
+   */
+  _handleDropdownKeydown(event) {
     if (this.hasAttribute('disabled')) return;
 
     switch (event.key) {
@@ -358,40 +357,43 @@ export class PilotSearch extends HTMLElement {
     }
   }
 
+  /**
+   * Override _highlightNext to render suggestions after highlighting
+   */
   _highlightNext() {
-    if (this._suggestions.length === 0) return;
-    this._highlightedIndex = (this._highlightedIndex + 1) % this._suggestions.length;
-    this._scrollToHighlighted();
+    super._highlightNext();
     this._renderSuggestions();
   }
 
+  /**
+   * Override _highlightPrevious to render suggestions after highlighting
+   */
   _highlightPrevious() {
-    if (this._suggestions.length === 0) return;
-    this._highlightedIndex = this._highlightedIndex <= 0 
-      ? this._suggestions.length - 1 
-      : this._highlightedIndex - 1;
-    this._scrollToHighlighted();
+    super._highlightPrevious();
     this._renderSuggestions();
   }
 
-  _scrollToHighlighted() {
-    setTimeout(() => {
-      const highlighted = this.shadowRoot.querySelector('.suggestion.highlighted');
-      if (highlighted && typeof highlighted.scrollIntoView === 'function') {
-        highlighted.scrollIntoView({ block: 'nearest' });
-      }
-    }, 0);
-  }
-
-  _openDropdown() {
-    this._isOpen = true;
-    this._highlightedIndex = this._suggestions.length > 0 ? 0 : -1;
+  /**
+   * Override _openDropdown from DropdownBase for search-specific behavior
+   */
+  _openDropdown(options = {}) {
+    const onOpen = () => {
+      this._highlightedIndex = this._suggestions.length > 0 ? 0 : -1;
+    };
+    
+    super._openDropdown({ ...options, onOpen });
     this._updateDropdownState();
   }
 
-  _closeDropdown() {
-    this._isOpen = false;
-    this._highlightedIndex = -1;
+  /**
+   * Override _closeDropdown from DropdownBase
+   */
+  _closeDropdown(options = {}) {
+    const onClose = () => {
+      this._highlightedIndex = -1;
+    };
+    
+    super._closeDropdown({ ...options, onClose });
     this._updateDropdownState();
   }
 
@@ -565,11 +567,9 @@ export class PilotSearch extends HTMLElement {
     
     // Open dropdown if we have suggestions and not disabled
     if (this._suggestions.length > 0 && !this.hasAttribute('disabled')) {
-      this._isOpen = true;
-      this._highlightedIndex = 0;
+      this._openDropdown();
     } else {
-      this._isOpen = false;
-      this._highlightedIndex = -1;
+      this._closeDropdown();
     }
     
     this._updateDropdownState();

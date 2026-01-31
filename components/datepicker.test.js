@@ -60,7 +60,7 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open calendar using internal method
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     // Check the internal state
@@ -77,10 +77,10 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open then close using internal methods
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
     
-    datepicker._closeCalendar();
+    datepicker._closeDropdown();
     await waitForRender(datepicker);
 
     // Check the internal state
@@ -96,7 +96,7 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open calendar
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     // Find a day button that's not disabled
@@ -124,7 +124,7 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open calendar
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     // Get first and fifth days
@@ -165,7 +165,7 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open calendar
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     // Days before min date should be disabled
@@ -182,7 +182,7 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open calendar
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     // Days after max date should be disabled
@@ -195,7 +195,7 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open calendar
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     const monthYear = datepicker.shadowRoot.querySelector('.month-year');
@@ -214,7 +214,7 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open calendar
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     const monthYear = datepicker.shadowRoot.querySelector('.month-year');
@@ -233,7 +233,7 @@ describe('PilotDatepicker', () => {
     await waitForRender(datepicker);
 
     // Open calendar and select a date
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     const day = datepicker.shadowRoot.querySelector('.day:not(.disabled):not(.other-month)');
@@ -262,7 +262,7 @@ describe('PilotDatepicker', () => {
     datepicker.addEventListener('change', changeHandler);
 
     // Open calendar and select a date
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     const day = datepicker.shadowRoot.querySelector('.day:not(.disabled):not(.other-month)');
@@ -297,7 +297,7 @@ describe('PilotDatepicker', () => {
     expect(trigger.hasAttribute('disabled')).toBe(true);
 
     // Try to open calendar - should not work when disabled
-    datepicker._openCalendar();
+    datepicker._openDropdown();
     await waitForRender(datepicker);
 
     // Calendar should remain closed

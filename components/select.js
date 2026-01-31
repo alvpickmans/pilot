@@ -6,12 +6,13 @@
  */
 
 import { baseStyles } from './shared.js';
+import { DropdownBase } from './dropdown-base.js';
 
 // ============================================
 // TECHNICAL SELECT COMPONENT
 // ============================================
 
-export class PilotSelect extends HTMLElement {
+export class PilotSelect extends DropdownBase(HTMLElement) {
   static get observedAttributes() {
     return ['multiple', 'searchable', 'placeholder', 'disabled', 'value', 'label'];
   }
@@ -19,10 +20,8 @@ export class PilotSelect extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this._isOpen = false;
     this._selectedValues = [];
     this._filteredOptions = [];
-    this._highlightedIndex = -1;
     this._optionElements = [];
     this._searchQuery = '';
     this._options = []; // Initialize _options to prevent undefined errors
@@ -280,6 +279,7 @@ export class PilotSelect extends HTMLElement {
   }
 
   connectedCallback() {
+    this._setupDropdownListeners();
     this._setupEventListeners();
     this._parseOptions();
     this._updateSelectedValues();
@@ -289,17 +289,14 @@ export class PilotSelect extends HTMLElement {
 
   disconnectedCallback() {
     this._removeEventListeners();
+    this._cleanupDropdown();
   }
 
   _setupEventListeners() {
-    this._clickOutsideHandler = this._handleClickOutside.bind(this);
-    this._keydownHandler = this._handleKeydown.bind(this);
     this._slotChangeHandler = this._handleSlotChange.bind(this);
     
-    document.addEventListener('click', this._clickOutsideHandler);
-    this.addEventListener('keydown', this._keydownHandler);
-    
-    // Listen for slot changes to re-parse options when they change dynamically
+    // Dropdown event listeners are managed by DropdownBase mixin
+    // Only add slot change listener here
     const slot = this.shadowRoot.querySelector('slot');
     if (slot) {
       slot.addEventListener('slotchange', this._slotChangeHandler);
@@ -307,9 +304,7 @@ export class PilotSelect extends HTMLElement {
   }
 
   _removeEventListeners() {
-    document.removeEventListener('click', this._clickOutsideHandler);
-    this.removeEventListener('keydown', this._keydownHandler);
-    
+    // Dropdown event listeners are cleaned up by DropdownBase mixin
     const slot = this.shadowRoot.querySelector('slot');
     if (slot) {
       slot.removeEventListener('slotchange', this._slotChangeHandler);
@@ -451,80 +446,83 @@ export class PilotSelect extends HTMLElement {
     });
   }
 
-  _handleClickOutside(event) {
-    if (!this.contains(event.target) && !this.shadowRoot.contains(event.target)) {
-      this._closeDropdown();
+  /**
+   * Get item count for keyboard navigation (required by DropdownBase)
+   */
+  _getItemCount() {
+    return this._filteredOptions.length;
+  }
+
+  /**
+   * Select highlighted item (required by DropdownBase)
+   */
+  _selectHighlightedItem() {
+    if (this._highlightedIndex >= 0 && this._highlightedIndex < this._filteredOptions.length) {
+      this._selectOption(this._filteredOptions[this._highlightedIndex]);
     }
   }
 
-  _handleKeydown(event) {
+  /**
+   * Override _openDropdown from DropdownBase to add select-specific behavior
+   */
+  _openDropdown(options = {}) {
+    const onOpen = () => {
+      // Focus search input if searchable
+      if (this.hasAttribute('searchable')) {
+        setTimeout(() => {
+          const searchInput = this.shadowRoot.querySelector('.search-input');
+          if (searchInput) searchInput.focus();
+        }, 0);
+      }
+    };
+    
+    super._openDropdown({
+      ...options,
+      highlightIndex: this._filteredOptions.length > 0 ? 0 : -1,
+      onOpen
+    });
+    
+    this.render();
+  }
+
+  /**
+   * Override _closeDropdown from DropdownBase to add select-specific behavior
+   */
+  _closeDropdown(options = {}) {
+    const onClose = () => {
+      this._searchQuery = '';
+      this._filteredOptions = [...this._options];
+    };
+    
+    super._closeDropdown({ ...options, onClose });
+    this.render();
+  }
+
+  /**
+   * Override _handleDropdownKeydown to handle select-specific keys
+   */
+  _handleDropdownKeydown(event) {
     if (this.hasAttribute('disabled')) return;
-
-    switch (event.key) {
-      case 'Enter':
-      case ' ':
-        event.preventDefault();
-        if (this._isOpen && this._highlightedIndex >= 0) {
-          this._selectOption(this._filteredOptions[this._highlightedIndex]);
-        } else {
-          this._toggleDropdown();
-        }
-        break;
-      case 'Escape':
-        if (this._isOpen) {
+    
+    // Handle searchable input navigation
+    if (this.hasAttribute('searchable') && this._isOpen) {
+      const searchInput = this.shadowRoot.querySelector('.search-input');
+      if (searchInput && document.activeElement === searchInput) {
+        // Don't intercept arrow keys when search input is focused
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
           event.preventDefault();
-          this._closeDropdown();
+          if (event.key === 'ArrowDown') {
+            this._highlightNext();
+          } else {
+            this._highlightPrevious();
+          }
+          return;
         }
-        break;
-      case 'ArrowDown':
-        event.preventDefault();
-        if (!this._isOpen) {
-          this._openDropdown();
-        } else {
-          this._highlightNext();
-        }
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        if (!this._isOpen) {
-          this._openDropdown();
-        } else {
-          this._highlightPrevious();
-        }
-        break;
-      case 'Home':
-        if (this._isOpen) {
-          event.preventDefault();
-          this._highlightedIndex = 0;
-          this._scrollToHighlighted();
-        }
-        break;
-      case 'End':
-        if (this._isOpen) {
-          event.preventDefault();
-          this._highlightedIndex = this._filteredOptions.length - 1;
-          this._scrollToHighlighted();
-        }
-        break;
+      }
     }
-  }
-
-  _highlightNext() {
-    if (this._filteredOptions.length === 0) return;
-    this._highlightedIndex = (this._highlightedIndex + 1) % this._filteredOptions.length;
-    this._scrollToHighlighted();
-    // Only update the options list, don't do full re-render
-    this._updateHighlightedOption();
-  }
-
-  _highlightPrevious() {
-    if (this._filteredOptions.length === 0) return;
-    this._highlightedIndex = this._highlightedIndex <= 0 
-      ? this._filteredOptions.length - 1 
-      : this._highlightedIndex - 1;
-    this._scrollToHighlighted();
-    // Only update the options list, don't do full re-render
-    this._updateHighlightedOption();
+    
+    // Call parent handler for standard dropdown keys
+    super._handleDropdownKeydown(event);
   }
 
   _updateHighlightedOption() {
@@ -533,45 +531,6 @@ export class PilotSelect extends HTMLElement {
       option.classList.toggle('highlighted', index === this._highlightedIndex);
       option.setAttribute('aria-selected', index === this._highlightedIndex);
     });
-  }
-
-  _scrollToHighlighted() {
-    setTimeout(() => {
-      const highlighted = this.shadowRoot.querySelector('.option.highlighted');
-      if (highlighted && typeof highlighted.scrollIntoView === 'function') {
-        highlighted.scrollIntoView({ block: 'nearest' });
-      }
-    }, 0);
-  }
-
-  _toggleDropdown() {
-    if (this._isOpen) {
-      this._closeDropdown();
-    } else {
-      this._openDropdown();
-    }
-  }
-
-  _openDropdown() {
-    this._isOpen = true;
-    this._highlightedIndex = this._filteredOptions.length > 0 ? 0 : -1;
-    this.render();
-    
-    // Focus search input if searchable
-    if (this.hasAttribute('searchable')) {
-      setTimeout(() => {
-        const searchInput = this.shadowRoot.querySelector('.search-input');
-        if (searchInput) searchInput.focus();
-      }, 0);
-    }
-  }
-
-  _closeDropdown() {
-    this._isOpen = false;
-    this._searchQuery = '';
-    this._filteredOptions = [...this._options];
-    this._highlightedIndex = -1;
-    this.render();
   }
 
   _selectOption(option) {

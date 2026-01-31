@@ -6,12 +6,13 @@
  */
 
 import { baseStyles } from './shared.js';
+import { DropdownBase } from './dropdown-base.js';
 
 // ============================================
 // TECHNICAL DATEPICKER COMPONENT
 // ============================================
 
-export class PilotDatepicker extends HTMLElement {
+export class PilotDatepicker extends DropdownBase(HTMLElement) {
   static get observedAttributes() {
     return ['mode', 'min', 'max', 'format', 'value', 'label', 'disabled', 'placeholder'];
   }
@@ -23,7 +24,6 @@ export class PilotDatepicker extends HTMLElement {
     this._selectedStartDate = null;
     this._selectedEndDate = null;
     this._hoverDate = null;
-    this._isOpen = false;
     this.render();
   }
 
@@ -238,7 +238,13 @@ export class PilotDatepicker extends HTMLElement {
       .calendar-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
+        grid-auto-rows: minmax(36px, auto);
         gap: var(--spacing-1, 0.25rem);
+      }
+
+      .day.placeholder {
+        visibility: hidden;
+        pointer-events: none;
       }
 
       .day {
@@ -350,46 +356,30 @@ export class PilotDatepicker extends HTMLElement {
   }
 
   connectedCallback() {
-    this._setupEventListeners();
+    this._setupDropdownListeners();
     this._parseValue();
   }
 
   disconnectedCallback() {
-    this._removeEventListeners();
+    this._cleanupDropdown();
   }
 
-  _setupEventListeners() {
-    this._clickOutsideHandler = this._handleClickOutside.bind(this);
-    this._keydownHandler = this._handleKeydown.bind(this);
-
-    document.addEventListener('click', this._clickOutsideHandler);
-    this.addEventListener('keydown', this._keydownHandler);
-  }
-
-  _removeEventListeners() {
-    document.removeEventListener('click', this._clickOutsideHandler);
-    this.removeEventListener('keydown', this._keydownHandler);
-  }
-
-  _handleClickOutside(event) {
-    if (!this.contains(event.target) && !this.shadowRoot.contains(event.target)) {
-      this._closeCalendar();
-    }
-  }
-
-  _handleKeydown(event) {
+  /**
+   * Override _handleDropdownKeydown for datepicker-specific keyboard navigation
+   */
+  _handleDropdownKeydown(event) {
     if (this.hasAttribute('disabled')) return;
 
     switch (event.key) {
       case 'Enter':
       case ' ':
         event.preventDefault();
-        this._toggleCalendar();
+        this._toggleDropdown();
         break;
       case 'Escape':
         if (this._isOpen) {
           event.preventDefault();
-          this._closeCalendar();
+          this._closeDropdown();
         }
         break;
       case 'ArrowLeft':
@@ -514,30 +504,34 @@ export class PilotDatepicker extends HTMLElement {
 
     const days = [];
 
-    // Previous month days
+    // Previous month days (only enough to fill the first week)
     const prevMonth = new Date(year, month, 0);
     const daysInPrevMonth = prevMonth.getDate();
     for (let i = startDayOfWeek - 1; i >= 0; i--) {
       days.push({
         date: new Date(year, month - 1, daysInPrevMonth - i),
-        isOtherMonth: true
+        isOtherMonth: true,
+        isVisible: false
       });
     }
 
-    // Current month days
+    // Current month days (always visible)
     for (let i = 1; i <= daysInMonth; i++) {
       days.push({
         date: new Date(year, month, i),
-        isOtherMonth: false
+        isOtherMonth: false,
+        isVisible: true
       });
     }
 
-    // Next month days to fill the grid
-    const remainingDays = 42 - days.length; // 6 rows * 7 days
+    // Next month days (only enough to complete the last week)
+    const totalDaysNeeded = days.length;
+    const remainingDays = (7 - (totalDaysNeeded % 7)) % 7;
     for (let i = 1; i <= remainingDays; i++) {
       days.push({
         date: new Date(year, month + 1, i),
-        isOtherMonth: true
+        isOtherMonth: true,
+        isVisible: false
       });
     }
 
@@ -568,28 +562,29 @@ export class PilotDatepicker extends HTMLElement {
     return this.getAttribute('placeholder') || 'Select a date';
   }
 
-  _toggleCalendar() {
-    if (this._isOpen) {
-      this._closeCalendar();
-    } else {
-      this._openCalendar();
-    }
-  }
-
-  _openCalendar() {
+  /**
+   * Override _openDropdown from DropdownBase for datepicker-specific behavior
+   */
+  _openDropdown(options = {}) {
     if (this.hasAttribute('disabled')) return;
-    this._isOpen = true;
+    
+    const onOpen = () => {
+      // Focus first day of month
+      setTimeout(() => {
+        const firstDay = this.shadowRoot.querySelector('.day:not(.other-month)');
+        if (firstDay) firstDay.focus();
+      }, 0);
+    };
+    
+    super._openDropdown({ ...options, onOpen });
     this.render();
-
-    // Focus first day of month
-    setTimeout(() => {
-      const firstDay = this.shadowRoot.querySelector('.day:not(.other-month)');
-      if (firstDay) firstDay.focus();
-    }, 0);
   }
 
-  _closeCalendar() {
-    this._isOpen = false;
+  /**
+   * Override _closeDropdown from DropdownBase
+   */
+  _closeDropdown(options = {}) {
+    super._closeDropdown(options);
     this.render();
   }
 
@@ -614,10 +609,11 @@ export class PilotDatepicker extends HTMLElement {
       monthYearLabel.textContent = this._getMonthYearLabel();
     }
 
-    // Update calendar grid
+    // Update calendar grid - only render visible days
     const calendarGrid = this.shadowRoot.querySelector('.calendar-grid');
     if (calendarGrid) {
-      calendarGrid.innerHTML = days.map(day => {
+      const visibleDays = days.filter(day => day.isVisible);
+      calendarGrid.innerHTML = visibleDays.map(day => {
         const dateStr = this._formatDate(day.date);
         const isDisabled = this._isDateDisabled(day.date);
         const isSelected = this._isSameDay(day.date, this._selectedStartDate) ||
@@ -629,11 +625,11 @@ export class PilotDatepicker extends HTMLElement {
 
         return `
           <button
-            class="day ${day.isOtherMonth ? 'other-month' : ''} ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''} ${isInRange ? 'in-range' : ''} ${isToday ? 'today' : ''}"
+            class="day ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''} ${isInRange ? 'in-range' : ''} ${isToday ? 'today' : ''}"
             data-date="${dateStr}"
             ${isDisabled ? 'disabled' : ''}
             aria-label="${day.date.toDateString()}${isSelected ? ' (selected)' : ''}${isToday ? ' (today)' : ''}"
-            tabindex="${day.isOtherMonth ? '-1' : '0'}"
+            tabindex="0"
           >
             ${day.date.getDate()}
           </button>
@@ -675,12 +671,12 @@ export class PilotDatepicker extends HTMLElement {
         } else {
           this._selectedEndDate = date;
         }
-        this._closeCalendar();
+        this._closeDropdown();
       }
     } else {
       this._selectedStartDate = date;
       this._selectedEndDate = null;
-      this._closeCalendar();
+      this._closeDropdown();
     }
 
     this._updateValue();
@@ -759,7 +755,7 @@ export class PilotDatepicker extends HTMLElement {
               ${weekdays.map(day => `<div class="weekday">${day}</div>`).join('')}
             </div>
             <div class="calendar-grid">
-              ${days.map(day => {
+              ${days.filter(day => day.isVisible).map(day => {
                 const dateStr = this._formatDate(day.date);
                 const isDisabled = this._isDateDisabled(day.date);
                 const isSelected = this._isSameDay(day.date, this._selectedStartDate) ||
@@ -771,11 +767,11 @@ export class PilotDatepicker extends HTMLElement {
 
                 return `
                   <button
-                    class="day ${day.isOtherMonth ? 'other-month' : ''} ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''} ${isInRange ? 'in-range' : ''} ${isToday ? 'today' : ''}"
+                    class="day ${isDisabled ? 'disabled' : ''} ${isSelected ? 'selected' : ''} ${isRangeStart ? 'range-start' : ''} ${isRangeEnd ? 'range-end' : ''} ${isInRange ? 'in-range' : ''} ${isToday ? 'today' : ''}"
                     data-date="${dateStr}"
                     ${isDisabled ? 'disabled' : ''}
                     aria-label="${day.date.toDateString()}${isSelected ? ' (selected)' : ''}${isToday ? ' (today)' : ''}"
-                    tabindex="${day.isOtherMonth ? '-1' : '0'}"
+                    tabindex="0"
                   >
                     ${day.date.getDate()}
                   </button>
@@ -806,7 +802,7 @@ export class PilotDatepicker extends HTMLElement {
     const clearBtn = this.shadowRoot.querySelector('[data-action="clear"]');
 
     if (trigger && !this.hasAttribute('disabled')) {
-      trigger.addEventListener('click', () => this._toggleCalendar());
+      trigger.addEventListener('click', () => this._toggleDropdown());
     }
 
     navButtons.forEach(btn => {
