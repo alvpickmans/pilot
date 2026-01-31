@@ -159,6 +159,9 @@ describe('PilotTabs', () => {
     const tabButtons = tabs.shadowRoot.querySelectorAll('.tab-button');
     tabButtons[1].click();
     
+    // Wait for async event dispatch
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    
     expect(changeHandler).toHaveBeenCalledTimes(1);
     expect(changeHandler).toHaveBeenCalledWith(
       expect.objectContaining({

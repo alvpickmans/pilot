@@ -96,9 +96,10 @@ export class PilotTabs extends HTMLElement {
         border: none;
         color: var(--color-text-secondary, #525252);
         cursor: pointer;
-        transition: all var(--duration-fast, 150ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+        transition: color 80ms ease-out, background-color 80ms ease-out;
         white-space: nowrap;
         position: relative;
+        will-change: color, background-color;
       }
       
       .tabs-container.vertical .tab-button {
@@ -192,7 +193,8 @@ export class PilotTabs extends HTMLElement {
         height: 2px;
         background: var(--color-brand-primary, #1a1a1a);
         transform: scaleX(0);
-        transition: transform var(--duration-fast, 150ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+        transition: transform 100ms ease-out;
+        will-change: transform;
       }
       
       .tabs-container.underline.horizontal .tab-button.active::after {
@@ -208,7 +210,8 @@ export class PilotTabs extends HTMLElement {
         width: 2px;
         background: var(--color-brand-primary, #1a1a1a);
         transform: scaleY(0);
-        transition: transform var(--duration-fast, 150ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+        transition: transform 100ms ease-out;
+        will-change: transform;
       }
       
       .tabs-container.underline.vertical .tab-button.active::after {
@@ -239,17 +242,15 @@ export class PilotTabs extends HTMLElement {
       
       .tab-panel.active {
         display: block;
-        animation: fadeIn var(--duration-fast, 150ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+        animation: fadeIn 100ms ease-out;
       }
       
       @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(4px);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
         }
       }
       
@@ -395,17 +396,22 @@ export class PilotTabs extends HTMLElement {
     if (index === this._activeTab || this._tabs[index]?.disabled) return;
     
     this._activeTab = index;
-    this.setAttribute('active-tab', index);
     
-    this.dispatchEvent(new CustomEvent('tab-change', {
-      detail: { 
-        index: index, 
-        tab: this._tabs[index] 
-      },
-      bubbles: true
-    }));
-    
+    // Update visual state immediately before any async operations
     this._updateVisualState();
+    
+    // Dispatch event asynchronously to not block the UI update
+    requestAnimationFrame(() => {
+      this.setAttribute('active-tab', index);
+      
+      this.dispatchEvent(new CustomEvent('tab-change', {
+        detail: { 
+          index: index, 
+          tab: this._tabs[index] 
+        },
+        bubbles: true
+      }));
+    });
   }
 
   _updateVisualState() {
