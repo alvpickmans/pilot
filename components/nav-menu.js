@@ -21,10 +21,274 @@ export class PilotNavMenu extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this._isOpen = false;
     this._breakpoint = 768;
+    this._processedNavItems = new WeakSet();
+    this._processedMobileNavItems = new WeakSet();
     this._keydownHandler = this._handleKeydown.bind(this);
     this._clickOutsideHandler = this._handleClickOutside.bind(this);
     this._resizeHandler = this._handleResize.bind(this);
+    this._injectGlobalStyles();
     this.render();
+  }
+
+  _injectGlobalStyles() {
+    // Inject global styles for slotted nav items (light DOM elements)
+    if (!document.getElementById('pilot-nav-menu-styles')) {
+      const style = document.createElement('style');
+      style.id = 'pilot-nav-menu-styles';
+      style.textContent = `
+        /* Pilot Nav Menu - Slotted Content Styles */
+        li[slot="nav-items"] {
+          position: relative;
+          list-style: none;
+          z-index: 100;
+        }
+        
+        li[slot="nav-items"] > a,
+        li[slot="nav-items"] > button {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          padding: 0.5rem 0.75rem;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.875rem;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          text-decoration: none;
+          color: #1a1a1a;
+          border: 1px solid transparent;
+          transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          background: none;
+        }
+        
+        li[slot="nav-items"] > a:hover,
+        li[slot="nav-items"] > button:hover {
+          color: #1a1a1a;
+          background: #f5f5f5;
+          border-color: #b3b3b3;
+        }
+        
+        li[slot="nav-items"] > a:focus-visible,
+        li[slot="nav-items"] > button:focus-visible {
+          outline: 2px solid #f59e0b;
+          outline-offset: 2px;
+        }
+        
+        li[slot="nav-items"] > a.active,
+        li[slot="nav-items"] > button.active {
+          color: #1a1a1a;
+          background: #f5f5f5;
+          border-color: #1a1a1a;
+        }
+        
+        /* Nested menu indicator */
+        li[slot="nav-items"] > a[data-has-children]::after,
+        li[slot="nav-items"] > button[data-has-children]::after {
+          content: '▼';
+          font-size: 0.6em;
+          margin-left: 0.25rem;
+          transition: transform 150ms;
+        }
+        
+        li[slot="nav-items"][data-expanded="true"] > a[data-has-children]::after,
+        li[slot="nav-items"][data-expanded="true"] > button[data-has-children]::after {
+          transform: rotate(180deg);
+        }
+        
+        /* Submenu styles */
+        li[slot="nav-items"] > ul {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          min-width: 200px;
+          background: #ffffff;
+          border: 1px solid #d4d4d4;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+          list-style: none;
+          margin: 0.25rem 0 0 0;
+          padding: 0.5rem 0;
+          z-index: 1000;
+        }
+        
+        /* Show submenu when parent is expanded */
+        li[slot="nav-items"][data-expanded="true"] > ul,
+        li[slot="nav-items"] > ul[data-expanded="true"] {
+          display: block;
+        }
+        
+        /* Submenu visibility for nested items */
+        li[slot="nav-items"] li[data-expanded="true"] > ul {
+          display: block;
+        }
+        
+        li[slot="nav-items"] > ul > li > a,
+        li[slot="nav-items"] > ul > li > button {
+          padding: 0.5rem 1rem;
+          border: none;
+          text-transform: none;
+          font-size: 0.875rem;
+        }
+        
+        li[slot="nav-items"] > ul > li > a:hover,
+        li[slot="nav-items"] > ul > li > button:hover {
+          background: #f5f5f5;
+        }
+        
+        /* Mobile Navigation Styles */
+        li[slot="mobile-nav-items"] {
+          list-style: none;
+          border-bottom: 1px solid #d4d4d4;
+        }
+        
+        li[slot="mobile-nav-items"] > a,
+        li[slot="mobile-nav-items"] > button {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          padding: 1rem 1.5rem;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.875rem;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          text-decoration: none;
+          color: #1a1a1a;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          transition: background 150ms;
+        }
+        
+        li[slot="mobile-nav-items"] > a:hover,
+        li[slot="mobile-nav-items"] > button:hover {
+          background: #f5f5f5;
+        }
+        
+        li[slot="mobile-nav-items"] > a:focus-visible,
+        li[slot="mobile-nav-items"] > button:focus-visible {
+          outline: 2px solid #f59e0b;
+          outline-offset: -2px;
+        }
+        
+        li[slot="mobile-nav-items"] > a.active,
+        li[slot="mobile-nav-items"] > button.active {
+          background: #f5f5f5;
+          border-left: 3px solid #1a1a1a;
+        }
+        
+        /* Mobile expand icon */
+        li[slot="mobile-nav-items"] > a > .expand-icon,
+        li[slot="mobile-nav-items"] > button > .expand-icon {
+          font-size: 0.7em;
+          transition: transform 150ms;
+        }
+        
+        li[slot="mobile-nav-items"][data-expanded="true"] > a > .expand-icon,
+        li[slot="mobile-nav-items"][data-expanded="true"] > button > .expand-icon {
+          transform: rotate(180deg);
+        }
+        
+        /* Mobile submenu styles */
+        li[slot="mobile-nav-items"] > ul {
+          display: none;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          background: #f5f5f5;
+        }
+        
+        li[slot="mobile-nav-items"][data-expanded="true"] > ul {
+          display: block;
+        }
+        
+        li[slot="mobile-nav-items"] > ul > li > a,
+        li[slot="mobile-nav-items"] > ul > li > button {
+          padding-left: 2rem;
+          text-transform: none;
+          font-size: 0.875rem;
+        }
+        
+        li[slot="mobile-nav-items"] > ul > li > ul > li > a,
+        li[slot="mobile-nav-items"] > ul > li > ul > li > button {
+          padding-left: 3rem;
+        }
+        
+        /* Nested mobile nav items (added by JS via _processMobileSubmenu) */
+        .mobile-nav-item {
+          border-bottom: 1px solid #d4d4d4;
+          list-style: none;
+        }
+        
+        .mobile-nav-item > a,
+        .mobile-nav-item > button {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          padding: 1rem 1.5rem;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.875rem;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          text-decoration: none;
+          color: #1a1a1a;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          transition: background 150ms;
+        }
+        
+        .mobile-nav-item > a:hover,
+        .mobile-nav-item > button:hover {
+          background: #f5f5f5;
+        }
+        
+        .mobile-nav-item > a:focus-visible,
+        .mobile-nav-item > button:focus-visible {
+          outline: 2px solid #f59e0b;
+          outline-offset: -2px;
+        }
+        
+        .mobile-nav-item > a.active,
+        .mobile-nav-item > button.active {
+          background: #f5f5f5;
+          border-left: 3px solid #1a1a1a;
+        }
+        
+        /* Nested submenu items with increased indentation */
+        .mobile-nav-submenu .mobile-nav-item > a,
+        .mobile-nav-submenu .mobile-nav-item > button {
+          padding-left: 2rem;
+          text-transform: none;
+          font-size: 0.875rem;
+        }
+        
+        .mobile-nav-submenu .mobile-nav-submenu .mobile-nav-item > a,
+        .mobile-nav-submenu .mobile-nav-submenu .mobile-nav-item > button {
+          padding-left: 3rem;
+        }
+        
+        /* Mobile submenu container */
+        .mobile-nav-submenu {
+          display: none;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          background: #f5f5f5;
+        }
+        
+        .mobile-nav-item[data-expanded="true"] > .mobile-nav-submenu {
+          display: block;
+        }
+      `;
+      document.head.appendChild(style);
+    }
   }
 
   get styles() {
@@ -77,6 +341,7 @@ export class PilotNavMenu extends HTMLElement {
 
       .nav-item {
         position: relative;
+        z-index: 100;
       }
 
       .nav-link {
@@ -149,17 +414,13 @@ export class PilotNavMenu extends HTMLElement {
         list-style: none;
         margin: var(--spacing-1, 0.25rem) 0 0 0;
         padding: var(--spacing-2, 0.5rem) 0;
-        z-index: 10;
+        z-index: 1000;
       }
 
       :host([variant="technical"]) .nav-submenu {
         background: var(--color-background-technical, #f5f5f5);
         border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
         box-shadow: var(--shadow-lg, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
-      }
-
-      .nav-item[data-expanded="true"] > .nav-submenu {
-        display: block;
       }
 
       .nav-submenu .nav-link {
@@ -545,6 +806,12 @@ export class PilotNavMenu extends HTMLElement {
     const items = slot.assignedElements();
     items.forEach(item => {
       if (item.tagName === 'LI') {
+        // Skip if already processed
+        if (this._processedNavItems.has(item)) {
+          return;
+        }
+        this._processedNavItems.add(item);
+
         item.classList.add('nav-item');
         item.setAttribute('role', 'none');
 
@@ -581,8 +848,36 @@ export class PilotNavMenu extends HTMLElement {
                 this._toggleSubmenu(item, link);
               }
             });
+          } else {
+            // Close all submenus when clicking a nav item without children
+            link.addEventListener('click', () => {
+              this._closeAllSubmenus();
+            });
           }
         }
+      }
+    });
+  }
+
+  _closeAllSubmenus() {
+    // Close all desktop submenus (nav items are in light DOM, not shadow DOM)
+    // Query all li elements with slot="nav-items" that have data-expanded
+    const navItems = this.querySelectorAll('li[slot="nav-items"][data-expanded="true"]');
+    navItems.forEach(item => {
+      item.removeAttribute('data-expanded');
+      const link = item.querySelector('a, button');
+      if (link) {
+        link.setAttribute('aria-expanded', 'false');
+      }
+    });
+    
+    // Also close any nested submenus within nav items
+    const nestedItems = this.querySelectorAll('li[slot="nav-items"] li[data-expanded="true"]');
+    nestedItems.forEach(item => {
+      item.removeAttribute('data-expanded');
+      const link = item.querySelector('a, button');
+      if (link) {
+        link.setAttribute('aria-expanded', 'false');
       }
     });
   }
@@ -591,6 +886,12 @@ export class PilotNavMenu extends HTMLElement {
     const items = slot.assignedElements();
     items.forEach(item => {
       if (item.tagName === 'LI') {
+        // Skip if already processed
+        if (this._processedMobileNavItems.has(item)) {
+          return;
+        }
+        this._processedMobileNavItems.add(item);
+
         item.classList.add('mobile-nav-item');
 
         const link = item.querySelector('a, button');
@@ -815,7 +1116,14 @@ export class PilotNavMenu extends HTMLElement {
     const mobileMenu = this.shadowRoot.querySelector('.mobile-menu');
     const hamburger = this.shadowRoot.querySelector('.hamburger-button');
 
-    if (mobileMenu && !mobileMenu.contains(event.target) && !hamburger.contains(event.target)) {
+    // Use composedPath() to handle shadow DOM event retargeting
+    // event.target is retargeted to the host element in shadow DOM,
+    // so we need the full path to check if click was inside mobile menu or hamburger
+    const path = event.composedPath();
+    const clickedInsideMenu = path.includes(mobileMenu);
+    const clickedInsideHamburger = path.includes(hamburger);
+
+    if (mobileMenu && !clickedInsideMenu && !clickedInsideHamburger) {
       this._closeMenu();
     }
   }
@@ -833,14 +1141,15 @@ export class PilotNavMenu extends HTMLElement {
       this._breakpoint = isNaN(parsed) ? 768 : parsed;
       this.render();
     } else if (name === 'open') {
+      // Use targeted updates for open attribute to preserve event listeners
       if (newValue !== null && !this._isOpen) {
         this._openMenu();
       } else if (newValue === null && this._isOpen) {
         this._closeMenu();
       }
-    } else {
-      this.render();
     }
+    // Note: 'sticky' and 'variant' attributes are handled via CSS :host selectors
+    // No need to re-render for these
   }
 
   connectedCallback() {
@@ -850,6 +1159,9 @@ export class PilotNavMenu extends HTMLElement {
       const parsed = parseInt(breakpointAttr, 10);
       this._breakpoint = isNaN(parsed) ? 768 : parsed;
     }
+    
+    // Note: Slotted content is processed via slotchange event listeners
+    // in _attachEventListeners(), which is called from render()
   }
 
   disconnectedCallback() {
