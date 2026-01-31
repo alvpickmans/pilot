@@ -101,6 +101,83 @@
     <pilot-divider variant="technical" style="margin-top: var(--spacing-8, 2rem);"></pilot-divider>
   </header>
 
+  <!-- Navigation Menu Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Navigation Menu</h2>
+    <p class="demo-subtitle">Responsive navigation with mobile hamburger menu</p>
+    
+    <div class="component-showcase" style="padding: 0; overflow: hidden;">
+      <pilot-nav-menu>
+        <div slot="brand" style="font-family: var(--font-technical); font-weight: 600; letter-spacing: var(--letter-spacing-technical); text-transform: uppercase;">
+          PILOT NAV
+        </div>
+        <li slot="nav-items"><a href="#buttons">Buttons</a></li>
+        <li slot="nav-items"><a href="#cards">Cards</a></li>
+        <li slot="nav-items"><a href="#inputs">Inputs</a></li>
+        <li slot="nav-items">
+          <a href="#components">Components</a>
+          <ul>
+            <li><a href="#badges">Badges</a></li>
+            <li><a href="#labels">Labels</a></li>
+            <li><a href="#status">Status</a></li>
+          </ul>
+        </li>
+        <li slot="nav-items"><a href="#about">About</a></li>
+        
+        <li slot="mobile-nav-items"><a href="#buttons">Buttons</a></li>
+        <li slot="mobile-nav-items"><a href="#cards">Cards</a></li>
+        <li slot="mobile-nav-items"><a href="#inputs">Inputs</a></li>
+        <li slot="mobile-nav-items">
+          <a href="#components">Components</a>
+          <ul>
+            <li><a href="#badges">Badges</a></li>
+            <li><a href="#labels">Labels</a></li>
+            <li><a href="#status">Status</a></li>
+          </ul>
+        </li>
+        <li slot="mobile-nav-items"><a href="#about">About</a></li>
+      </pilot-nav-menu>
+    </div>
+    
+    <p style="margin-top: var(--spacing-4); font-size: var(--font-size-sm); color: var(--color-text-secondary);">
+      Resize your browser window to see the responsive behavior. On mobile (&lt; 768px), the navigation collapses into a hamburger menu.
+    </p>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-title">Navigation Menu - Technical Variant</h2>
+    <p class="demo-subtitle">Technical styling with enhanced borders</p>
+    
+    <div class="component-showcase" style="padding: 0; overflow: hidden;">
+      <pilot-nav-menu variant="technical">
+        <div slot="brand" style="font-family: var(--font-mono); font-weight: 600; letter-spacing: var(--letter-spacing-technical); text-transform: uppercase;">
+          TECHNICAL_NAV
+        </div>
+        <li slot="nav-items"><a href="#section1">Section 01</a></li>
+        <li slot="nav-items"><a href="#section2">Section 02</a></li>
+        <li slot="nav-items"><a href="#section3">Section 03</a></li>
+        <li slot="nav-items">
+          <a href="#more">More</a>
+          <ul>
+            <li><a href="#sub1">Submenu 01</a></li>
+            <li><a href="#sub2">Submenu 02</a></li>
+          </ul>
+        </li>
+        
+        <li slot="mobile-nav-items"><a href="#section1">Section 01</a></li>
+        <li slot="mobile-nav-items"><a href="#section2">Section 02</a></li>
+        <li slot="mobile-nav-items"><a href="#section3">Section 03</a></li>
+        <li slot="mobile-nav-items">
+          <a href="#more">More</a>
+          <ul>
+            <li><a href="#sub1">Submenu 01</a></li>
+            <li><a href="#sub2">Submenu 02</a></li>
+          </ul>
+        </li>
+      </pilot-nav-menu>
+    </div>
+  </section>
+
   <!-- Buttons Section -->
   <section class="demo-section">
     <h2 class="demo-title">Buttons</h2>
