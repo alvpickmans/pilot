@@ -122,6 +122,12 @@ export class PilotCommodityInput extends HTMLElement {
     this._rawValue = '';
     this._formattedValue = '';
     this._isUserEditing = false;
+
+    // Store bound event handler references for proper cleanup
+    this._boundHandleInput = this._handleInput.bind(this);
+    this._boundHandleBlur = this._handleBlur.bind(this);
+    this._boundHandleFocus = this._handleFocus.bind(this);
+
     this.render();
   }
 
@@ -401,9 +407,9 @@ export class PilotCommodityInput extends HTMLElement {
   _setupEventListeners() {
     const input = this.shadowRoot.querySelector('input');
     if (input) {
-      input.addEventListener('input', this._handleInput.bind(this));
-      input.addEventListener('blur', this._handleBlur.bind(this));
-      input.addEventListener('focus', this._handleFocus.bind(this));
+      input.addEventListener('input', this._boundHandleInput);
+      input.addEventListener('blur', this._boundHandleBlur);
+      input.addEventListener('focus', this._boundHandleFocus);
     }
   }
 
@@ -414,9 +420,9 @@ export class PilotCommodityInput extends HTMLElement {
   disconnectedCallback() {
     const input = this.shadowRoot.querySelector('input');
     if (input) {
-      input.removeEventListener('input', this._handleInput.bind(this));
-      input.removeEventListener('blur', this._handleBlur.bind(this));
-      input.removeEventListener('focus', this._handleFocus.bind(this));
+      input.removeEventListener('input', this._boundHandleInput);
+      input.removeEventListener('blur', this._boundHandleBlur);
+      input.removeEventListener('focus', this._boundHandleFocus);
     }
   }
 
