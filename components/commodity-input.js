@@ -121,6 +121,7 @@ export class PilotCommodityInput extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this._rawValue = '';
     this._formattedValue = '';
+    this._isUserEditing = false;
     this.render();
   }
 
@@ -322,6 +323,9 @@ export class PilotCommodityInput extends HTMLElement {
     const input = event.target;
     const rawValue = input.value;
 
+    // Mark that user is currently editing
+    this._isUserEditing = true;
+
     // Allow typing, but filter out invalid characters
     const cleanedValue = rawValue.replace(/[^\d.,\-]/g, '');
 
@@ -354,6 +358,9 @@ export class PilotCommodityInput extends HTMLElement {
   }
 
   _handleBlur(event) {
+    // Mark that user has finished editing
+    this._isUserEditing = false;
+    
     const input = event.target;
     const parsedValue = this._parseValue(input.value);
 
@@ -381,6 +388,9 @@ export class PilotCommodityInput extends HTMLElement {
   }
 
   _handleFocus(event) {
+    // Mark that user is starting to edit
+    this._isUserEditing = true;
+    
     const input = event.target;
     // Show raw value on focus for easier editing
     if (this._rawValue) {
@@ -466,6 +476,12 @@ export class PilotCommodityInput extends HTMLElement {
         if (name === 'value') {
           this._rawValue = newValue || '';
         }
+      }
+
+      // Don't re-render if user is currently editing (typing)
+      // This prevents focus loss during typing
+      if (this._isUserEditing && (name === 'value' || name === 'error')) {
+        return;
       }
 
       // Re-render on attribute changes, but preserve input value for non-value changes

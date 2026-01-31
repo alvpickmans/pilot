@@ -18,7 +18,46 @@ export class PilotInput extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    this._isUserEditing = false;
     this.render();
+  }
+
+  connectedCallback() {
+    this._setupEventListeners();
+  }
+
+  disconnectedCallback() {
+    this._removeEventListeners();
+  }
+
+  _setupEventListeners() {
+    const input = this.shadowRoot.querySelector('input');
+    if (input) {
+      input.addEventListener('focus', () => {
+        this._isUserEditing = true;
+      });
+      input.addEventListener('blur', () => {
+        this._isUserEditing = false;
+        // Update the value attribute to match what user typed
+        this.setAttribute('value', input.value);
+      });
+      input.addEventListener('input', (e) => {
+        // Don't re-render on input - just let the user type
+        // The value will be synced on blur
+      });
+    }
+  }
+
+  _removeEventListeners() {
+    const input = this.shadowRoot.querySelector('input');
+    if (input) {
+      input.removeEventListener('focus', () => {
+        this._isUserEditing = true;
+      });
+      input.removeEventListener('blur', () => {
+        this._isUserEditing = false;
+      });
+    }
   }
 
   get styles() {
@@ -162,8 +201,18 @@ export class PilotInput extends HTMLElement {
     `;
   }
 
-  attributeChangedCallback() {
+  attributeChangedCallback(name, oldValue, newValue) {
+    // Don't re-render if user is currently editing (typing)
+    // This prevents focus loss during typing
+    if (this._isUserEditing && name === 'value') {
+      return;
+    }
+    
+    // For non-value attributes or when not editing, re-render
     this.render();
+    
+    // Re-attach event listeners after render
+    this._setupEventListeners();
   }
 }
 

@@ -26,6 +26,7 @@ export class PilotSelect extends HTMLElement {
     this._optionElements = [];
     this._searchQuery = '';
     this._options = []; // Initialize _options to prevent undefined errors
+    this._isSearching = false; // Track when user is typing in search box
     this.render();
   }
 
@@ -388,7 +389,66 @@ export class PilotSelect extends HTMLElement {
       );
     }
     this._highlightedIndex = this._filteredOptions.length > 0 ? 0 : -1;
-    this.render();
+    // Only re-render the options list, not the entire component
+    this._renderOptionsList();
+  }
+
+  _renderOptionsList() {
+    const optionsContainer = this.shadowRoot.querySelector('.options-container');
+    if (!optionsContainer) return;
+
+    const multiple = this.hasAttribute('multiple');
+    let currentGroup = null;
+
+    if (this._filteredOptions.length === 0) {
+      optionsContainer.innerHTML = `
+        <div class="no-results">No results found</div>
+      `;
+    } else {
+      optionsContainer.innerHTML = this._filteredOptions.map((option, index) => {
+        const isSelected = this._selectedValues.includes(option.value);
+        const isHighlighted = index === this._highlightedIndex;
+        const groupHeader = option.group && option.group !== currentGroup 
+          ? (currentGroup = option.group, `<div class="option-group">${option.group}</div>`) 
+          : '';
+        
+        return `${groupHeader}
+          <div 
+            class="option ${isSelected ? 'selected' : ''} ${isHighlighted ? 'highlighted' : ''} ${option.disabled ? 'disabled' : ''}"
+            role="option"
+            aria-selected="${isSelected}"
+            data-value="${option.value}"
+          >
+            ${multiple ? `<span class="option-checkbox">${isSelected ? '✓' : ''}</span>` : ''}
+            <span>${option.label}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Re-attach event listeners to new option elements
+    const options = optionsContainer.querySelectorAll('.option');
+    options.forEach((option) => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const value = option.getAttribute('data-value');
+        const optionData = this._filteredOptions.find(o => o.value === value);
+        if (optionData) {
+          this._selectOption(optionData);
+        }
+      });
+      option.addEventListener('mouseenter', (e) => {
+        e.stopPropagation();
+        const value = option.getAttribute('data-value');
+        const index = this._filteredOptions.findIndex(o => o.value === value);
+        this._highlightedIndex = index;
+        // Update visual highlighting via CSS only, no re-render
+        options.forEach((s, i) => {
+          s.classList.toggle('highlighted', i === index);
+          s.setAttribute('aria-selected', i === index);
+        });
+      });
+    });
   }
 
   _handleClickOutside(event) {
@@ -453,7 +513,8 @@ export class PilotSelect extends HTMLElement {
     if (this._filteredOptions.length === 0) return;
     this._highlightedIndex = (this._highlightedIndex + 1) % this._filteredOptions.length;
     this._scrollToHighlighted();
-    this.render();
+    // Only update the options list, don't do full re-render
+    this._updateHighlightedOption();
   }
 
   _highlightPrevious() {
@@ -462,7 +523,16 @@ export class PilotSelect extends HTMLElement {
       ? this._filteredOptions.length - 1 
       : this._highlightedIndex - 1;
     this._scrollToHighlighted();
-    this.render();
+    // Only update the options list, don't do full re-render
+    this._updateHighlightedOption();
+  }
+
+  _updateHighlightedOption() {
+    const options = this.shadowRoot.querySelectorAll('.option');
+    options.forEach((option, index) => {
+      option.classList.toggle('highlighted', index === this._highlightedIndex);
+      option.setAttribute('aria-selected', index === this._highlightedIndex);
+    });
   }
 
   _scrollToHighlighted() {
@@ -667,6 +737,17 @@ export class PilotSelect extends HTMLElement {
     });
 
     if (searchInput) {
+      // Store reference to keep focus
+      this._searchInput = searchInput;
+      
+      // Track when user is actively searching to prevent re-rendering
+      searchInput.addEventListener('focus', () => {
+        this._isSearching = true;
+      });
+      searchInput.addEventListener('blur', () => {
+        this._isSearching = false;
+      });
+      
       searchInput.addEventListener('input', (e) => {
         this._searchQuery = e.target.value;
         this._filterOptions(this._searchQuery);
@@ -690,6 +771,16 @@ export class PilotSelect extends HTMLElement {
     // Parse options if they haven't been parsed yet (e.g., when attributes are set before connectedCallback)
     if (this._options.length === 0 && this.querySelector('option, optgroup')) {
       this._parseOptions();
+    }
+    
+    // Don't re-render if user is actively searching (typing in search box)
+    // This prevents the search input from losing focus
+    if (this._isSearching && name !== 'disabled') {
+      // Still update internal state for value changes, but don't re-render
+      if (name === 'value') {
+        this._updateSelectedValues();
+      }
+      return;
     }
     
     if (name === 'value') {
