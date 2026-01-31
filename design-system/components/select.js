@@ -25,6 +25,7 @@ export class PilotSelect extends HTMLElement {
     this._highlightedIndex = -1;
     this._optionElements = [];
     this._searchQuery = '';
+    this._options = []; // Initialize _options to prevent undefined errors
     this.render();
   }
 
@@ -281,6 +282,8 @@ export class PilotSelect extends HTMLElement {
     this._setupEventListeners();
     this._parseOptions();
     this._updateSelectedValues();
+    // Re-render now that options are parsed
+    this.render();
   }
 
   disconnectedCallback() {
@@ -371,6 +374,11 @@ export class PilotSelect extends HTMLElement {
   }
 
   _filterOptions(query) {
+    // Ensure options are parsed before filtering
+    if (this._options.length === 0 && this.querySelector('option, optgroup')) {
+      this._parseOptions();
+    }
+    
     if (!query) {
       this._filteredOptions = [...this._options];
     } else {
@@ -460,7 +468,7 @@ export class PilotSelect extends HTMLElement {
   _scrollToHighlighted() {
     setTimeout(() => {
       const highlighted = this.shadowRoot.querySelector('.option.highlighted');
-      if (highlighted) {
+      if (highlighted && typeof highlighted.scrollIntoView === 'function') {
         highlighted.scrollIntoView({ block: 'nearest' });
       }
     }, 0);
@@ -540,6 +548,11 @@ export class PilotSelect extends HTMLElement {
   }
 
   render() {
+    // Ensure options are parsed before rendering
+    if (this._options.length === 0 && this.querySelector('option, optgroup')) {
+      this._parseOptions();
+    }
+    
     const multiple = this.hasAttribute('multiple');
     const searchable = this.hasAttribute('searchable');
     const placeholder = this.getAttribute('placeholder') || 'Select an option';
@@ -674,6 +687,11 @@ export class PilotSelect extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    // Parse options if they haven't been parsed yet (e.g., when attributes are set before connectedCallback)
+    if (this._options.length === 0 && this.querySelector('option, optgroup')) {
+      this._parseOptions();
+    }
+    
     if (name === 'value') {
       this._updateSelectedValues();
       this.render();

@@ -116,7 +116,10 @@ describe('PilotSelect', () => {
     });
 
     it('handles multiple attribute', async () => {
-      const select = mount('pilot-select', { multiple: true });
+      const select = mount('pilot-select', { multiple: true }, `
+        <option value="opt1">Option 1</option>
+        <option value="opt2">Option 2</option>
+      `);
       await waitForRender(select);
       
       // Open dropdown to see checkboxes
@@ -791,7 +794,7 @@ describe('PilotSelect', () => {
       select._openDropdown();
       await waitForRender(select);
       
-      select._filterOptions('opt1');
+      select._filterOptions('Option 1');
       await waitForRender(select);
       
       expect(select.shadowRoot.querySelectorAll('.option').length).toBe(1);
