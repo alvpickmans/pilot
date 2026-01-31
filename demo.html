@@ -393,6 +393,118 @@
     </div>
   </section>
 
+  <!-- Search Component Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Search</h2>
+    <p class="demo-subtitle">Autocomplete search with keyboard navigation</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <pilot-search 
+          id="search1"
+          placeholder="Search transactions..."
+          debounce="300"
+          min-length="2"
+        ></pilot-search>
+        <script>
+          // Demo suggestions for search1
+          const search1 = document.getElementById('search1');
+          const transactionData = [
+            { label: 'TRX-2024-001', value: 'TRX-2024-001', meta: '$1,250.00' },
+            { label: 'TRX-2024-002', value: 'TRX-2024-002', meta: '$3,400.00' },
+            { label: 'TRX-2024-003', value: 'TRX-2024-003', meta: '$890.50' },
+            { label: 'TRX-2024-004', value: 'TRX-2024-004', meta: '$12,000.00' },
+            { label: 'ACC-SAVINGS-001', value: 'ACC-SAVINGS-001', meta: 'Account' },
+            { label: 'ACC-CHECKING-001', value: 'ACC-CHECKING-001', meta: 'Account' },
+            { label: 'ACC-INVESTMENT-001', value: 'ACC-INVESTMENT-001', meta: 'Account' }
+          ];
+          
+          search1.addEventListener('search', (e) => {
+            const query = e.detail.query.toLowerCase();
+            search1.setLoading(true);
+            
+            // Simulate API delay
+            setTimeout(() => {
+              const filtered = transactionData.filter(item => 
+                item.label.toLowerCase().includes(query) ||
+                item.value.toLowerCase().includes(query)
+              );
+              search1.setSuggestions(filtered);
+              search1.setLoading(false);
+            }, 200);
+          });
+          
+          search1.addEventListener('select', (e) => {
+            console.log('Selected:', e.detail.suggestion);
+          });
+        </script>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-search 
+          id="search2"
+          placeholder="Search accounts..."
+          debounce="500"
+          min-length="3"
+        ></pilot-search>
+        <script>
+          // Demo suggestions for search2
+          const search2 = document.getElementById('search2');
+          const accountData = [
+            { label: 'Personal Checking', value: 'CHK-1234', meta: '$5,420.00' },
+            { label: 'Personal Savings', value: 'SAV-5678', meta: '$15,000.00' },
+            { label: 'Business Account', value: 'BUS-9012', meta: '$45,200.00' },
+            { label: 'Investment Portfolio', value: 'INV-3456', meta: '$125,000.00' },
+            { label: 'Credit Card', value: 'CC-7890', meta: '-$1,200.00' }
+          ];
+          
+          search2.addEventListener('search', (e) => {
+            const query = e.detail.query.toLowerCase();
+            search2.setLoading(true);
+            
+            setTimeout(() => {
+              const filtered = accountData.filter(item => 
+                item.label.toLowerCase().includes(query)
+              );
+              search2.setSuggestions(filtered);
+              search2.setLoading(false);
+            }, 300);
+          });
+        </script>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-search 
+          placeholder="Disabled search"
+          disabled
+        ></pilot-search>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-search 
+          id="search3"
+          placeholder="Loading state demo..."
+        ></pilot-search>
+        <script>
+          const search3 = document.getElementById('search3');
+          search3.addEventListener('search', (e) => {
+            search3.setLoading(true);
+            // Simulate long loading
+            setTimeout(() => {
+              search3.setSuggestions([
+                { label: 'Result 1', value: 'res1' },
+                { label: 'Result 2', value: 'res2' }
+              ]);
+              search3.setLoading(false);
+            }, 1500);
+          });
+        </script>
+      </div>
+    </div>
+  </section>
+
   <!-- Badges & Labels Section -->
   <section class="demo-section">
     <h2 class="demo-title">Badges & Labels</h2>
