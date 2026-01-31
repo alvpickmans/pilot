@@ -798,8 +798,6 @@ export class PilotNavMenu extends HTMLElement {
       mobileNavSlot.addEventListener('slotchange', () => this._processMobileNavItems(mobileNavSlot));
     }
 
-    // Window resize
-    window.addEventListener('resize', this._resizeHandler);
   }
 
   _processNavItems(slot) {
@@ -1159,6 +1157,9 @@ export class PilotNavMenu extends HTMLElement {
       const parsed = parseInt(breakpointAttr, 10);
       this._breakpoint = isNaN(parsed) ? 768 : parsed;
     }
+    
+    // Window resize listener for responsive behavior
+    window.addEventListener('resize', this._resizeHandler);
     
     // Note: Slotted content is processed via slotchange event listeners
     // in _attachEventListeners(), which is called from render()
