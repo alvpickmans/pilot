@@ -19,6 +19,22 @@ export class PilotInput extends HTMLElement {
     super();
     this.attachShadow({ mode: 'open' });
     this._isUserEditing = false;
+    
+    // Store event handler references for proper cleanup
+    this._handleFocus = () => {
+      this._isUserEditing = true;
+    };
+    this._handleBlur = () => {
+      this._isUserEditing = false;
+      const input = this.shadowRoot.querySelector('input');
+      if (input) {
+        this.setAttribute('value', input.value);
+      }
+    };
+    this._handleInput = () => {
+      // Don't re-render on input - value synced on blur
+    };
+    
     this.render();
   }
 
@@ -33,30 +49,18 @@ export class PilotInput extends HTMLElement {
   _setupEventListeners() {
     const input = this.shadowRoot.querySelector('input');
     if (input) {
-      input.addEventListener('focus', () => {
-        this._isUserEditing = true;
-      });
-      input.addEventListener('blur', () => {
-        this._isUserEditing = false;
-        // Update the value attribute to match what user typed
-        this.setAttribute('value', input.value);
-      });
-      input.addEventListener('input', (e) => {
-        // Don't re-render on input - just let the user type
-        // The value will be synced on blur
-      });
+      input.addEventListener('focus', this._handleFocus);
+      input.addEventListener('blur', this._handleBlur);
+      input.addEventListener('input', this._handleInput);
     }
   }
 
   _removeEventListeners() {
     const input = this.shadowRoot.querySelector('input');
     if (input) {
-      input.removeEventListener('focus', () => {
-        this._isUserEditing = true;
-      });
-      input.removeEventListener('blur', () => {
-        this._isUserEditing = false;
-      });
+      input.removeEventListener('focus', this._handleFocus);
+      input.removeEventListener('blur', this._handleBlur);
+      input.removeEventListener('input', this._handleInput);
     }
   }
 
