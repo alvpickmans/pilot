@@ -71,6 +71,7 @@ export class PilotDatepicker extends DropdownBase(HTMLElement) {
         border-right: none;
         padding-left: var(--spacing-8, 2rem);
         padding-right: var(--spacing-8, 2rem);
+        width: 100%;
       }
 
       .calendar {

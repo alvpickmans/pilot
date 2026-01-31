@@ -135,20 +135,29 @@ export const technicalBracketStyles = `
     font-size: var(--font-size-lg, 1.125rem);
     color: var(--color-border-primary, #b3b3b3);
     padding: 0 var(--spacing-2, 0.5rem);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
   }
 
   .input-wrapper.technical::before {
     content: '[';
+    left: 0;
   }
 
   .input-wrapper.technical::after {
     content: ']';
+    right: 0;
   }
 
   .input-wrapper.technical input {
     border-left: none;
     border-right: none;
+    padding-left: var(--spacing-8, 2rem);
+    padding-right: var(--spacing-8, 2rem);
     text-align: center;
+    width: 100%;
   }
 `;
 
