@@ -38,13 +38,13 @@ python3 -m http.server 8000
 ### Testing
 ```bash
 # Run unit tests (Vitest + happy-dom - no browser required)
-bun run test:unit
+npm test
 
 # Run tests in watch mode during development
-bun run test:unit:watch
+npm run test:watch
 
 # Run tests with coverage report
-bun run test:coverage
+npm run test:coverage
 ```
 
 ### Linting

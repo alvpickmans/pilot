@@ -16,7 +16,7 @@ Use this prompt when creating a new Web Component for the Pilot Design System.
 
 3. **Set task to in_progress:**
    ```bash
-   bd set-state <task-id> status=in_progress
+   bd set-state <task-id> status=in_progress --reason "Starting work on this task"
    ```
 
 ## Component Development Workflow
