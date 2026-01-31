@@ -32,3 +32,4 @@ export { PilotAnnotation } from './annotation.js';
 export { PilotMeasurement } from './measurement.js';
 export { PilotModal } from './modal.js';
 export { PilotSelect } from './select.js';
+export { PilotDatepicker } from './datepicker.js';

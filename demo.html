@@ -351,6 +351,48 @@
     </div>
   </section>
 
+  <!-- Datepicker Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Datepicker</h2>
+    <p class="demo-subtitle">Date selection with grid-based calendar</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <pilot-datepicker 
+          label="Deployment Date"
+          placeholder="Select date"
+        ></pilot-datepicker>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-datepicker 
+          label="Date Range"
+          placeholder="Select date range"
+          mode="range"
+        ></pilot-datepicker>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-datepicker 
+          label="Maintenance Window"
+          placeholder="Select maintenance date"
+          min="2026-01-01"
+          max="2026-12-31"
+        ></pilot-datepicker>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-datepicker 
+          label="Disabled State"
+          placeholder="Cannot select"
+          disabled
+        ></pilot-datepicker>
+      </div>
+    </div>
+  </section>
+
   <!-- Badges & Labels Section -->
   <section class="demo-section">
     <h2 class="demo-title">Badges & Labels</h2>
@@ -663,7 +705,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          15 Web Components
+          16 Web Components
         </p>
       </div>
       <div>

@@ -182,6 +182,37 @@ refactor: simplify pilot-card shadow DOM
 
 Always test in demo.html before committing.
 
+## Testing Tips for Web Components
+
+### Testing Components with Re-rendering
+When a component re-renders its entire shadow DOM (using `innerHTML`), DOM references become stale. This affects tests that click elements:
+
+**Problem:** Clicking a trigger button that calls `render()` replaces the entire shadow DOM, making subsequent queries fail.
+
+**Solution:** Use internal methods directly in tests instead of clicking:
+```javascript
+// ❌ Avoid: Clicking can fail due to DOM replacement
+const trigger = shadowRoot.querySelector('.trigger');
+trigger.click();  // This triggers render() which replaces the DOM
+const calendar = shadowRoot.querySelector('.calendar');  // Stale reference!
+
+// ✅ Better: Call internal methods directly
+datepicker._openCalendar();  // Or _toggleDropdown(), etc.
+await waitForRender(datepicker);
+const calendar = datepicker.shadowRoot.querySelector('.calendar');
+expect(calendar.classList.contains('open')).toBe(true);
+```
+
+**Always re-query elements after `waitForRender()`** when the component might have re-rendered.
+
+### Test Utilities
+Import test helpers from `tests/web-components.js`:
+```javascript
+import { registerComponent, mount, cleanup, waitForRender } from '../tests/web-components.js';
+```
+
+Use `waitForRender()` after any operation that triggers re-rendering.
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
