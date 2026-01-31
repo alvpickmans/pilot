@@ -578,6 +578,7 @@ export class PilotSelect extends HTMLElement {
     if (option.disabled) return;
 
     const multiple = this.hasAttribute('multiple');
+    const searchable = this.hasAttribute('searchable');
 
     if (multiple) {
       const index = this._selectedValues.indexOf(option.value);
@@ -600,7 +601,86 @@ export class PilotSelect extends HTMLElement {
       bubbles: true
     }));
 
-    this.render();
+    // Avoid full re-render when dropdown is open and searchable to prevent focus loss
+    if (multiple && this._isOpen && searchable) {
+      this._updateTriggerAndTags();
+      this._updateOptionStates();
+    } else {
+      this.render();
+    }
+  }
+
+  _updateTriggerAndTags() {
+    const triggerText = this.shadowRoot.querySelector('.trigger-text');
+    const selectedTags = this.shadowRoot.querySelector('.selected-tags');
+    const multiple = this.hasAttribute('multiple');
+    const placeholder = this.getAttribute('placeholder') || 'Select an option';
+
+    const selectedLabels = this._selectedValues.map(value => {
+      const option = this._options.find(o => o.value === value);
+      return option ? option.label : value;
+    });
+
+    if (triggerText) {
+      const text = selectedLabels.length > 0 
+        ? (multiple ? `${selectedLabels.length} selected` : selectedLabels[0])
+        : placeholder;
+      triggerText.textContent = text;
+      triggerText.classList.toggle('placeholder', selectedLabels.length === 0);
+    }
+
+    if (multiple) {
+      const field = this.shadowRoot.querySelector('.field');
+      if (field) {
+        // Remove existing tags container if present
+        const existingTags = field.querySelector('.selected-tags');
+        if (existingTags) {
+          existingTags.remove();
+        }
+        
+        // Add new tags if there are selections
+        if (selectedLabels.length > 0) {
+          const tagsContainer = document.createElement('div');
+          tagsContainer.className = 'selected-tags';
+          tagsContainer.innerHTML = selectedLabels.map((label, index) => `
+            <span class="tag">
+              ${label}
+              <span class="tag-remove" data-value="${this._selectedValues[index]}">×</span>
+            </span>
+          `).join('');
+          field.appendChild(tagsContainer);
+          
+          // Attach event listeners to new remove buttons
+          const tagRemoves = tagsContainer.querySelectorAll('.tag-remove');
+          tagRemoves.forEach(remove => {
+            remove.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this._removeTag(remove.getAttribute('data-value'));
+            });
+          });
+        }
+      }
+    }
+  }
+
+  _updateOptionStates() {
+    const options = this.shadowRoot.querySelectorAll('.option');
+    const multiple = this.hasAttribute('multiple');
+    
+    options.forEach((optionEl) => {
+      const value = optionEl.getAttribute('data-value');
+      const isSelected = this._selectedValues.includes(value);
+      
+      optionEl.classList.toggle('selected', isSelected);
+      optionEl.setAttribute('aria-selected', isSelected);
+      
+      if (multiple) {
+        const checkbox = optionEl.querySelector('.option-checkbox');
+        if (checkbox) {
+          checkbox.textContent = isSelected ? '✓' : '';
+        }
+      }
+    });
   }
 
   _removeTag(value) {
@@ -613,7 +693,15 @@ export class PilotSelect extends HTMLElement {
         detail: { value: this._selectedValues },
         bubbles: true
       }));
-      this.render();
+      
+      // Avoid full re-render when dropdown is open and searchable to prevent focus loss
+      const searchable = this.hasAttribute('searchable');
+      if (this._isOpen && searchable) {
+        this._updateTriggerAndTags();
+        this._updateOptionStates();
+      } else {
+        this.render();
+      }
     }
   }
 
