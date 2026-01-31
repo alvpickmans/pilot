@@ -91,6 +91,48 @@ customElements.define('pilot-component', PilotComponent);
 - Re-render on `attributeChangedCallback`
 - Use semantic HTML elements inside components
 
+**Performance - Avoid Full Re-renders on User Input:**
+When handling user interactions (clicks, keyboard input), avoid calling `render()` which rebuilds the entire shadow DOM. Instead, update only the changed elements directly:
+
+```javascript
+// ❌ BAD: Full re-render causes lag
+_handleClick() {
+  this._isChecked = !this._isChecked;
+  this.render(); // Rebuilds entire DOM - slow!
+}
+
+// ✅ GOOD: Targeted updates are instant
+_handleClick() {
+  this._isChecked = !this._isChecked;
+  this._updateVisualState(); // Updates only what changed
+}
+
+_updateVisualState() {
+  const track = this.shadowRoot.querySelector('.toggle-track');
+  const labels = this.shadowRoot.querySelectorAll('.toggle-label');
+  
+  if (track) {
+    track.classList.toggle('checked', this._isChecked);
+    track.setAttribute('aria-checked', this._isChecked);
+  }
+  
+  if (labels.length === 2) {
+    labels[0].classList.toggle('active', !this._isChecked);
+    labels[1].classList.toggle('active', this._isChecked);
+  }
+}
+```
+
+**When to use full re-render:**
+- Initial component creation (constructor)
+- Structural changes (adding/removing elements, changing labels)
+- Attribute changes from outside the component (attributeChangedCallback)
+
+**When to use targeted updates:**
+- User interactions (clicks, keypresses)
+- Toggle state changes
+- Visual state updates that don't change DOM structure
+
 ### CSS
 
 **Variable Naming:**
