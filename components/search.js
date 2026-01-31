@@ -13,7 +13,7 @@ import { baseStyles } from './shared.js';
 
 export class PilotSearch extends HTMLElement {
   static get observedAttributes() {
-    return ['placeholder', 'debounce', 'min-length', 'disabled', 'loading', 'value'];
+    return ['placeholder', 'debounce', 'min-length', 'disabled', 'loading'];
   }
 
   constructor() {
@@ -26,13 +26,8 @@ export class PilotSearch extends HTMLElement {
     this._debounceTimer = null;
     this._selectedValue = '';
     
-    // Initialize value from attribute if present
-    if (this.hasAttribute('value')) {
-      this._selectedValue = this.getAttribute('value') || '';
-      this._searchQuery = this._selectedValue;
-    }
-    
-    this.render();
+    // Create the initial DOM structure once
+    this._createDOM();
   }
 
   get styles() {
@@ -232,7 +227,58 @@ export class PilotSearch extends HTMLElement {
     `;
   }
 
+  _createDOM() {
+    const placeholder = this.getAttribute('placeholder') || 'Search...';
+    const disabled = this.hasAttribute('disabled');
+    const loading = this.hasAttribute('loading');
+    const hasValue = this._selectedValue.length > 0;
+
+    this.shadowRoot.innerHTML = `
+      <style>${this.styles}</style>
+      <div class="field">
+        <div class="input-wrapper technical">
+          <input 
+            type="text"
+            placeholder="${placeholder}"
+            value="${this._selectedValue}"
+            ${disabled ? 'disabled' : ''}
+            autocomplete="off"
+            aria-autocomplete="list"
+            aria-expanded="${this._isOpen}"
+            aria-haspopup="listbox"
+          />
+          <div class="input-actions">
+            <div class="loading-indicator ${loading ? 'visible' : ''}"></div>
+            <button class="clear-button ${hasValue && !loading ? 'visible' : ''}" aria-label="Clear search">×</button>
+          </div>
+        </div>
+        <div class="dropdown ${this._isOpen ? 'open' : ''}" role="listbox">
+          <div class="suggestions-container"></div>
+        </div>
+      </div>
+    `;
+
+    // Cache DOM references
+    this._input = this.shadowRoot.querySelector('input');
+    this._dropdown = this.shadowRoot.querySelector('.dropdown');
+    this._suggestionsContainer = this.shadowRoot.querySelector('.suggestions-container');
+    this._loadingIndicator = this.shadowRoot.querySelector('.loading-indicator');
+    this._clearButton = this.shadowRoot.querySelector('.clear-button');
+
+    this._attachEventListeners();
+  }
+
   connectedCallback() {
+    // Initialize value from attribute if present (attributes are now available)
+    if (this.hasAttribute('value')) {
+      this._selectedValue = this.getAttribute('value') || '';
+      this._searchQuery = this._selectedValue;
+      if (this._input) {
+        this._input.value = this._selectedValue;
+      }
+      this._updateClearButton();
+    }
+    
     this._setupEventListeners();
   }
 
@@ -298,7 +344,7 @@ export class PilotSearch extends HTMLElement {
           event.preventDefault();
           this._highlightedIndex = 0;
           this._scrollToHighlighted();
-          this.render();
+          this._renderSuggestions();
         }
         break;
       case 'End':
@@ -306,7 +352,7 @@ export class PilotSearch extends HTMLElement {
           event.preventDefault();
           this._highlightedIndex = this._suggestions.length - 1;
           this._scrollToHighlighted();
-          this.render();
+          this._renderSuggestions();
         }
         break;
     }
@@ -316,7 +362,7 @@ export class PilotSearch extends HTMLElement {
     if (this._suggestions.length === 0) return;
     this._highlightedIndex = (this._highlightedIndex + 1) % this._suggestions.length;
     this._scrollToHighlighted();
-    this.render();
+    this._renderSuggestions();
   }
 
   _highlightPrevious() {
@@ -325,7 +371,7 @@ export class PilotSearch extends HTMLElement {
       ? this._suggestions.length - 1 
       : this._highlightedIndex - 1;
     this._scrollToHighlighted();
-    this.render();
+    this._renderSuggestions();
   }
 
   _scrollToHighlighted() {
@@ -340,27 +386,102 @@ export class PilotSearch extends HTMLElement {
   _openDropdown() {
     this._isOpen = true;
     this._highlightedIndex = this._suggestions.length > 0 ? 0 : -1;
-    this.render();
+    this._updateDropdownState();
   }
 
   _closeDropdown() {
     this._isOpen = false;
     this._highlightedIndex = -1;
-    this.render();
+    this._updateDropdownState();
   }
 
-  _toggleDropdown() {
-    if (this._isOpen) {
-      this._closeDropdown();
-    } else {
-      this._openDropdown();
+  _updateDropdownState() {
+    if (this._dropdown) {
+      this._dropdown.classList.toggle('open', this._isOpen);
     }
+    if (this._input) {
+      this._input.setAttribute('aria-expanded', this._isOpen);
+    }
+    this._renderSuggestions();
+  }
+
+  _renderSuggestions() {
+    if (!this._suggestionsContainer) return;
+
+    const minLength = parseInt(this.getAttribute('min-length')) || 1;
+    
+    if (this._suggestions.length === 0 && this._searchQuery.length >= minLength) {
+      this._suggestionsContainer.innerHTML = `
+        <div class="no-results">
+          <div class="no-results-icon">⚲</div>
+          <div>No results found</div>
+        </div>
+      `;
+    } else {
+      this._suggestionsContainer.innerHTML = this._suggestions.map((suggestion, index) => {
+        const isHighlighted = index === this._highlightedIndex;
+        const highlightedLabel = this._highlightMatch(suggestion.label, this._searchQuery);
+        
+        return `
+          <div 
+            class="suggestion ${isHighlighted ? 'highlighted' : ''}"
+            role="option"
+            aria-selected="${isHighlighted}"
+            data-index="${index}"
+          >
+            <span class="suggestion-text">${highlightedLabel}</span>
+            ${suggestion.meta ? `<span class="suggestion-meta">${suggestion.meta}</span>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Re-attach suggestion click handlers
+    const suggestions = this._suggestionsContainer.querySelectorAll('.suggestion');
+    suggestions.forEach((suggestion) => {
+      suggestion.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const index = parseInt(suggestion.getAttribute('data-index'));
+        if (this._suggestions[index]) {
+          this._selectSuggestion(this._suggestions[index]);
+        }
+      });
+      
+      suggestion.addEventListener('mouseenter', () => {
+        const index = parseInt(suggestion.getAttribute('data-index'));
+        this._highlightedIndex = index;
+        // Update highlighting without full re-render
+        suggestions.forEach((s, i) => {
+          s.classList.toggle('highlighted', i === index);
+          s.setAttribute('aria-selected', i === index);
+        });
+      });
+    });
+  }
+
+  _updateClearButton() {
+    if (this._clearButton) {
+      const hasValue = this._selectedValue.length > 0;
+      const loading = this.hasAttribute('loading');
+      this._clearButton.classList.toggle('visible', hasValue && !loading);
+    }
+  }
+
+  _updateLoadingState() {
+    if (this._loadingIndicator) {
+      const loading = this.hasAttribute('loading');
+      this._loadingIndicator.classList.toggle('visible', loading);
+    }
+    this._updateClearButton();
   }
 
   _handleInput(event) {
     const value = event.target.value;
     this._searchQuery = value;
     this._selectedValue = value;
+    
+    // Update clear button visibility without re-rendering entire component
+    this._updateClearButton();
     
     // Clear previous debounce timer
     if (this._debounceTimer) {
@@ -372,7 +493,6 @@ export class PilotSearch extends HTMLElement {
     if (value.length < minLength) {
       this._suggestions = [];
       this._closeDropdown();
-      this.render();
       return;
     }
 
@@ -385,8 +505,6 @@ export class PilotSearch extends HTMLElement {
         bubbles: true
       }));
     }, debounceMs);
-
-    this.render();
   }
 
   _selectSuggestion(suggestion) {
@@ -394,18 +512,17 @@ export class PilotSearch extends HTMLElement {
     this._searchQuery = this._selectedValue;
     this._closeDropdown();
     
-    // Update input value
-    const input = this.shadowRoot.querySelector('input');
-    if (input) {
-      input.value = this._selectedValue;
+    // Update input value directly without re-rendering
+    if (this._input) {
+      this._input.value = this._selectedValue;
     }
+    
+    this._updateClearButton();
 
     this.dispatchEvent(new CustomEvent('select', {
       detail: { suggestion },
       bubbles: true
     }));
-
-    this.render();
   }
 
   _clearValue() {
@@ -414,17 +531,16 @@ export class PilotSearch extends HTMLElement {
     this._suggestions = [];
     this._closeDropdown();
     
-    const input = this.shadowRoot.querySelector('input');
-    if (input) {
-      input.value = '';
-      input.focus();
+    if (this._input) {
+      this._input.value = '';
+      this._input.focus();
     }
+    
+    this._updateClearButton();
 
     this.dispatchEvent(new CustomEvent('clear', {
       bubbles: true
     }));
-
-    this.render();
   }
 
   _highlightMatch(text, query) {
@@ -449,12 +565,14 @@ export class PilotSearch extends HTMLElement {
     
     // Open dropdown if we have suggestions and not disabled
     if (this._suggestions.length > 0 && !this.hasAttribute('disabled')) {
-      this._openDropdown();
+      this._isOpen = true;
+      this._highlightedIndex = 0;
     } else {
-      this._closeDropdown();
+      this._isOpen = false;
+      this._highlightedIndex = -1;
     }
     
-    this.render();
+    this._updateDropdownState();
   }
 
   // Public method to set loading state
@@ -464,109 +582,46 @@ export class PilotSearch extends HTMLElement {
     } else {
       this.removeAttribute('loading');
     }
-    this.render();
-  }
-
-  render() {
-    const placeholder = this.getAttribute('placeholder') || 'Search...';
-    const disabled = this.hasAttribute('disabled');
-    const loading = this.hasAttribute('loading');
-    const hasValue = this._selectedValue.length > 0;
-
-    this.shadowRoot.innerHTML = `
-      <style>${this.styles}</style>
-      <div class="field">
-        <div class="input-wrapper technical">
-          <input 
-            type="text"
-            placeholder="${placeholder}"
-            value="${this._selectedValue}"
-            ${disabled ? 'disabled' : ''}
-            autocomplete="off"
-            aria-autocomplete="list"
-            aria-expanded="${this._isOpen}"
-            aria-haspopup="listbox"
-          />
-          <div class="input-actions">
-            <div class="loading-indicator ${loading ? 'visible' : ''}"></div>
-            <button class="clear-button ${hasValue && !loading ? 'visible' : ''}" aria-label="Clear search">×</button>
-          </div>
-        </div>
-        <div class="dropdown ${this._isOpen ? 'open' : ''}" role="listbox">
-          <div class="suggestions-container">
-            ${this._suggestions.length === 0 && this._searchQuery.length >= (parseInt(this.getAttribute('min-length')) || 1) ? `
-              <div class="no-results">
-                <div class="no-results-icon">⚲</div>
-                <div>No results found</div>
-              </div>
-            ` : this._suggestions.map((suggestion, index) => {
-              const isHighlighted = index === this._highlightedIndex;
-              const highlightedLabel = this._highlightMatch(suggestion.label, this._searchQuery);
-              
-              return `
-                <div 
-                  class="suggestion ${isHighlighted ? 'highlighted' : ''}"
-                  role="option"
-                  aria-selected="${isHighlighted}"
-                  data-index="${index}"
-                >
-                  <span class="suggestion-text">${highlightedLabel}</span>
-                  ${suggestion.meta ? `<span class="suggestion-meta">${suggestion.meta}</span>` : ''}
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      </div>
-    `;
-
-    this._attachEventListeners();
+    this._updateLoadingState();
   }
 
   _attachEventListeners() {
-    const input = this.shadowRoot.querySelector('input');
-    const clearButton = this.shadowRoot.querySelector('.clear-button');
-    const suggestions = this.shadowRoot.querySelectorAll('.suggestion');
-
-    if (input && !this.hasAttribute('disabled')) {
-      input.addEventListener('input', (e) => this._handleInput(e));
-      input.addEventListener('focus', () => {
-        if (this._suggestions.length > 0) {
+    if (this._input && !this.hasAttribute('disabled')) {
+      this._input.addEventListener('input', (e) => this._handleInput(e));
+      this._input.addEventListener('focus', () => {
+        if (this._suggestions.length > 0 && !this._isOpen) {
           this._openDropdown();
         }
       });
     }
 
-    if (clearButton) {
-      clearButton.addEventListener('click', (e) => {
+    if (this._clearButton) {
+      this._clearButton.addEventListener('click', (e) => {
         e.stopPropagation();
         this._clearValue();
       });
     }
-
-    suggestions.forEach((suggestion) => {
-      suggestion.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const index = parseInt(suggestion.getAttribute('data-index'));
-        if (this._suggestions[index]) {
-          this._selectSuggestion(this._suggestions[index]);
-        }
-      });
-      
-      suggestion.addEventListener('mouseenter', () => {
-        const index = parseInt(suggestion.getAttribute('data-index'));
-        this._highlightedIndex = index;
-        // Don't re-render on mouseenter - visual highlighting handled by CSS
-      });
-    });
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'value' && newValue !== oldValue) {
       this._selectedValue = newValue || '';
       this._searchQuery = this._selectedValue;
+      if (this._input) {
+        this._input.value = this._selectedValue;
+      }
+      this._updateClearButton();
+    } else if (name === 'placeholder' && this._input) {
+      this._input.setAttribute('placeholder', newValue || 'Search...');
+    } else if (name === 'disabled' && this._input) {
+      if (newValue !== null) {
+        this._input.setAttribute('disabled', '');
+      } else {
+        this._input.removeAttribute('disabled');
+      }
+    } else if (name === 'loading') {
+      this._updateLoadingState();
     }
-    this.render();
   }
 
   get value() {
@@ -576,7 +631,10 @@ export class PilotSearch extends HTMLElement {
   set value(val) {
     this._selectedValue = val || '';
     this._searchQuery = this._selectedValue;
-    this.render();
+    if (this._input) {
+      this._input.value = this._selectedValue;
+    }
+    this._updateClearButton();
   }
 }
 
