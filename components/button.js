@@ -49,27 +49,44 @@ export class PilotButton extends HTMLElement {
         overflow: hidden;
       }
       
-      button::before {
+      /* Technical corner accents for hover effect */
+      button::before,
+      button::after {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--color-brand-primary, #1a1a1a);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
-        z-index: 0;
+        width: 6px;
+        height: 6px;
+        border: 2px solid var(--color-brand-primary, #1a1a1a);
+        opacity: 0;
+        transition: all var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
       }
       
-      button:hover::before {
-        transform: scaleX(1);
+      /* Top-left corner bracket */
+      button::before {
+        top: 4px;
+        left: 4px;
+        border-right: none;
+        border-bottom: none;
+      }
+      
+      /* Bottom-right corner bracket */
+      button::after {
+        bottom: 4px;
+        right: 4px;
+        border-left: none;
+        border-top: none;
+      }
+      
+      button:hover::before,
+      button:hover::after {
+        opacity: 1;
+        width: 10px;
+        height: 10px;
+        border-width: 3px;
       }
       
       button:hover {
-        color: var(--color-text-inverse, #ffffff);
-        border-color: var(--color-brand-primary, #1a1a1a);
+        background: var(--color-background-secondary, #f5f5f5);
       }
       
       button > * {
@@ -95,12 +112,25 @@ export class PilotButton extends HTMLElement {
       /* Variants */
       button[variant="primary"] {
         background: var(--color-brand-primary, #1a1a1a);
-        color: var(--color-text-inverse, #ffffff);
+        color: var(--color-white-100, #ffffff);
         border-color: var(--color-brand-primary, #1a1a1a);
       }
       
-      button[variant="primary"]::before {
+      /* Primary button maintains white text always */
+      button[variant="primary"]:hover {
+        color: var(--color-white-100, #ffffff);
         background: var(--color-brand-primary-hover, #242424);
+      }
+      
+      /* Primary button corner accents in white */
+      button[variant="primary"]::before,
+      button[variant="primary"]::after {
+        border-color: var(--color-white-100, #ffffff);
+      }
+      
+      /* Primary button maintains white text in dark mode */
+      :host-context([data-theme="dark"]) button[variant="primary"] {
+        color: var(--color-white-100, #ffffff);
       }
       
       button[variant="secondary"] {
