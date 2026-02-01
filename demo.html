@@ -89,6 +89,28 @@
   </style>
 </head>
 <body>
+  <!-- Global Navigation -->
+  <pilot-nav-menu sticky variant="technical" style="margin-bottom: var(--spacing-8);">
+    <div slot="brand" style="font-family: var(--font-technical); font-weight: 600; letter-spacing: var(--letter-spacing-technical); text-transform: uppercase;">
+      PILOT DS
+    </div>
+    <li slot="nav-items"><a href="#buttons">Buttons</a></li>
+    <li slot="nav-items"><a href="#cards">Cards</a></li>
+    <li slot="nav-items"><a href="#inputs">Inputs</a></li>
+    <li slot="nav-items"><a href="#components">Components</a></li>
+    <li slot="nav-items"><a href="#about">About</a></li>
+    
+    <div slot="actions">
+      <pilot-theme-toggle show-label></pilot-theme-toggle>
+    </div>
+    
+    <li slot="mobile-nav-items"><a href="#buttons">Buttons</a></li>
+    <li slot="mobile-nav-items"><a href="#cards">Cards</a></li>
+    <li slot="mobile-nav-items"><a href="#inputs">Inputs</a></li>
+    <li slot="mobile-nav-items"><a href="#components">Components</a></li>
+    <li slot="mobile-nav-items"><a href="#about">About</a></li>
+  </pilot-nav-menu>
+
   <!-- Header -->
   <header class="demo-section">
     <h1 class="demo-title" style="font-size: var(--font-size-5xl, 3rem);">

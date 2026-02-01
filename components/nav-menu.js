@@ -49,13 +49,13 @@ export class PilotNavMenu extends HTMLElement {
           align-items: center;
           gap: 0.25rem;
           padding: 0.5rem 0.75rem;
-          font-family: 'JetBrains Mono', monospace;
+          font-family: var(--font-technical, 'JetBrains Mono', monospace);
           font-size: 0.875rem;
           font-weight: 500;
           letter-spacing: 0.05em;
           text-transform: uppercase;
           text-decoration: none;
-          color: #1a1a1a;
+          color: var(--color-text-primary, #1a1a1a);
           border: 1px solid transparent;
           transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
           cursor: pointer;
@@ -64,22 +64,22 @@ export class PilotNavMenu extends HTMLElement {
         
         li[slot="nav-items"] > a:hover,
         li[slot="nav-items"] > button:hover {
-          color: #1a1a1a;
-          background: #f5f5f5;
-          border-color: #b3b3b3;
+          color: var(--color-text-primary, #1a1a1a);
+          background: var(--color-background-secondary, #f5f5f5);
+          border-color: var(--color-border-primary, #b3b3b3);
         }
         
         li[slot="nav-items"] > a:focus-visible,
         li[slot="nav-items"] > button:focus-visible {
-          outline: 2px solid #f59e0b;
+          outline: 2px solid var(--color-brand-accent, #f59e0b);
           outline-offset: 2px;
         }
         
         li[slot="nav-items"] > a.active,
         li[slot="nav-items"] > button.active {
-          color: #1a1a1a;
-          background: #f5f5f5;
-          border-color: #1a1a1a;
+          color: var(--color-text-primary, #1a1a1a);
+          background: var(--color-background-secondary, #f5f5f5);
+          border-color: var(--color-border-technical, #1a1a1a);
         }
         
         /* Nested menu indicator */
@@ -103,8 +103,8 @@ export class PilotNavMenu extends HTMLElement {
           top: 100%;
           left: 0;
           min-width: 200px;
-          background: #ffffff;
-          border: 1px solid #d4d4d4;
+          background: var(--color-background-primary, #ffffff);
+          border: 1px solid var(--color-border-secondary, #d4d4d4);
           box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
           list-style: none;
           margin: 0.25rem 0 0 0;
@@ -133,13 +133,13 @@ export class PilotNavMenu extends HTMLElement {
         
         li[slot="nav-items"] > ul > li > a:hover,
         li[slot="nav-items"] > ul > li > button:hover {
-          background: #f5f5f5;
+          background: var(--color-background-secondary, #f5f5f5);
         }
         
         /* Mobile Navigation Styles */
         li[slot="mobile-nav-items"] {
           list-style: none;
-          border-bottom: 1px solid #d4d4d4;
+          border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
         }
         
         li[slot="mobile-nav-items"] > a,
@@ -149,13 +149,13 @@ export class PilotNavMenu extends HTMLElement {
           justify-content: space-between;
           width: 100%;
           padding: 1rem 1.5rem;
-          font-family: 'JetBrains Mono', monospace;
+          font-family: var(--font-technical, 'JetBrains Mono', monospace);
           font-size: 0.875rem;
           font-weight: 500;
           letter-spacing: 0.05em;
           text-transform: uppercase;
           text-decoration: none;
-          color: #1a1a1a;
+          color: var(--color-text-primary, #1a1a1a);
           background: none;
           border: none;
           cursor: pointer;
@@ -165,19 +165,19 @@ export class PilotNavMenu extends HTMLElement {
         
         li[slot="mobile-nav-items"] > a:hover,
         li[slot="mobile-nav-items"] > button:hover {
-          background: #f5f5f5;
+          background: var(--color-background-secondary, #f5f5f5);
         }
         
         li[slot="mobile-nav-items"] > a:focus-visible,
         li[slot="mobile-nav-items"] > button:focus-visible {
-          outline: 2px solid #f59e0b;
+          outline: 2px solid var(--color-brand-accent, #f59e0b);
           outline-offset: -2px;
         }
         
         li[slot="mobile-nav-items"] > a.active,
         li[slot="mobile-nav-items"] > button.active {
-          background: #f5f5f5;
-          border-left: 3px solid #1a1a1a;
+          background: var(--color-background-secondary, #f5f5f5);
+          border-left: 3px solid var(--color-border-technical, #1a1a1a);
         }
         
         /* Mobile expand icon */
@@ -198,7 +198,7 @@ export class PilotNavMenu extends HTMLElement {
           list-style: none;
           margin: 0;
           padding: 0;
-          background: #f5f5f5;
+          background: var(--color-background-secondary, #f5f5f5);
         }
         
         li[slot="mobile-nav-items"].expanded > ul {
@@ -219,7 +219,7 @@ export class PilotNavMenu extends HTMLElement {
         
         /* Nested mobile nav items (added by JS via _processMobileSubmenu) */
         .mobile-nav-item {
-          border-bottom: 1px solid #d4d4d4;
+          border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
           list-style: none;
         }
         
@@ -230,13 +230,13 @@ export class PilotNavMenu extends HTMLElement {
           justify-content: space-between;
           width: 100%;
           padding: 1rem 1.5rem;
-          font-family: 'JetBrains Mono', monospace;
+          font-family: var(--font-technical, 'JetBrains Mono', monospace);
           font-size: 0.875rem;
           font-weight: 500;
           letter-spacing: 0.05em;
           text-transform: uppercase;
           text-decoration: none;
-          color: #1a1a1a;
+          color: var(--color-text-primary, #1a1a1a);
           background: none;
           border: none;
           cursor: pointer;
@@ -246,19 +246,19 @@ export class PilotNavMenu extends HTMLElement {
         
         .mobile-nav-item > a:hover,
         .mobile-nav-item > button:hover {
-          background: #f5f5f5;
+          background: var(--color-background-secondary, #f5f5f5);
         }
         
         .mobile-nav-item > a:focus-visible,
         .mobile-nav-item > button:focus-visible {
-          outline: 2px solid #f59e0b;
+          outline: 2px solid var(--color-brand-accent, #f59e0b);
           outline-offset: -2px;
         }
         
         .mobile-nav-item > a.active,
         .mobile-nav-item > button.active {
-          background: #f5f5f5;
-          border-left: 3px solid #1a1a1a;
+          background: var(--color-background-secondary, #f5f5f5);
+          border-left: 3px solid var(--color-border-technical, #1a1a1a);
         }
         
         /* Nested submenu items with increased indentation */
@@ -280,7 +280,7 @@ export class PilotNavMenu extends HTMLElement {
           list-style: none;
           margin: 0;
           padding: 0;
-          background: #f5f5f5;
+          background: var(--color-background-secondary, #f5f5f5);
         }
         
         .mobile-nav-item.expanded > .mobile-nav-submenu {
@@ -337,6 +337,17 @@ export class PilotNavMenu extends HTMLElement {
         list-style: none;
         margin: 0;
         padding: 0;
+        flex: 1;
+        justify-content: center;
+      }
+
+      /* Actions Slot */
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-3, 0.75rem);
+        flex-shrink: 0;
+        margin-left: auto;
       }
 
       .nav-item {
@@ -589,6 +600,18 @@ export class PilotNavMenu extends HTMLElement {
         padding: var(--spacing-4, 1rem) 0;
       }
 
+      .mobile-actions {
+        padding: var(--spacing-4, 1rem) var(--spacing-6, 1.5rem);
+        border-top: var(--border-width-1, 1px) solid var(--color-border-secondary, #d4d4d4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      :host([variant="technical"]) .mobile-actions {
+        border-top: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+      }
+
       .mobile-nav-item {
         border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
       }
@@ -673,6 +696,10 @@ export class PilotNavMenu extends HTMLElement {
           display: none;
         }
 
+        .nav-actions {
+          display: none;
+        }
+
         .hamburger-button {
           display: flex;
         }
@@ -720,6 +747,11 @@ export class PilotNavMenu extends HTMLElement {
           <slot name="nav-items"></slot>
         </ul>
 
+        <!-- Actions Slot -->
+        <div class="nav-actions" part="actions">
+          <slot name="actions"></slot>
+        </div>
+
         <!-- Hamburger Button -->
         <button
           class="hamburger-button"
@@ -759,6 +791,11 @@ export class PilotNavMenu extends HTMLElement {
         <ul class="mobile-nav-menu" part="mobile-nav" role="menu">
           <slot name="mobile-nav-items"></slot>
         </ul>
+        
+        <!-- Mobile Actions -->
+        <div class="mobile-actions" part="mobile-actions">
+          <slot name="actions"></slot>
+        </div>
       </div>
 
       <div id="nav-content"></div>
@@ -798,6 +835,36 @@ export class PilotNavMenu extends HTMLElement {
       mobileNavSlot.addEventListener('slotchange', () => this._processMobileNavItems(mobileNavSlot));
     }
 
+    // Handle actions slot
+    const actionsSlot = this.shadowRoot.querySelector('slot[name="actions"]');
+    if (actionsSlot) {
+      actionsSlot.addEventListener('slotchange', () => {
+        const assigned = actionsSlot.assignedElements();
+        if (assigned.length > 0) {
+          // Actions are present, ensure container is visible
+          const actionsContainer = this.shadowRoot.querySelector('.nav-actions');
+          if (actionsContainer) {
+            actionsContainer.style.display = 'flex';
+          }
+        }
+      });
+    }
+
+    // Listen for theme changes
+    this._themeChangeHandler = (e) => {
+      // Force re-render to pick up new CSS variable values
+      this._updateThemeStyles();
+    };
+    document.addEventListener('themechange', this._themeChangeHandler);
+  }
+
+  _updateThemeStyles() {
+    // The CSS variables will auto-update, but we can force a reflow if needed
+    const container = this.shadowRoot.querySelector('.nav-container');
+    if (container) {
+      // Trigger a reflow to ensure styles are recalculated
+      container.style.setProperty('--pilot-theme-update', Date.now());
+    }
   }
 
   _processNavItems(slot) {
@@ -1170,6 +1237,7 @@ export class PilotNavMenu extends HTMLElement {
     document.removeEventListener('keydown', this._keydownHandler);
     document.removeEventListener('click', this._clickOutsideHandler);
     window.removeEventListener('resize', this._resizeHandler);
+    document.removeEventListener('themechange', this._themeChangeHandler);
 
     // Restore body scroll if component is removed while menu is open
     if (this._isOpen) {

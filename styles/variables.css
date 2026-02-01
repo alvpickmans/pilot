@@ -254,7 +254,46 @@
 }
 
 /* ============================================
-   DARK MODE OVERRIDES
+   LIGHT MODE (explicit - for manual override)
+   ============================================ */
+[data-theme="light"] {
+  /* Text - Light mode defaults */
+  --color-text-primary: var(--color-black-300);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-disabled: var(--color-gray-400);
+  --color-text-inverse: var(--color-white-100);
+  --color-text-code: var(--color-gray-800);
+  
+  /* Background - Light mode defaults */
+  --color-background-primary: var(--color-white-100);
+  --color-background-secondary: var(--color-gray-50);
+  --color-background-tertiary: var(--color-gray-100);
+  --color-background-inverse: var(--color-black-300);
+  --color-background-code: var(--color-gray-100);
+  --color-background-technical: var(--color-gray-50);
+  
+  /* Border - Light mode defaults */
+  --color-border-primary: var(--color-gray-300);
+  --color-border-secondary: var(--color-gray-200);
+  --color-border-technical: var(--color-black-300);
+  --color-border-dashed: var(--color-gray-400);
+  
+  /* Technical - Light mode defaults */
+  --color-pilot-grid: var(--color-gray-200);
+  --color-pilot-measurement: var(--color-gray-400);
+  --color-pilot-annotation: var(--color-gray-600);
+  
+  /* Shadows - Light mode defaults */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   DARK MODE (explicit - manual override)
    ============================================ */
 [data-theme="dark"] {
   /* Text */
@@ -290,4 +329,46 @@
   --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   SYSTEM PREFERENCE (auto-detect)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  /* Only apply when no explicit theme is set */
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    /* Text */
+    --color-text-primary: var(--color-gray-50);
+    --color-text-secondary: var(--color-gray-300);
+    --color-text-tertiary: var(--color-gray-400);
+    --color-text-disabled: var(--color-gray-600);
+    --color-text-inverse: var(--color-black-300);
+    --color-text-code: var(--color-gray-200);
+    
+    /* Background */
+    --color-background-primary: var(--color-black-300);
+    --color-background-secondary: var(--color-black-400);
+    --color-background-tertiary: var(--color-black-500);
+    --color-background-inverse: var(--color-white-100);
+    --color-background-code: var(--color-black-400);
+    --color-background-technical: var(--color-black-400);
+    
+    /* Border */
+    --color-border-primary: var(--color-gray-700);
+    --color-border-secondary: var(--color-gray-800);
+    --color-border-technical: var(--color-gray-500);
+    --color-border-dashed: var(--color-gray-600);
+    
+    /* Technical */
+    --color-pilot-grid: var(--color-gray-800);
+    --color-pilot-measurement: var(--color-gray-600);
+    --color-pilot-annotation: var(--color-gray-400);
+    
+    /* Shadows */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+    --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  }
 }
