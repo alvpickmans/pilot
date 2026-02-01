@@ -335,7 +335,8 @@ export class PilotCommodityInput extends HTMLElement {
     `;
 
     this._setupEventListeners();
-    this._updateSymbolPadding();
+    // Wait for next frame to ensure DOM is fully laid out
+    requestAnimationFrame(() => this._updateSymbolPadding());
   }
 
   _updateSymbolPadding() {
@@ -380,6 +381,11 @@ export class PilotCommodityInput extends HTMLElement {
       // Restore the input value if it was being edited and not a value attribute change
       if (input && isFocused && name !== 'value' && name !== 'decimals') {
         input.value = currentValue;
+      }
+      
+      // Update symbol padding after render (especially for currency changes)
+      if (name === 'currency' || name === 'currency-symbol') {
+        requestAnimationFrame(() => this._updateSymbolPadding());
       }
     }
   }
