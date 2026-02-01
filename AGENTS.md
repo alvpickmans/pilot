@@ -206,6 +206,7 @@ _updateVisualState() {
 - Add to QUICK-REFERENCE.md for quick lookup
 - Include usage examples in component JSDoc
 - Document all attributes and slots
+- **MANDATORY**: Add Storybook stories in `stories/{component-name}.stories.js` with examples for all variants, sizes, and states
 
 ## Git Conventions
 ```

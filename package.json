@@ -9,7 +9,9 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "demo": "npx serve .",
-    "demo:python": "python3 -m http.server 8000"
+    "demo:python": "python3 -m http.server 8000",
+    "storybook": "storybook dev -p 6006 --host 0.0.0.0",
+    "build-storybook": "storybook build"
   },
   "keywords": [
     "design-system",
@@ -20,9 +22,15 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@storybook/addon-docs": "^10.2.3",
+    "@storybook/web-components-vite": "^10.2.3",
     "@testing-library/jest-dom": "^6.1.0",
     "@vitest/ui": "^1.0.0",
     "happy-dom": "^12.0.0",
+    "storybook": "^10.2.3",
     "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "lit": "^3.3.2"
   }
 }
