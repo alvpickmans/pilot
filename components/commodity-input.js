@@ -55,10 +55,11 @@ export class PilotCommodityInput extends HTMLElement {
         color: var(--color-text-secondary, #525252);
         pointer-events: none;
         z-index: 1;
+        white-space: nowrap;
       }
 
       input {
-        padding-left: calc(var(--spacing-4, 1rem) + 1.5rem);
+        padding-left: var(--symbol-padding, calc(var(--spacing-4, 1rem) + 1.5rem));
       }
 
       .negative-indicator {
@@ -334,6 +335,23 @@ export class PilotCommodityInput extends HTMLElement {
     `;
 
     this._setupEventListeners();
+    this._updateSymbolPadding();
+  }
+
+  _updateSymbolPadding() {
+    const symbol = this.shadowRoot.querySelector('.currency-symbol');
+    const input = this.shadowRoot.querySelector('input');
+    
+    if (symbol && input) {
+      // Calculate the width of the symbol plus consistent spacing
+      const symbolWidth = symbol.offsetWidth;
+      const basePadding = 16; // 1rem = 16px default
+      const gap = 8; // 0.5rem gap between symbol and input text
+      const totalPadding = basePadding + symbolWidth + gap;
+      
+      // Set the CSS variable for dynamic padding
+      input.style.setProperty('--symbol-padding', `${totalPadding}px`);
+    }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
