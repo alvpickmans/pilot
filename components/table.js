@@ -48,36 +48,36 @@ export class PilotTable extends HTMLElement {
       table {
         width: 100%;
         border-collapse: collapse;
-        font-family: var(--font-body, 'IBM Plex Sans', sans-serif);
-        font-size: var(--font-size-sm, 0.875rem);
+        font-family: 'IBM Plex Sans', sans-serif;
+        font-size: 0.875rem;
         min-width: 100%;
       }
       
       /* Technical border styling */
       :host([bordered]) table {
-        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+        border: 1.5px solid #1a1a1a;
       }
       
       :host([bordered]) th,
       :host([bordered]) td {
-        border: 1px solid var(--color-border-primary, #b3b3b3);
+        border: 1px solid #b3b3b3;
       }
       
       /* Header styling */
       thead {
-        background: var(--color-background-secondary, #f5f5f5);
-        border-bottom: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+        background: #f5f5f5;
+        border-bottom: 1.5px solid #1a1a1a;
       }
       
       th {
-        padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
-        font-family: var(--font-technical, 'JetBrains Mono', monospace);
-        font-size: var(--font-size-xs, 0.75rem);
-        font-weight: var(--font-weight-semibold, 600);
-        letter-spacing: var(--letter-spacing-technical, 0.05em);
+        padding: 0.75rem 1rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
         text-align: left;
-        color: var(--color-text-secondary, #525252);
+        color: #525252;
         white-space: nowrap;
         position: relative;
       }
@@ -91,17 +91,17 @@ export class PilotTable extends HTMLElement {
       th.sortable {
         cursor: pointer;
         user-select: none;
-        transition: background var(--duration-fast, 150ms);
+        transition: background 150ms;
       }
       
       th.sortable:hover {
-        background: var(--color-background-technical, #f0f0f0);
+        background: #f0f0f0;
       }
       
       th.sortable .th-content {
         display: flex;
         align-items: center;
-        gap: var(--spacing-2, 0.5rem);
+        gap: 0.5rem;
       }
       
       .sort-indicator {
@@ -109,11 +109,11 @@ export class PilotTable extends HTMLElement {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-size: var(--font-size-xs, 0.75rem);
+        font-size: 0.75rem;
         line-height: 0.5;
-        color: var(--color-text-tertiary, #6b6b6b);
+        color: #6b6b6b;
         opacity: 0.3;
-        transition: opacity var(--duration-fast, 150ms);
+        transition: opacity 150ms;
       }
       
       th.sortable:hover .sort-indicator,
@@ -122,7 +122,7 @@ export class PilotTable extends HTMLElement {
       }
       
       th.sorted .sort-indicator {
-        color: var(--color-brand-primary, #1a1a1a);
+        color: #1a1a1a;
       }
       
       .sort-indicator .asc,
@@ -133,19 +133,19 @@ export class PilotTable extends HTMLElement {
       
       .sort-indicator.ascending .asc,
       .sort-indicator.descending .desc {
-        color: var(--color-brand-primary, #1a1a1a);
-        font-weight: var(--font-weight-bold, 700);
+        color: #1a1a1a;
+        font-weight: 700;
       }
       
       /* Body styling */
       tbody {
-        background: var(--color-background-primary, #ffffff);
+        background: #ffffff;
       }
       
       td {
-        padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
-        color: var(--color-text-primary, #1a1a1a);
-        border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
+        padding: 0.75rem 1rem;
+        color: #1a1a1a;
+        border-bottom: 1px solid #d4d4d4;
         white-space: nowrap;
       }
       
@@ -156,29 +156,29 @@ export class PilotTable extends HTMLElement {
       
       /* Row states */
       tbody tr {
-        transition: background var(--duration-fast, 150ms);
+        transition: background 150ms;
       }
       
       tbody tr:hover {
-        background: var(--color-background-secondary, #f5f5f5);
+        background: #f5f5f5;
       }
       
       /* Striped rows */
       :host([striped]) tbody tr:nth-child(even) {
-        background: var(--color-background-secondary, #f5f5f5);
+        background: #f5f5f5;
       }
       
       :host([striped]) tbody tr:nth-child(even):hover {
-        background: var(--color-background-technical, #f0f0f0);
+        background: #f0f0f0;
       }
       
       /* Selected rows */
       tbody tr.selected {
-        background: var(--color-background-technical, #f0f0f0);
+        background: #f0f0f0;
       }
       
       tbody tr.selected td {
-        border-bottom-color: var(--color-brand-accent, #f59e0b);
+        border-bottom-color: #f59e0b;
       }
       
       /* Selection styling */
@@ -190,9 +190,9 @@ export class PilotTable extends HTMLElement {
       .row-checkbox {
         width: 18px;
         height: 18px;
-        border: 1px solid var(--color-border-primary, #b3b3b3);
-        border-radius: var(--border-radius-none, 0);
-        background: var(--color-background-primary, #ffffff);
+        border: 1px solid #b3b3b3;
+        border-radius: 0;
+        background: #ffffff;
         cursor: pointer;
         appearance: none;
         -webkit-appearance: none;
@@ -200,45 +200,45 @@ export class PilotTable extends HTMLElement {
         align-items: center;
         justify-content: center;
         margin: 0;
-        transition: all var(--duration-fast, 150ms);
+        transition: all 150ms;
       }
       
       .row-checkbox:checked {
-        background: var(--color-brand-primary, #1a1a1a);
-        border-color: var(--color-brand-primary, #1a1a1a);
+        background: #1a1a1a;
+        border-color: #1a1a1a;
       }
       
       .row-checkbox:checked::after {
         content: '✓';
-        color: var(--color-text-inverse, #ffffff);
-        font-size: var(--font-size-xs, 0.75rem);
-        font-weight: var(--font-weight-bold, 700);
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 700;
       }
       
       .row-checkbox:focus {
-        outline: 2px solid var(--color-brand-accent, #f59e0b);
+        outline: 2px solid #f59e0b;
         outline-offset: 2px;
       }
       
       /* Empty state */
       .empty-state {
-        padding: var(--spacing-12, 3rem) var(--spacing-4, 1rem);
+        padding: 3rem 1rem;
         text-align: center;
-        font-family: var(--font-technical, 'JetBrains Mono', monospace);
-        font-size: var(--font-size-sm, 0.875rem);
-        color: var(--color-text-tertiary, #6b6b6b);
-        border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.875rem;
+        color: #6b6b6b;
+        border-bottom: 1px solid #d4d4d4;
       }
       
       /* Header slot */
       .header-slot {
-        margin-bottom: var(--spacing-4, 1rem);
+        margin-bottom: 1rem;
       }
       
       /* Focus states */
       th:focus-visible,
       td:focus-visible {
-        outline: 2px solid var(--color-brand-accent, #f59e0b);
+        outline: 2px solid #f59e0b;
         outline-offset: -2px;
       }
       
@@ -249,12 +249,12 @@ export class PilotTable extends HTMLElement {
         }
         
         th, td {
-          padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
-          font-size: var(--font-size-xs, 0.75rem);
+          padding: 0.5rem 0.75rem;
+          font-size: 0.75rem;
         }
         
         th {
-          font-size: var(--font-size-xs, 0.75rem);
+          font-size: 0.75rem;
         }
       }
     `;
