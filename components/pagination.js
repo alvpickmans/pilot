@@ -245,6 +245,25 @@ export class PilotPagination extends HTMLElement {
         outline-offset: 2px;
       }
       
+      /* Page indicator for compact mode */
+      .page-indicator {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 0 var(--spacing-3, 0.75rem);
+        min-width: 44px;
+        min-height: 44px;
+      }
+      
+      .page-indicator-text {
+        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+        font-size: var(--font-size-sm, 0.875rem);
+        font-weight: var(--font-weight-medium, 500);
+        color: var(--color-text-primary, #1a1a1a);
+        text-align: center;
+        white-space: nowrap;
+      }
+      
       /* Compact mode */
       :host([compact]) .nav-btn {
         padding: var(--spacing-1, 0.25rem) var(--spacing-2, 0.5rem);
@@ -283,15 +302,35 @@ export class PilotPagination extends HTMLElement {
         }
       }
       
+      /* Small screen: show compact mode (page/total instead of buttons) */
       @container pagination (max-width: 480px) {
         .pagination-wrapper {
-          flex-direction: column;
-          align-items: flex-start;
+          flex-direction: row;
+          align-items: center;
           gap: var(--spacing-2, 0.5rem);
         }
         
+        .pagination-controls {
+          flex-wrap: nowrap;
+        }
+        
         .pagination-container {
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
+        }
+        
+        /* Hide page buttons, show page indicator */
+        .page-buttons {
+          display: none;
+        }
+        
+        .page-indicator {
+          display: flex;
+        }
+        
+        /* Hide brackets in compact mode */
+        .bracket-left,
+        .bracket-right {
+          display: none;
         }
         
         .pagination-meta {
@@ -307,6 +346,19 @@ export class PilotPagination extends HTMLElement {
         
         .page-info {
           margin-left: 0;
+        }
+      }
+      
+      /* Large screen: show full mode (page buttons) */
+      @container pagination (min-width: 481px) {
+        .page-buttons {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-1, 0.25rem);
+        }
+        
+        .page-indicator {
+          display: none;
         }
       }
       
@@ -378,7 +430,7 @@ export class PilotPagination extends HTMLElement {
     const showInfo = !this.hasAttribute('hide-info');
     let needsRender = false;
     
-    // Auto-hide per-page selector on very small screens
+    // Auto-hide per-page selector on small screens
     const shouldHidePerPage = width < 480 && showPerPage;
     const currentHidePerPage = this.getAttribute('data-hide-per-page') === 'true';
     if (shouldHidePerPage !== currentHidePerPage) {
@@ -390,7 +442,7 @@ export class PilotPagination extends HTMLElement {
       needsRender = true;
     }
     
-    // Auto-hide page info on small screens
+    // Auto-hide page info on smaller screens
     const shouldHideInfo = width < 640 && showInfo;
     const currentHideInfo = this.getAttribute('data-hide-info') === 'true';
     if (shouldHideInfo !== currentHideInfo) {
@@ -402,19 +454,20 @@ export class PilotPagination extends HTMLElement {
       needsRender = true;
     }
     
-    // Adjust max visible buttons based on width
-    let newMaxVisible = this._maxVisible;
-    if (width < 480) {
-      newMaxVisible = Math.min(this._maxVisible, 3);
-    } else if (width < 640) {
-      newMaxVisible = Math.min(this._maxVisible, 5);
-    } else {
-      newMaxVisible = this._maxVisible;
+    // Compact mode for very small screens - shows page/total instead of buttons
+    const shouldCompactMode = width < 480;
+    const currentCompactMode = this.getAttribute('data-compact-mode') === 'true';
+    if (shouldCompactMode !== currentCompactMode) {
+      if (shouldCompactMode) {
+        this.setAttribute('data-compact-mode', 'true');
+      } else {
+        this.removeAttribute('data-compact-mode');
+      }
+      needsRender = true;
     }
     
-    // Re-render if max visible or visibility changed
-    if (newMaxVisible !== this._currentMaxVisible || needsRender) {
-      this._currentMaxVisible = newMaxVisible;
+    // Re-render if visibility changed
+    if (needsRender) {
       this.render();
     }
   }
@@ -547,13 +600,14 @@ export class PilotPagination extends HTMLElement {
     const showInfo = !this.hasAttribute('hide-info');
     const isDataHidePerPage = this.getAttribute('data-hide-per-page') === 'true';
     const isDataHideInfo = this.getAttribute('data-hide-info') === 'true';
+    const isCompactMode = this.getAttribute('data-compact-mode') === 'true';
 
     this.shadowRoot.innerHTML = `
       <style>${this.styles}</style>
       <div class="pagination-wrapper">
         <div class="pagination-container">
           <div class="pagination-controls">
-            ${hasFirstLast ? `
+            ${hasFirstLast && !isCompactMode ? `
               <button class="nav-btn" data-action="first" ${this._page === 1 ? 'disabled' : ''} aria-label="First page">
                 <span>|&lt;</span>
               </button>
@@ -563,31 +617,39 @@ export class PilotPagination extends HTMLElement {
               <span>&lt;</span>
             </button>
             
-            <span class="bracket-left">[</span>
+            <!-- Full mode: show page buttons -->
+            <div class="page-buttons">
+              <span class="bracket-left">[</span>
+              
+              ${visiblePages.map(p => {
+                if (p === '...') {
+                  return '<span class="ellipsis">...</span>';
+                }
+                return `
+                  <button 
+                    class="page-btn ${p === this._page ? 'active' : ''}" 
+                    data-page="${p}"
+                    aria-label="Page ${p}"
+                    aria-current="${p === this._page ? 'page' : 'false'}"
+                  >
+                    ${p}
+                  </button>
+                `;
+              }).join('')}
+              
+              <span class="bracket-right">]</span>
+            </div>
             
-            ${visiblePages.map(p => {
-              if (p === '...') {
-                return '<span class="ellipsis">...</span>';
-              }
-              return `
-                <button 
-                  class="page-btn ${p === this._page ? 'active' : ''}" 
-                  data-page="${p}"
-                  aria-label="Page ${p}"
-                  aria-current="${p === this._page ? 'page' : 'false'}"
-                >
-                  ${p}
-                </button>
-              `;
-            }).join('')}
-            
-            <span class="bracket-right">]</span>
+            <!-- Compact mode: show page/total -->
+            <div class="page-indicator">
+              <span class="page-indicator-text">${this._page}/${totalPages}</span>
+            </div>
             
             <button class="nav-btn" data-action="next" ${this._page === totalPages || totalPages === 0 ? 'disabled' : ''} aria-label="Next page">
               <span>&gt;</span>
             </button>
             
-            ${hasFirstLast ? `
+            ${hasFirstLast && !isCompactMode ? `
               <button class="nav-btn" data-action="last" ${this._page === totalPages || totalPages === 0 ? 'disabled' : ''} aria-label="Last page">
                 <span>&gt;|</span>
               </button>
