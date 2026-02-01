@@ -49,7 +49,7 @@ export class PilotButton extends HTMLElement {
         overflow: hidden;
       }
       
-      /* Light underline hover effect */
+      /* Light underline hover effect - matches text color */
       button {
         position: relative;
       }
@@ -61,7 +61,8 @@ export class PilotButton extends HTMLElement {
         left: 0;
         right: 0;
         height: 2px;
-        background: var(--color-brand-accent, #f59e0b);
+        background: currentColor;
+        opacity: 0.3;
         transform: scaleX(0);
         transform-origin: left;
         transition: transform var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
@@ -69,6 +70,11 @@ export class PilotButton extends HTMLElement {
       
       button:hover::after {
         transform: scaleX(1);
+      }
+      
+      /* Loading button - no underline to avoid conflicts with spinner */
+      button[loading]::after {
+        display: none;
       }
       
       button > * {
