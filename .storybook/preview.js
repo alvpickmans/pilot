@@ -16,7 +16,6 @@ import '../components/label.js';
 import '../components/measurement.js';
 import '../components/modal.js';
 import '../components/nav-menu.js';
-import '../components/pagination.js';
 import '../components/panel.js';
 import '../components/search.js';
 import '../components/select.js';
