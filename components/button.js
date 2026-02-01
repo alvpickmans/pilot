@@ -49,44 +49,9 @@ export class PilotButton extends HTMLElement {
         overflow: hidden;
       }
       
-      /* Technical corner accents for hover effect */
-      button::before,
-      button::after {
-        content: '';
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        border: 2px solid var(--color-brand-primary, #1a1a1a);
-        opacity: 0;
-        transition: all var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
-      }
-      
-      /* Top-left corner bracket */
-      button::before {
-        top: 4px;
-        left: 4px;
-        border-right: none;
-        border-bottom: none;
-      }
-      
-      /* Bottom-right corner bracket */
-      button::after {
-        bottom: 4px;
-        right: 4px;
-        border-left: none;
-        border-top: none;
-      }
-      
-      button:hover::before,
-      button:hover::after {
-        opacity: 1;
-        width: 10px;
-        height: 10px;
-        border-width: 3px;
-      }
-      
+      /* Simple hover effect - thicker border */
       button:hover {
-        background: var(--color-background-secondary, #f5f5f5);
+        border-width: var(--border-width-2, 2px);
       }
       
       button > * {
@@ -122,12 +87,6 @@ export class PilotButton extends HTMLElement {
         background: var(--color-brand-primary-hover, #242424);
       }
       
-      /* Primary button corner accents in white */
-      button[variant="primary"]::before,
-      button[variant="primary"]::after {
-        border-color: var(--color-white-100, #ffffff);
-      }
-      
       /* Primary button maintains white text in dark mode */
       :host-context([data-theme="dark"]) button[variant="primary"] {
         color: var(--color-white-100, #ffffff);
@@ -150,10 +109,6 @@ export class PilotButton extends HTMLElement {
       button[variant="ghost"]:hover {
         background: var(--color-background-secondary, #f5f5f5);
         color: var(--color-text-primary, #1a1a1a);
-      }
-      
-      button[variant="ghost"]::before {
-        display: none;
       }
       
       /* Technical variant - for code/machine aesthetic */
