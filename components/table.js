@@ -14,7 +14,7 @@ import { baseStyles } from './shared.js';
 
 export class PilotTable extends HTMLElement {
   static get observedAttributes() {
-    return ['bordered', 'striped', 'responsive'];
+    return ['bordered', 'striped', 'responsive', 'variant'];
   }
 
   constructor() {
@@ -59,33 +59,75 @@ export class PilotTable extends HTMLElement {
         margin: 0;
       }
       
-      /* Bordered table */
+      /* ============================================
+         BORDERED VARIANT - Technical Borders
+         ============================================ */
+      
       :host([bordered]) ::slotted(table) {
-        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+        border: var(--border-width-1, 1px) solid var(--color-border-secondary, #d4d4d4);
       }
       
       :host([bordered]) ::slotted(table) th,
       :host([bordered]) ::slotted(table) td {
-        border: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
+        border: var(--border-width-1, 1px) solid var(--color-border-secondary, #d4d4d4);
       }
       
-      /* Header styling - JetBrains Mono for technical look */
+      /* Technical variant with heavy borders */
+      :host([bordered][variant="technical"]) ::slotted(table) {
+        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+      }
+      
+      :host([bordered][variant="technical"]) ::slotted(table) th,
+      :host([bordered][variant="technical"]) ::slotted(table) td {
+        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+      }
+      
+      /* ============================================
+         HEADER STYLING - Matches Navigation Component
+         ============================================ */
+      
       ::slotted(table) thead {
         background: var(--color-background-secondary, #f5f5f5);
+        border-bottom: var(--border-width-1, 1px) solid var(--color-border-secondary, #d4d4d4);
+      }
+      
+      /* Technical variant - matches nav-menu technical styling */
+      :host([variant="technical"]) ::slotted(table) thead {
+        background: var(--color-background-technical, #f5f5f5);
         border-bottom: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
       }
       
       ::slotted(table) th {
-        padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
+        padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
         font-family: var(--font-technical, 'JetBrains Mono', monospace);
-        font-size: var(--font-size-xs, 0.75rem);
-        font-weight: var(--font-weight-semibold, 600);
+        font-size: var(--font-size-sm, 0.875rem);
+        font-weight: var(--font-weight-medium, 500);
         letter-spacing: var(--letter-spacing-technical, 0.05em);
         text-transform: uppercase;
         text-align: left;
-        color: var(--color-text-secondary, #525252);
+        color: var(--color-text-primary, #1a1a1a);
         white-space: nowrap;
         position: relative;
+        border: 1px solid transparent;
+        transition: all var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+      }
+      
+      /* Technical variant headers */
+      :host([variant="technical"]) ::slotted(table) th {
+        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+        background: var(--color-background-technical, #f5f5f5);
+        border: 1px solid transparent;
+      }
+      
+      /* Hover effect like nav-menu */
+      ::slotted(table) th:hover {
+        color: var(--color-brand-primary, #1a1a1a);
+        background: var(--color-background-secondary, #f5f5f5);
+      }
+      
+      :host([variant="technical"]) ::slotted(table) th:hover {
+        background: var(--color-background-primary, #ffffff);
+        border-color: var(--color-border-technical, #1a1a1a);
       }
       
       /* Body styling */
@@ -109,13 +151,25 @@ export class PilotTable extends HTMLElement {
         background: var(--color-background-secondary, #f5f5f5);
       }
       
-      /* Striped rows */
+      /* ============================================
+         STRIPED ROWS VARIANT
+         ============================================ */
+      
       :host([striped]) ::slotted(table) tbody tr:nth-child(even) {
         background: var(--color-background-secondary, #f5f5f5);
       }
       
       :host([striped]) ::slotted(table) tbody tr:nth-child(even):hover {
         background: var(--color-gray-100, #e5e5e5);
+      }
+      
+      /* Technical variant striped */
+      :host([striped][variant="technical"]) ::slotted(table) tbody tr:nth-child(even) {
+        background: var(--color-gray-100, #e5e5e5);
+      }
+      
+      :host([striped][variant="technical"]) ::slotted(table) tbody tr:nth-child(even):hover {
+        background: var(--color-gray-200, #d4d4d4);
       }
       
       /* ============================================
@@ -162,7 +216,11 @@ export class PilotTable extends HTMLElement {
         }
         
         :host([responsive]) ::slotted(table) th {
-          font-size: var(--font-size-2xs, 0.625rem);
+          font-size: var(--font-size-xs, 0.75rem);
+        }
+        
+        :host([responsive][variant="technical"]) ::slotted(table) th {
+          font-size: var(--font-size-xs, 0.75rem);
         }
       }
     `;

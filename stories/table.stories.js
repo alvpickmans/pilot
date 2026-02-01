@@ -4,19 +4,12 @@ export default {
   title: 'Components/Table',
   component: 'pilot-table',
   argTypes: {
-    sortable: {
-      control: 'boolean',
-      description: 'Enable column sorting',
-      table: {
-        defaultValue: { summary: 'false' },
-      },
-    },
-    selectable: {
+    variant: {
       control: 'select',
-      options: ['none', 'single', 'multi'],
-      description: 'Row selection mode (none, single, or multi)',
+      options: ['default', 'technical'],
+      description: 'Table style variant',
       table: {
-        defaultValue: { summary: 'none' },
+        defaultValue: { summary: 'default' },
       },
     },
     striped: {
@@ -40,23 +33,23 @@ export default {
         component: `
 ## Pilot Table
 
-A data table component with sortable columns, row selection, and technical styling.
+A pure styling component for data tables with technical aesthetic.
 
 ### Features
-- **Sortable columns**: Click headers to sort (ascending/descending)
-- **Row selection**: Single or multi-select modes with checkboxes
 - **Technical styling**: Industrial borders and uppercase headers
 - **Striped rows**: Alternating row colors for better readability
+- **Bordered variant**: Heavy borders for technical documentation look
 - **Responsive**: Horizontal scroll on small screens
 - **Empty state**: Automatic empty state display
+- **Header slot**: Optional header content above the table
 
 ### Usage
 \`\`\`html
-<pilot-table sortable striped>
+<pilot-table striped>
   <thead>
     <tr>
-      <th data-key="name" data-sortable>Name</th>
-      <th data-key="value" data-sortable>Value</th>
+      <th data-key="name">Name</th>
+      <th data-key="value">Value</th>
     </tr>
   </thead>
   <tbody>
@@ -66,18 +59,15 @@ A data table component with sortable columns, row selection, and technical styli
 </pilot-table>
 \`\`\`
 
+### Styling Attributes
+- \`striped\`: Alternating row colors
+- \`bordered\`: Technical border styling (1.5px borders)
+- \`variant="technical"\`: Full technical styling (combines bordered + uppercase)
+
 ### Data Structure
 The table reads data from the light DOM:
-- \`<thead>\` with \`<th>\` elements (use \`data-key\` for column identification)
+- \`<thead>\` with \`<th>\` elements (use \`data-key\` for semantic identification)
 - \`<tbody>\` with \`<tr>\` and \`<td>\` elements
-
-### Events
-- **sort**: Fired when a column is sorted. Event detail includes:
-  - \`column\`: The column key that was sorted
-  - \`direction\`: 'asc' or 'desc'
-- **selection-change**: Fired when row selection changes. Event detail includes:
-  - \`selectedRows\`: Array of selected row indices
-  - \`selectedData\`: Array of selected row data objects
 
 ### Slots
 - **header**: Optional header content displayed above the table
@@ -121,24 +111,22 @@ const sampleData = {
   },
 };
 
-const Template = ({ sortable, selectable, striped, bordered, dataSet = 'transactions' }) => {
+const Template = ({ variant, striped, bordered, dataSet = 'transactions' }) => {
   const data = sampleData[dataSet];
-  const sortableAttr = sortable ? 'sortable' : '';
-  const selectableAttr = selectable !== 'none' ? `selectable="${selectable}"` : '';
+  const variantAttr = variant === 'technical' ? 'variant="technical"' : '';
   const stripedAttr = striped ? 'striped' : '';
   const borderedAttr = bordered ? 'bordered' : '';
-  
+
   return html`
-    <pilot-table 
-      ${sortableAttr} 
-      ${selectableAttr} 
-      ${stripedAttr} 
+    <pilot-table
+      ${variantAttr}
+      ${stripedAttr}
       ${borderedAttr}
     >
       <thead>
         <tr>
           ${data.headers.map((header, i) => html`
-            <th data-key="${data.keys[i]}" ${sortable ? 'data-sortable' : ''}>${header}</th>
+            <th data-key="${data.keys[i]}">${header}</th>
           `)}
         </tr>
       </thead>
@@ -153,26 +141,15 @@ const Template = ({ sortable, selectable, striped, bordered, dataSet = 'transact
 
 export const Default = Template.bind({});
 Default.args = {
-  sortable: false,
-  selectable: 'none',
+  variant: 'default',
   striped: false,
   bordered: false,
   dataSet: 'transactions',
 };
 
-export const Sortable = Template.bind({});
-Sortable.args = {
-  sortable: true,
-  selectable: 'none',
-  striped: false,
-  bordered: false,
-  dataSet: 'accounts',
-};
-
 export const Striped = Template.bind({});
 Striped.args = {
-  sortable: false,
-  selectable: 'none',
+  variant: 'default',
   striped: true,
   bordered: false,
   dataSet: 'accounts',
@@ -180,37 +157,17 @@ Striped.args = {
 
 export const Bordered = Template.bind({});
 Bordered.args = {
-  sortable: false,
-  selectable: 'none',
+  variant: 'default',
   striped: false,
   bordered: true,
   dataSet: 'transactions',
 };
 
-export const SingleSelect = Template.bind({});
-SingleSelect.args = {
-  sortable: false,
-  selectable: 'single',
+export const TechnicalVariant = Template.bind({});
+TechnicalVariant.args = {
+  variant: 'technical',
   striped: false,
   bordered: false,
-  dataSet: 'systems',
-};
-
-export const MultiSelect = Template.bind({});
-MultiSelect.args = {
-  sortable: false,
-  selectable: 'multi',
-  striped: false,
-  bordered: false,
-  dataSet: 'systems',
-};
-
-export const FullFeatured = Template.bind({});
-FullFeatured.args = {
-  sortable: true,
-  selectable: 'multi',
-  striped: true,
-  bordered: true,
   dataSet: 'systems',
 };
 
@@ -229,7 +186,7 @@ export const EmptyState = () => html`
 `;
 
 export const WithHeaderSlot = () => html`
-  <pilot-table sortable striped>
+  <pilot-table striped>
     <div slot="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
       <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; font-weight: 600;">
         Transaction History
@@ -240,10 +197,10 @@ export const WithHeaderSlot = () => html`
     </div>
     <thead>
       <tr>
-        <th data-key="transaction" data-sortable>Transaction ID</th>
-        <th data-key="date" data-sortable>Date</th>
-        <th data-key="amount" data-sortable>Amount</th>
-        <th data-key="status" data-sortable>Status</th>
+        <th data-key="transaction">Transaction ID</th>
+        <th data-key="date">Date</th>
+        <th data-key="amount">Amount</th>
+        <th data-key="status">Status</th>
       </tr>
     </thead>
     <tbody>
@@ -257,7 +214,7 @@ export const WithHeaderSlot = () => html`
 `;
 
 export const FinancialData = () => html`
-  <pilot-table sortable striped selectable="multi" bordered>
+  <pilot-table striped bordered>
     <div slot="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
       <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; font-weight: 600;">
         Account Summary
@@ -273,11 +230,11 @@ export const FinancialData = () => html`
     </div>
     <thead>
       <tr>
-        <th data-key="account" data-sortable>Account Number</th>
-        <th data-key="type" data-sortable>Type</th>
-        <th data-key="holder" data-sortable>Holder</th>
-        <th data-key="balance" data-sortable>Balance</th>
-        <th data-key="status" data-sortable>Status</th>
+        <th data-key="account">Account Number</th>
+        <th data-key="type">Type</th>
+        <th data-key="holder">Holder</th>
+        <th data-key="balance">Balance</th>
+        <th data-key="status">Status</th>
       </tr>
     </thead>
     <tbody>
@@ -292,7 +249,7 @@ export const FinancialData = () => html`
 `;
 
 export const SystemLogs = () => html`
-  <pilot-table selectable="single" bordered>
+  <pilot-table bordered>
     <div slot="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
       <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; font-weight: 600;">
         System Logs
@@ -339,25 +296,7 @@ export const AllVariants = () => html`
         </tbody>
       </pilot-table>
     </div>
-    
-    <div>
-      <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #6b6b6b;">Sortable Columns</p>
-      <pilot-table sortable>
-        <thead>
-          <tr>
-            <th data-key="name" data-sortable>Name</th>
-            <th data-key="category" data-sortable>Category</th>
-            <th data-key="amount" data-sortable>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Charlie</td><td>Group A</td><td>300</td></tr>
-          <tr><td>Alpha</td><td>Group B</td><td>100</td></tr>
-          <tr><td>Bravo</td><td>Group A</td><td>200</td></tr>
-        </tbody>
-      </pilot-table>
-    </div>
-    
+
     <div>
       <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #6b6b6b;">Striped Rows</p>
       <pilot-table striped>
@@ -376,7 +315,7 @@ export const AllVariants = () => html`
         </tbody>
       </pilot-table>
     </div>
-    
+
     <div>
       <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #6b6b6b;">Bordered (Technical Style)</p>
       <pilot-table bordered>
@@ -394,10 +333,10 @@ export const AllVariants = () => html`
         </tbody>
       </pilot-table>
     </div>
-    
+
     <div>
-      <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #6b6b6b;">Multi-Selectable</p>
-      <pilot-table selectable="multi" striped bordered>
+      <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #6b6b6b;">Technical Variant (Bordered + Striped)</p>
+      <pilot-table variant="technical" striped>
         <thead>
           <tr>
             <th data-key="task">Task</th>
@@ -413,30 +352,7 @@ export const AllVariants = () => html`
         </tbody>
       </pilot-table>
     </div>
-    
-    <div>
-      <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #6b6b6b;">Full-Featured (Sortable + Multi-Select + Striped + Bordered)</p>
-      <pilot-table sortable selectable="multi" striped bordered>
-        <thead>
-          <tr>
-            <th data-key="id" data-sortable>ID</th>
-            <th data-key="product" data-sortable>Product</th>
-            <th data-key="category" data-sortable>Category</th>
-            <th data-key="price" data-sortable>Price</th>
-            <th data-key="stock" data-sortable>Stock</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>PRD-001</td><td>Laptop Pro</td><td>Electronics</td><td>$1,299.00</td><td>45</td></tr>
-          <tr><td>PRD-002</td><td>Wireless Mouse</td><td>Accessories</td><td>$29.99</td><td>120</td></tr>
-          <tr><td>PRD-003</td><td>USB-C Hub</td><td>Accessories</td><td>$79.99</td><td>85</td></tr>
-          <tr><td>PRD-004</td><td>Monitor 4K</td><td>Electronics</td><td>$499.00</td><td>23</td></tr>
-          <tr><td>PRD-005</td><td>Mechanical Keyboard</td><td>Accessories</td><td>$149.99</td><td>67</td></tr>
-          <tr><td>PRD-006</td><td>Webcam HD</td><td>Electronics</td><td>$89.99</td><td>94</td></tr>
-        </tbody>
-      </pilot-table>
-    </div>
-    
+
     <div>
       <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #6b6b6b;">Empty State</p>
       <pilot-table>
