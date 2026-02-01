@@ -12,6 +12,14 @@ import { DropdownBase } from './dropdown-base.js';
 // TECHNICAL SELECT COMPONENT
 // ============================================
 
+// Virtual scrolling configuration
+const VIRTUAL_SCROLL_CONFIG = {
+  ITEM_HEIGHT: 36, // Height of each option in pixels
+  BUFFER_SIZE: 5, // Number of items to render above/below visible area
+  MAX_ITEMS_WITHOUT_VIRTUALIZATION: 50, // Only use virtualization for lists larger than this
+  CONTAINER_MAX_HEIGHT: 300 // Max height of dropdown in pixels
+};
+
 export class PilotSelect extends DropdownBase(HTMLElement) {
   static get observedAttributes() {
     return ['multiple', 'searchable', 'placeholder', 'disabled', 'value', 'label'];
@@ -26,6 +34,13 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
     this._searchQuery = '';
     this._options = []; // Initialize _options to prevent undefined errors
     this._isSearching = false; // Track when user is typing in search box
+    
+    // Virtual scrolling state
+    this._scrollTop = 0;
+    this._visibleStartIndex = 0;
+    this._visibleEndIndex = 0;
+    this._scrollHandler = null;
+    
     this.render();
   }
 
@@ -102,6 +117,13 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
         flex: 1;
         overflow-y: auto;
         padding: var(--spacing-1, 0.25rem) 0;
+        max-height: ${VIRTUAL_SCROLL_CONFIG.CONTAINER_MAX_HEIGHT}px;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .virtual-spacer {
+        flex-shrink: 0;
       }
       
       .option {
@@ -210,6 +232,15 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
   disconnectedCallback() {
     this._removeEventListeners();
     this._cleanupDropdown();
+    
+    // Clean up virtual scroll listener
+    if (this._scrollHandler) {
+      const optionsContainer = this.shadowRoot?.querySelector('.options-container');
+      if (optionsContainer) {
+        optionsContainer.removeEventListener('scroll', this._scrollHandler);
+      }
+      this._scrollHandler = null;
+    }
   }
 
   _setupEventListeners() {
@@ -308,18 +339,171 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
     this._renderOptionsList();
   }
 
+  /**
+   * Calculate visible range for virtual scrolling
+   */
+  _calculateVisibleRange() {
+    const containerHeight = VIRTUAL_SCROLL_CONFIG.CONTAINER_MAX_HEIGHT;
+    const itemHeight = VIRTUAL_SCROLL_CONFIG.ITEM_HEIGHT;
+    const bufferSize = VIRTUAL_SCROLL_CONFIG.BUFFER_SIZE;
+    
+    const startIndex = Math.floor(this._scrollTop / itemHeight);
+    const visibleCount = Math.ceil(containerHeight / itemHeight);
+    
+    this._visibleStartIndex = Math.max(0, startIndex - bufferSize);
+    this._visibleEndIndex = Math.min(
+      this._filteredOptions.length,
+      startIndex + visibleCount + bufferSize
+    );
+  }
+
+  /**
+   * Check if virtual scrolling should be enabled
+   */
+  _shouldUseVirtualization() {
+    return this._filteredOptions.length > VIRTUAL_SCROLL_CONFIG.MAX_ITEMS_WITHOUT_VIRTUALIZATION;
+  }
+
+  /**
+   * Setup scroll listener for virtual scrolling
+   */
+  _setupVirtualScrollListener() {
+    const optionsContainer = this.shadowRoot.querySelector('.options-container');
+    if (!optionsContainer || !this._shouldUseVirtualization()) return;
+
+    // Remove existing handler if any
+    if (this._scrollHandler) {
+      optionsContainer.removeEventListener('scroll', this._scrollHandler);
+    }
+
+    this._scrollHandler = (e) => {
+      this._scrollTop = e.target.scrollTop;
+      this._renderVisibleOptions();
+    };
+
+    optionsContainer.addEventListener('scroll', this._scrollHandler);
+  }
+
+  /**
+   * Render only visible options (for virtual scrolling)
+   */
+  _renderVisibleOptions() {
+    const optionsContainer = this.shadowRoot.querySelector('.options-container');
+    if (!optionsContainer) return;
+
+    this._calculateVisibleRange();
+
+    const multiple = this.hasAttribute('multiple');
+    const itemHeight = VIRTUAL_SCROLL_CONFIG.ITEM_HEIGHT;
+    const totalHeight = this._filteredOptions.length * itemHeight;
+    
+    let currentGroup = null;
+    let html = '';
+
+    // Add top spacer to maintain scroll position
+    const topSpacerHeight = this._visibleStartIndex * itemHeight;
+    html += `<div class="virtual-spacer" style="height: ${topSpacerHeight}px; flex-shrink: 0;"></div>`;
+
+    // Render visible options
+    for (let i = this._visibleStartIndex; i < this._visibleEndIndex; i++) {
+      const option = this._filteredOptions[i];
+      if (!option) continue;
+
+      const isSelected = this._selectedValues.includes(option.value);
+      const isHighlighted = i === this._highlightedIndex;
+      
+      // Handle group headers - only show if this is the first item in a group
+      let groupHeader = '';
+      if (option.group && option.group !== currentGroup) {
+        // Check if this is the first visible item of this group
+        const isFirstInGroup = i === 0 || this._filteredOptions[i - 1].group !== option.group;
+        if (isFirstInGroup) {
+          currentGroup = option.group;
+          groupHeader = `<div class="option-group">${option.group}</div>`;
+        }
+      }
+
+      html += `${groupHeader}
+        <div 
+          class="option ${isSelected ? 'selected' : ''} ${isHighlighted ? 'highlighted' : ''} ${option.disabled ? 'disabled' : ''}"
+          role="option"
+          aria-selected="${isSelected}"
+          data-value="${option.value}"
+          data-index="${i}"
+          style="height: ${itemHeight}px; flex-shrink: 0;"
+        >
+          ${multiple ? `<span class="option-checkbox">${isSelected ? '✓' : ''}</span>` : ''}
+          <span>${option.label}</span>
+        </div>
+      `;
+    }
+
+    // Add bottom spacer to maintain total scroll height
+    const bottomSpacerHeight = (this._filteredOptions.length - this._visibleEndIndex) * itemHeight;
+    html += `<div class="virtual-spacer" style="height: ${bottomSpacerHeight}px; flex-shrink: 0;"></div>`;
+
+    optionsContainer.innerHTML = html;
+
+    // Re-attach event listeners to new option elements
+    this._attachOptionEventListeners(optionsContainer);
+  }
+
+  /**
+   * Attach event listeners to option elements
+   */
+  _attachOptionEventListeners(optionsContainer) {
+    const options = optionsContainer.querySelectorAll('.option');
+    options.forEach((option) => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const value = option.getAttribute('data-value');
+        const index = parseInt(option.getAttribute('data-index'));
+        const optionData = this._filteredOptions[index];
+        if (optionData) {
+          this._selectOption(optionData);
+        }
+      });
+      option.addEventListener('mouseenter', (e) => {
+        e.stopPropagation();
+        const index = parseInt(option.getAttribute('data-index'));
+        this._highlightedIndex = index;
+        // Update visual highlighting via CSS only, no re-render
+        const allOptions = optionsContainer.querySelectorAll('.option');
+        allOptions.forEach((s) => {
+          const sIndex = parseInt(s.getAttribute('data-index'));
+          s.classList.toggle('highlighted', sIndex === index);
+          s.setAttribute('aria-selected', sIndex === index);
+        });
+      });
+    });
+  }
+
   _renderOptionsList() {
     const optionsContainer = this.shadowRoot.querySelector('.options-container');
     if (!optionsContainer) return;
 
-    const multiple = this.hasAttribute('multiple');
-    let currentGroup = null;
+    // Reset scroll position when filtering
+    this._scrollTop = 0;
+    if (optionsContainer) {
+      optionsContainer.scrollTop = 0;
+    }
 
     if (this._filteredOptions.length === 0) {
       optionsContainer.innerHTML = `
         <div class="no-results">No results found</div>
       `;
+      return;
+    }
+
+    // Use virtual scrolling for large lists
+    if (this._shouldUseVirtualization()) {
+      this._renderVisibleOptions();
+      this._setupVirtualScrollListener();
     } else {
+      // Render all options for small lists
+      const multiple = this.hasAttribute('multiple');
+      let currentGroup = null;
+
       optionsContainer.innerHTML = this._filteredOptions.map((option, index) => {
         const isSelected = this._selectedValues.includes(option.value);
         const isHighlighted = index === this._highlightedIndex;
@@ -333,37 +517,17 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
             role="option"
             aria-selected="${isSelected}"
             data-value="${option.value}"
+            data-index="${index}"
           >
             ${multiple ? `<span class="option-checkbox">${isSelected ? '✓' : ''}</span>` : ''}
             <span>${option.label}</span>
           </div>
         `;
       }).join('');
-    }
 
-    // Re-attach event listeners to new option elements
-    const options = optionsContainer.querySelectorAll('.option');
-    options.forEach((option) => {
-      option.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const value = option.getAttribute('data-value');
-        const optionData = this._filteredOptions.find(o => o.value === value);
-        if (optionData) {
-          this._selectOption(optionData);
-        }
-      });
-      option.addEventListener('mouseenter', (e) => {
-        e.stopPropagation();
-        const value = option.getAttribute('data-value');
-        const index = this._filteredOptions.findIndex(o => o.value === value);
-        this._highlightedIndex = index;
-        // Update visual highlighting via CSS only, no re-render
-        options.forEach((s, i) => {
-          s.classList.toggle('highlighted', i === index);
-          s.setAttribute('aria-selected', i === index);
-        });
-      });
-    });
+      // Attach event listeners
+      this._attachOptionEventListeners(optionsContainer);
+    }
   }
 
   /**
@@ -446,8 +610,36 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
   }
 
   _updateHighlightedOption() {
-    const options = this.shadowRoot.querySelectorAll('.option');
-    options.forEach((option, index) => {
+    const optionsContainer = this.shadowRoot.querySelector('.options-container');
+    if (!optionsContainer) return;
+
+    // If using virtual scrolling, we may need to re-render to show the highlighted option
+    if (this._shouldUseVirtualization()) {
+      const isVisible = this._highlightedIndex >= this._visibleStartIndex && 
+                        this._highlightedIndex < this._visibleEndIndex;
+      
+      if (!isVisible && this._highlightedIndex >= 0) {
+        // Scroll to make highlighted option visible
+        const itemHeight = VIRTUAL_SCROLL_CONFIG.ITEM_HEIGHT;
+        const containerHeight = VIRTUAL_SCROLL_CONFIG.CONTAINER_MAX_HEIGHT;
+        const visibleCount = Math.floor(containerHeight / itemHeight);
+        
+        // Center the highlighted option in the visible area
+        let targetScrollTop = (this._highlightedIndex - Math.floor(visibleCount / 2)) * itemHeight;
+        targetScrollTop = Math.max(0, Math.min(targetScrollTop, 
+          (this._filteredOptions.length * itemHeight) - containerHeight));
+        
+        optionsContainer.scrollTop = targetScrollTop;
+        this._scrollTop = targetScrollTop;
+        this._renderVisibleOptions();
+        return;
+      }
+    }
+
+    // Update highlighting for visible options
+    const options = optionsContainer.querySelectorAll('.option');
+    options.forEach((option) => {
+      const index = parseInt(option.getAttribute('data-index'));
       option.classList.toggle('highlighted', index === this._highlightedIndex);
       option.setAttribute('aria-selected', index === this._highlightedIndex);
     });
@@ -480,8 +672,8 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
       bubbles: true
     }));
 
-    // Avoid full re-render when dropdown is open and searchable to prevent focus loss
-    if (multiple && this._isOpen && searchable) {
+    // Avoid full re-render when dropdown is open to prevent focus loss and DOM destruction
+    if (multiple && this._isOpen) {
       this._updateTriggerAndTags();
       this._updateOptionStates();
     } else {
@@ -543,8 +735,11 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
   }
 
   _updateOptionStates() {
-    const options = this.shadowRoot.querySelectorAll('.option');
+    const optionsContainer = this.shadowRoot.querySelector('.options-container');
+    if (!optionsContainer) return;
+
     const multiple = this.hasAttribute('multiple');
+    const options = optionsContainer.querySelectorAll('.option');
     
     options.forEach((optionEl) => {
       const value = optionEl.getAttribute('data-value');
@@ -605,8 +800,6 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
       ? (multiple ? `${selectedLabels.length} selected` : selectedLabels[0])
       : placeholder;
 
-    let currentGroup = null;
-
     this.shadowRoot.innerHTML = `
       <style>${this.styles}</style>
       <div class="field">
@@ -635,25 +828,7 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
             <div class="options-container">
               ${this._filteredOptions.length === 0 ? `
                 <div class="no-results">No results found</div>
-              ` : this._filteredOptions.map((option, index) => {
-                const isSelected = this._selectedValues.includes(option.value);
-                const isHighlighted = index === this._highlightedIndex;
-                const groupHeader = option.group && option.group !== currentGroup 
-                  ? (currentGroup = option.group, `<div class="option-group">${option.group}</div>`) 
-                  : '';
-                
-                return `${groupHeader}
-                  <div 
-                    class="option ${isSelected ? 'selected' : ''} ${isHighlighted ? 'highlighted' : ''} ${option.disabled ? 'disabled' : ''}"
-                    role="option"
-                    aria-selected="${isSelected}"
-                    data-value="${option.value}"
-                  >
-                    ${multiple ? `<span class="option-checkbox">${isSelected ? '✓' : ''}</span>` : ''}
-                    <span>${option.label}</span>
-                  </div>
-                `;
-              }).join('')}
+              ` : ''}
             </div>
           </div>
         </div>
@@ -671,12 +846,16 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
       </div>
     `;
 
+    // Render options using virtual scrolling if needed
+    if (this._filteredOptions.length > 0) {
+      this._renderOptionsList();
+    }
+
     this._attachEventListeners();
   }
 
   _attachEventListeners() {
     const trigger = this.shadowRoot.querySelector('.trigger');
-    const options = this.shadowRoot.querySelectorAll('.option');
     const searchInput = this.shadowRoot.querySelector('.search-input');
     const tagRemoves = this.shadowRoot.querySelectorAll('.tag-remove');
 
@@ -684,24 +863,8 @@ export class PilotSelect extends DropdownBase(HTMLElement) {
       trigger.addEventListener('click', () => this._toggleDropdown());
     }
 
-    options.forEach((option) => {
-      option.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const value = option.getAttribute('data-value');
-        const optionData = this._filteredOptions.find(o => o.value === value);
-        if (optionData) {
-          this._selectOption(optionData);
-        }
-      });
-      option.addEventListener('mouseenter', (e) => {
-        e.stopPropagation();
-        const value = option.getAttribute('data-value');
-        const index = this._filteredOptions.findIndex(o => o.value === value);
-        this._highlightedIndex = index;
-        // Don't re-render on mouseenter - just update the index for keyboard nav
-        // Visual highlighting is handled by CSS :hover
-      });
-    });
+    // Note: Option click listeners are attached by _attachOptionEventListeners
+    // which is called from _renderOptionsList for both virtual and non-virtual lists
 
     if (searchInput) {
       // Store reference to keep focus

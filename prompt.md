@@ -8,6 +8,14 @@ Use this prompt when creating a new Web Component for the Pilot Design System.
    ```bash
    bd ready
    ```
+   
+   **Priority Order:** Always tackle tasks by priority level:
+   - **P0 (Critical)** - Fix bugs, blockers, or critical features first
+   - **P1 (High)** - Important features and improvements next
+   - **P2 (Medium)** - New components and enhancements
+   - **P3 (Low)** - Nice-to-have features last
+   
+   When multiple tasks are ready, pick the highest priority one.
 
 2. **Show task details:**
    ```bash
