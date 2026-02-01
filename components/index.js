@@ -39,3 +39,4 @@ export { PilotCommodityInput } from './commodity-input.js';
 export { PilotTabs, PilotTab } from './tabs.js';
 export { PilotNavMenu } from './nav-menu.js';
 export { PilotPagination } from './pagination.js';
+export { PilotTable } from './table.js';

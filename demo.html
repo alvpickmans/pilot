@@ -237,6 +237,109 @@
     </div>
   </section>
 
+  <!-- Table Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Data Table</h2>
+    <p class="demo-subtitle">Data table with sortable columns, row selection, and technical borders</p>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Basic Table</p>
+      <pilot-table>
+        <thead>
+          <tr>
+            <th data-key="transaction">Transaction ID</th>
+            <th data-key="date">Date</th>
+            <th data-key="amount">Amount</th>
+            <th data-key="status">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>TRX-001</td><td>2026-01-15</td><td>$1,250.00</td><td>Completed</td></tr>
+          <tr><td>TRX-002</td><td>2026-01-16</td><td>$3,400.00</td><td>Pending</td></tr>
+          <tr><td>TRX-003</td><td>2026-01-17</td><td>$890.50</td><td>Completed</td></tr>
+          <tr><td>TRX-004</td><td>2026-01-18</td><td>$12,000.00</td><td>Failed</td></tr>
+        </tbody>
+      </pilot-table>
+    </div>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Sortable & Striped Table</p>
+      <pilot-table sortable striped>
+        <thead>
+          <tr>
+            <th data-key="account" data-sortable>Account</th>
+            <th data-key="type" data-sortable>Type</th>
+            <th data-key="balance" data-sortable>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>ACC-1001</td><td>Checking</td><td>$5,420.00</td></tr>
+          <tr><td>ACC-1002</td><td>Savings</td><td>$15,000.00</td></tr>
+          <tr><td>ACC-1003</td><td>Investment</td><td>$125,000.00</td></tr>
+          <tr><td>ACC-1004</td><td>Credit Card</td><td>-$1,200.00</td></tr>
+          <tr><td>ACC-1005</td><td>Business</td><td>$45,200.00</td></tr>
+        </tbody>
+      </pilot-table>
+    </div>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Multi-Selectable Table</p>
+      <pilot-table selectable="multi" striped bordered>
+        <thead>
+          <tr>
+            <th data-key="system">System ID</th>
+            <th data-key="region">Region</th>
+            <th data-key="status">Status</th>
+            <th data-key="uptime">Uptime</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>SYS-01</td><td>US-East</td><td>Active</td><td>99.9%</td></tr>
+          <tr><td>SYS-02</td><td>US-West</td><td>Active</td><td>99.8%</td></tr>
+          <tr><td>SYS-03</td><td>EU-Central</td><td>Maintenance</td><td>0%</td></tr>
+          <tr><td>SYS-04</td><td>AP-South</td><td>Active</td><td>99.7%</td></tr>
+        </tbody>
+      </pilot-table>
+    </div>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Single-Selectable Table with Header Slot</p>
+      <pilot-table selectable="single" bordered>
+        <div slot="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-4);">
+          <span style="font-family: var(--font-technical); font-size: var(--font-size-xs); text-transform: uppercase;">System Logs</span>
+          <pilot-button variant="outline" size="sm">Export Logs</pilot-button>
+        </div>
+        <thead>
+          <tr>
+            <th data-key="timestamp">Timestamp</th>
+            <th data-key="level">Level</th>
+            <th data-key="message">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-01-20 14:32:01</td><td>INFO</td><td>System initialized successfully</td></tr>
+          <tr><td>2026-01-20 14:32:05</td><td>DEBUG</td><td>Database connection established</td></tr>
+          <tr><td>2026-01-20 14:33:12</td><td>WARN</td><td>High memory usage detected</td></tr>
+          <tr><td>2026-01-20 14:35:00</td><td>ERROR</td><td>Connection timeout on port 8080</td></tr>
+        </tbody>
+      </pilot-table>
+    </div>
+    
+    <div class="component-showcase">
+      <p class="demo-subtitle">Empty State</p>
+      <pilot-table>
+        <thead>
+          <tr>
+            <th data-key="id">ID</th>
+            <th data-key="name">Name</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </pilot-table>
+    </div>
+  </section>
+
   <!-- Buttons Section -->
   <section class="demo-section">
     <h2 class="demo-title">Buttons</h2>
@@ -1180,7 +1283,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          19 Web Components
+          20 Web Components
         </p>
       </div>
       <div>
