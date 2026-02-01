@@ -446,6 +446,58 @@
         error="Please enter a valid amount"
       ></pilot-commodity-input>
     </div>
+
+    <h3 class="demo-title" style="margin-top: var(--spacing-8); font-size: var(--font-size-lg);">Custom Currency Symbols</h3>
+    <p class="demo-subtitle">Use currency-symbol attribute for custom symbols or non-standard currencies</p>
+
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-commodity-input
+          label="Bitcoin Amount"
+          currency="BTC"
+          currency-symbol="₿"
+          value="2.5"
+          decimals="8"
+          hint="Custom symbol for cryptocurrency"
+        ></pilot-commodity-input>
+      </div>
+
+      <div class="component-showcase">
+        <pilot-commodity-input
+          label="Points Balance"
+          currency="PTS"
+          currency-symbol="★"
+          value="1250"
+          decimals="0"
+          hint="Custom symbol for loyalty points"
+        ></pilot-commodity-input>
+      </div>
+    </div>
+
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-commodity-input
+          label="Gold (Troy Ounces)"
+          currency="XAU"
+          currency-symbol="Au"
+          value="5.25"
+          decimals="3"
+          hint="Precious metal with custom abbreviation"
+        ></pilot-commodity-input>
+      </div>
+
+      <div class="component-showcase">
+        <pilot-commodity-input
+          label="Internal Credits"
+          currency="CRD"
+          currency-symbol="©"
+          value="50000"
+          decimals="2"
+          allow-negative
+          hint="Company credits with custom symbol"
+        ></pilot-commodity-input>
+      </div>
+    </div>
   </section>
 
   <!-- Toggle Component Section -->

@@ -10,110 +10,9 @@ import { baseStyles, formFieldStyles, inputBaseStyles } from './shared.js';
 // COMMODITY INPUT COMPONENT
 // ============================================
 
-const CURRENCY_SYMBOLS = {
-  USD: '$',
-  EUR: '€',
-  GBP: '£',
-  JPY: '¥',
-  CAD: 'CA$',
-  AUD: 'A$',
-  CHF: 'CHF',
-  CNY: '¥',
-  INR: '₹',
-  BRL: 'R$',
-  MXN: 'MX$',
-  KRW: '₩',
-  RUB: '₽',
-  SEK: 'kr',
-  NOK: 'kr',
-  DKK: 'kr',
-  PLN: 'zł',
-  TRY: '₺',
-  ZAR: 'R',
-  NZD: 'NZ$',
-  SGD: 'S$',
-  HKD: 'HK$',
-  TWD: 'NT$',
-  THB: '฿',
-  IDR: 'Rp',
-  PHP: '₱',
-  MYR: 'RM',
-  VND: '₫',
-  COP: 'COL$',
-  ARS: 'AR$',
-  CLP: 'CL$',
-  PEN: 'S/',
-  UYU: '$U',
-  AED: 'د.إ',
-  SAR: '﷼',
-  ILS: '₪',
-  EGP: '£',
-  NGN: '₦',
-  KES: 'KSh',
-  GHS: '₵',
-  PKR: '₨',
-  BDT: '৳',
-  LKR: '₨',
-  NPR: '₨',
-  MMK: 'K',
-  KHR: '៛',
-  LAK: '₭',
-  MNT: '₮',
-  KZT: '₸',
-  UZS: 'soʻm',
-  TJS: 'SM',
-  TMT: 'm',
-  AZN: '₼',
-  GEL: '₾',
-  AMD: '֏',
-  BYN: 'Br',
-  MDL: 'L',
-  UAH: '₴',
-  HUF: 'Ft',
-  CZK: 'Kč',
-  RON: 'lei',
-  BGN: 'лв',
-  HRK: 'kn',
-  RSD: 'din',
-  MKD: 'ден',
-  BAM: 'KM',
-  ALL: 'L',
-  ISK: 'kr',
-  GIP: '£',
-  FOK: 'kr',
-  GGP: '£',
-  IMP: '£',
-  JEP: '£',
-  SHP: '£',
-  TTD: 'TT$',
-  BBD: 'Bds$',
-  BZD: 'BZ$',
-  XCD: 'EC$',
-  BSD: 'B$',
-  BMD: 'BD$',
-  KYD: 'CI$',
-  FJD: 'FJ$',
-  SBD: 'SI$',
-  TOP: 'T$',
-  WST: 'WS$',
-  PGK: 'K',
-  VUV: 'VT',
-  KID: '$',
-  TVD: '$',
-  CKD: '$',
-  PND: '$',
-  SRD: '$',
-  GYD: '$',
-  BBD: 'Bds$',
-  XOF: 'CFA',
-  XAF: 'FCFA',
-  XPF: 'CFP',
-  XDR: 'SDR',
-};
-
 export class PilotCommodityInput extends HTMLElement {
   static get observedAttributes() {
-    return ['currency', 'decimals', 'min', 'max', 'allow-negative', 'placeholder', 'disabled', 'readonly', 'label', 'hint', 'error', 'value'];
+    return ['currency', 'currency-symbol', 'decimals', 'min', 'max', 'allow-negative', 'placeholder', 'disabled', 'readonly', 'label', 'hint', 'error', 'value'];
   }
 
   constructor() {
@@ -174,8 +73,37 @@ export class PilotCommodityInput extends HTMLElement {
   }
 
   _getCurrencySymbol() {
+    // Check for user-defined currency symbol first
+    const userSymbol = this.getAttribute('currency-symbol');
+    if (userSymbol) {
+      return userSymbol;
+    }
+
+    // Use Intl API to get currency symbol from currency code
     const currency = this.getAttribute('currency') || 'USD';
-    return CURRENCY_SYMBOLS[currency] || currency;
+    
+    try {
+      // Use Intl.NumberFormat to extract the currency symbol
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      });
+      
+      // Format a value and extract the currency symbol
+      const parts = formatter.formatToParts(1);
+      const symbolPart = parts.find(part => part.type === 'currency');
+      
+      if (symbolPart) {
+        return symbolPart.value;
+      }
+    } catch (e) {
+      // Intl API not available or currency code invalid
+    }
+    
+    // Fallback to currency code itself
+    return currency;
   }
 
   _getDecimals() {

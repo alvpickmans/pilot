@@ -62,6 +62,22 @@ describe('PilotCommodityInput', () => {
       expect(symbol.textContent).toBe('£');
     });
 
+    it('renders with custom currency-symbol attribute', async () => {
+      const input = mount('pilot-commodity-input', { 'currency-symbol': 'BTC' });
+      await waitForRender(input);
+
+      const symbol = input.shadowRoot.querySelector('.currency-symbol');
+      expect(symbol.textContent).toBe('BTC');
+    });
+
+    it('custom currency-symbol takes precedence over currency code', async () => {
+      const input = mount('pilot-commodity-input', { currency: 'USD', 'currency-symbol': '★' });
+      await waitForRender(input);
+
+      const symbol = input.shadowRoot.querySelector('.currency-symbol');
+      expect(symbol.textContent).toBe('★');
+    });
+
     it('renders label when provided', async () => {
       const input = mount('pilot-commodity-input', { label: 'Amount' });
       await waitForRender(input);
@@ -338,6 +354,17 @@ describe('PilotCommodityInput', () => {
       expect(symbol.textContent).toBe('€');
     });
 
+    it('re-renders when currency-symbol changes', async () => {
+      const input = mount('pilot-commodity-input', { 'currency-symbol': '$' });
+      await waitForRender(input);
+
+      input.setAttribute('currency-symbol', '€');
+      await waitForRender(input);
+
+      const symbol = input.shadowRoot.querySelector('.currency-symbol');
+      expect(symbol.textContent).toBe('€');
+    });
+
     it('re-renders when decimals changes', async () => {
       const input = mount('pilot-commodity-input', { value: '1234.5678', decimals: '2' });
       await waitForRender(input);
@@ -466,7 +493,7 @@ describe('PilotCommodityInput', () => {
       { code: 'CAD', symbol: 'CA$' },
       { code: 'AUD', symbol: 'A$' },
       { code: 'CHF', symbol: 'CHF' },
-      { code: 'CNY', symbol: '¥' },
+      { code: 'CNY', symbol: 'CN¥' },
       { code: 'INR', symbol: '₹' },
       { code: 'BRL', symbol: 'R$' },
     ];
