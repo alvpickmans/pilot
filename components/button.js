@@ -49,9 +49,26 @@ export class PilotButton extends HTMLElement {
         overflow: hidden;
       }
       
-      /* Simple hover effect - thicker border */
-      button:hover {
-        border-width: var(--border-width-2, 2px);
+      /* Light underline hover effect */
+      button {
+        position: relative;
+      }
+      
+      button::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--color-brand-accent, #f59e0b);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+      }
+      
+      button:hover::after {
+        transform: scaleX(1);
       }
       
       button > * {
