@@ -1,8 +1,9 @@
 /**
- * Pilot Design System - Table Component
+ * Pilot Design System - Table Component (Option 2: Enhanced CSS)
  *
- * Data table with sortable columns, row selection, and technical borders.
- * Essential for displaying transaction lists, account summaries, and financial data.
+ * Simplified table component that applies Pilot Design System styling
+ * without destroying or hiding the light DOM content. The original table
+ * elements remain in the DOM and are styled via ::slotted() selectors.
  */
 
 import { baseStyles } from './shared.js';
@@ -13,20 +14,15 @@ import { baseStyles } from './shared.js';
 
 export class PilotTable extends HTMLElement {
   static get observedAttributes() {
-    return ['sortable', 'selectable', 'striped', 'bordered', 'sort-column', 'sort-direction'];
+    return ['bordered', 'striped', 'responsive'];
   }
 
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    
-    // Internal state
-    this._sortColumn = this.getAttribute('sort-column') || '';
-    this._sortDirection = this.getAttribute('sort-direction') || 'asc';
-    this._selectedRows = new Set();
-    this._data = [];
     this._columns = [];
-    
+    this._isEmpty = false;
+    this._contentObserver = null;
     this.render();
   }
 
@@ -39,456 +35,242 @@ export class PilotTable extends HTMLElement {
         width: 100%;
       }
       
-      .table-container {
+      .table-wrapper {
         width: 100%;
-        overflow-x: auto;
         position: relative;
       }
       
-      table {
+      /* Responsive scrolling container */
+      :host([responsive]) .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* ============================================
+         SLOTTED TABLE STYLING
+         ============================================ */
+      
+      ::slotted(table) {
         width: 100%;
         border-collapse: collapse;
-        font-family: 'IBM Plex Sans', sans-serif;
-        font-size: 0.875rem;
+        font-family: var(--font-body, 'IBM Plex Sans', sans-serif);
+        font-size: var(--font-size-sm, 0.875rem);
         min-width: 100%;
+        margin: 0;
       }
       
-      /* Technical border styling */
-      :host([bordered]) table {
-        border: 1.5px solid #1a1a1a;
+      /* Bordered table */
+      :host([bordered]) ::slotted(table) {
+        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
       }
       
-      :host([bordered]) th,
-      :host([bordered]) td {
-        border: 1px solid #b3b3b3;
+      :host([bordered]) ::slotted(table) th,
+      :host([bordered]) ::slotted(table) td {
+        border: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
       }
       
-      /* Header styling */
-      thead {
-        background: #f5f5f5;
-        border-bottom: 1.5px solid #1a1a1a;
+      /* Header styling - JetBrains Mono for technical look */
+      ::slotted(table) thead {
+        background: var(--color-background-secondary, #f5f5f5);
+        border-bottom: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
       }
       
-      th {
-        padding: 0.75rem 1rem;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.05em;
+      ::slotted(table) th {
+        padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
+        font-family: var(--font-technical, 'JetBrains Mono', monospace);
+        font-size: var(--font-size-xs, 0.75rem);
+        font-weight: var(--font-weight-semibold, 600);
+        letter-spacing: var(--letter-spacing-technical, 0.05em);
         text-transform: uppercase;
         text-align: left;
-        color: #525252;
+        color: var(--color-text-secondary, #525252);
         white-space: nowrap;
         position: relative;
-      }
-      
-      th.checkbox-cell {
-        width: 48px;
-        text-align: center;
-      }
-      
-      /* Sortable headers */
-      th.sortable {
-        cursor: pointer;
-        user-select: none;
-        transition: background 150ms;
-      }
-      
-      th.sortable:hover {
-        background: #f0f0f0;
-      }
-      
-      th.sortable .th-content {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-      
-      .sort-indicator {
-        display: inline-flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        line-height: 0.5;
-        color: #6b6b6b;
-        opacity: 0.3;
-        transition: opacity 150ms;
-      }
-      
-      th.sortable:hover .sort-indicator,
-      th.sorted .sort-indicator {
-        opacity: 1;
-      }
-      
-      th.sorted .sort-indicator {
-        color: #1a1a1a;
-      }
-      
-      .sort-indicator .asc,
-      .sort-indicator .desc {
-        display: block;
-        height: 8px;
-      }
-      
-      .sort-indicator.ascending .asc,
-      .sort-indicator.descending .desc {
-        color: #1a1a1a;
-        font-weight: 700;
       }
       
       /* Body styling */
-      tbody {
-        background: #ffffff;
+      ::slotted(table) tbody {
+        background: var(--color-background-primary, #ffffff);
       }
       
-      td {
-        padding: 0.75rem 1rem;
-        color: #1a1a1a;
-        border-bottom: 1px solid #d4d4d4;
+      ::slotted(table) td {
+        padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
+        color: var(--color-text-primary, #1a1a1a);
+        border-bottom: var(--border-width-1, 1px) solid var(--color-border-secondary, #d4d4d4);
         white-space: nowrap;
       }
       
-      td.checkbox-cell {
-        width: 48px;
-        text-align: center;
+      /* Row hover effect */
+      ::slotted(table) tbody tr {
+        transition: background var(--duration-fast, 150ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
       }
       
-      /* Row states */
-      tbody tr {
-        transition: background 150ms;
-      }
-      
-      tbody tr:hover {
-        background: #f5f5f5;
+      ::slotted(table) tbody tr:hover {
+        background: var(--color-background-secondary, #f5f5f5);
       }
       
       /* Striped rows */
-      :host([striped]) tbody tr:nth-child(even) {
-        background: #f5f5f5;
+      :host([striped]) ::slotted(table) tbody tr:nth-child(even) {
+        background: var(--color-background-secondary, #f5f5f5);
       }
       
-      :host([striped]) tbody tr:nth-child(even):hover {
-        background: #f0f0f0;
+      :host([striped]) ::slotted(table) tbody tr:nth-child(even):hover {
+        background: var(--color-gray-100, #e5e5e5);
       }
       
-      /* Selected rows */
-      tbody tr.selected {
-        background: #f0f0f0;
-      }
+      /* ============================================
+         EMPTY STATE
+         ============================================ */
       
-      tbody tr.selected td {
-        border-bottom-color: #f59e0b;
-      }
-      
-      /* Selection styling */
-      :host([selectable]) tbody tr {
-        cursor: pointer;
-      }
-      
-      /* Checkbox styling */
-      .row-checkbox {
-        width: 18px;
-        height: 18px;
-        border: 1px solid #b3b3b3;
-        border-radius: 0;
-        background: #ffffff;
-        cursor: pointer;
-        appearance: none;
-        -webkit-appearance: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-        transition: all 150ms;
-      }
-      
-      .row-checkbox:checked {
-        background: #1a1a1a;
-        border-color: #1a1a1a;
-      }
-      
-      .row-checkbox:checked::after {
-        content: '✓';
-        color: #ffffff;
-        font-size: 0.75rem;
-        font-weight: 700;
-      }
-      
-      .row-checkbox:focus {
-        outline: 2px solid #f59e0b;
-        outline-offset: 2px;
-      }
-      
-      /* Empty state */
       .empty-state {
-        padding: 3rem 1rem;
+        display: none;
+        padding: var(--spacing-12, 3rem) var(--spacing-4, 1rem);
         text-align: center;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.875rem;
-        color: #6b6b6b;
-        border-bottom: 1px solid #d4d4d4;
+        font-family: var(--font-technical, 'JetBrains Mono', monospace);
+        font-size: var(--font-size-sm, 0.875rem);
+        color: var(--color-text-tertiary, #6b6b6b);
+        border-bottom: var(--border-width-1, 1px) solid var(--color-border-secondary, #d4d4d4);
+        background: var(--color-background-primary, #ffffff);
       }
       
-      /* Header slot */
+      :host([empty]) .empty-state {
+        display: block;
+      }
+      
+      /* Hide slotted table when empty */
+      :host([empty]) ::slotted(table) {
+        display: none;
+      }
+      
+      /* ============================================
+         HEADER SLOT
+         ============================================ */
+      
       .header-slot {
-        margin-bottom: 1rem;
+        margin-bottom: var(--spacing-4, 1rem);
       }
       
-      /* Focus states */
-      th:focus-visible,
-      td:focus-visible {
-        outline: 2px solid #f59e0b;
-        outline-offset: -2px;
-      }
+      /* ============================================
+         RESPONSIVE
+         ============================================ */
       
-      /* Responsive */
       @media (max-width: 768px) {
-        .table-container {
-          -webkit-overflow-scrolling: touch;
+        :host([responsive]) ::slotted(table) th,
+        :host([responsive]) ::slotted(table) td {
+          padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
+          font-size: var(--font-size-xs, 0.75rem);
         }
         
-        th, td {
-          padding: 0.5rem 0.75rem;
-          font-size: 0.75rem;
-        }
-        
-        th {
-          font-size: 0.75rem;
+        :host([responsive]) ::slotted(table) th {
+          font-size: var(--font-size-2xs, 0.625rem);
         }
       }
     `;
   }
 
   connectedCallback() {
-    this._setupEventListeners();
+    // Wait for light DOM content to be available
     this._parseColumns();
-    this._parseData();
-    this.render();
+    this._checkEmptyState();
+    
+    // Set up observer to detect changes in light DOM
+    this._contentObserver = new MutationObserver(() => {
+      this._parseColumns();
+      this._checkEmptyState();
+    });
+    
+    this._contentObserver.observe(this, { childList: true, subtree: true });
   }
 
   disconnectedCallback() {
-    this._removeEventListeners();
+    if (this._contentObserver) {
+      this._contentObserver.disconnect();
+    }
   }
 
-  _setupEventListeners() {
-    this.shadowRoot.addEventListener('click', this._handleClick.bind(this));
-    this.shadowRoot.addEventListener('change', this._handleChange.bind(this));
-  }
-
-  _removeEventListeners() {
-    this.shadowRoot.removeEventListener('click', this._handleClick.bind(this));
-    this.shadowRoot.removeEventListener('change', this._handleChange.bind(this));
-  }
-
-  _handleClick(event) {
-    const th = event.target.closest('th.sortable');
-    if (th) {
-      const column = th.dataset.column;
-      this._sort(column);
+  /**
+   * Parse column metadata from thead
+   * Extracts data-key and other attributes from header cells
+   */
+  _parseColumns() {
+    const table = this.querySelector('table');
+    if (!table) {
+      this._columns = [];
       return;
     }
 
-    // Handle row click for selection (if not clicking checkbox directly)
-    if (this.hasAttribute('selectable')) {
-      const tr = event.target.closest('tbody tr');
-      if (tr && !event.target.closest('.row-checkbox')) {
-        const index = parseInt(tr.dataset.index, 10);
-        this._toggleRowSelection(index);
-      }
-    }
-  }
-
-  _handleChange(event) {
-    if (event.target.classList.contains('row-checkbox')) {
-      const index = parseInt(event.target.dataset.index, 10);
-      const isHeaderCheckbox = event.target.classList.contains('header-checkbox');
-      
-      if (isHeaderCheckbox) {
-        this._toggleAllRows(event.target.checked);
-      } else {
-        this._toggleRowSelection(index, event.target.checked);
-      }
-    }
-  }
-
-  _parseColumns() {
-    // Parse columns from thead > tr > th elements
-    const thead = this.querySelector('thead');
+    const thead = table.querySelector('thead');
     if (thead) {
       const thElements = thead.querySelectorAll('th');
       this._columns = Array.from(thElements).map(th => ({
         key: th.dataset.key || th.textContent.trim().toLowerCase().replace(/\s+/g, '_'),
         label: th.textContent.trim(),
-        sortable: th.hasAttribute('data-sortable') || this.hasAttribute('sortable'),
-        type: th.dataset.type || 'text'
+        type: th.dataset.type || 'text',
+        sortable: th.hasAttribute('data-sortable'),
+        width: th.dataset.width || null
       }));
     } else {
-      // Auto-detect columns from first data row
-      const firstRow = this.querySelector('tbody tr');
+      // Auto-detect columns from first data row if no thead
+      const firstRow = table.querySelector('tbody tr');
       if (firstRow) {
         const cells = firstRow.querySelectorAll('td');
         this._columns = Array.from(cells).map((_, index) => ({
           key: `column_${index}`,
           label: `Column ${index + 1}`,
-          sortable: this.hasAttribute('sortable'),
-          type: 'text'
+          type: 'text',
+          sortable: false,
+          width: null
         }));
       }
     }
+
+    // Store column metadata on the host for external access
+    this._columns = this._columns;
   }
 
-  _parseData() {
-    const tbody = this.querySelector('tbody');
-    if (tbody) {
-      const rows = tbody.querySelectorAll('tr');
-      this._data = Array.from(rows).map((row, index) => {
-        const cells = row.querySelectorAll('td');
-        const rowData = { _index: index };
-        
-        this._columns.forEach((col, colIndex) => {
-          const cell = cells[colIndex];
-          rowData[col.key] = cell ? cell.textContent.trim() : '';
-          rowData[`_cell_${colIndex}`] = cell ? cell.innerHTML : '';
-        });
-        
-        return rowData;
-      });
-    }
-  }
-
-  _sort(column) {
-    if (!this.hasAttribute('sortable')) return;
-    
-    // Toggle direction if same column
-    if (this._sortColumn === column) {
-      this._sortDirection = this._sortDirection === 'asc' ? 'desc' : 'asc';
+  /**
+   * Check if the table has any data rows
+   */
+  _checkEmptyState() {
+    const table = this.querySelector('table');
+    if (!table) {
+      this._isEmpty = true;
     } else {
-      this._sortColumn = column;
-      this._sortDirection = 'asc';
-    }
-    
-    // Update attributes
-    this.setAttribute('sort-column', this._sortColumn);
-    this.setAttribute('sort-direction', this._sortDirection);
-    
-    // Sort the data
-    this._data.sort((a, b) => {
-      let aVal = a[column] || '';
-      let bVal = b[column] || '';
-      
-      // Try numeric sort
-      const aNum = parseFloat(aVal);
-      const bNum = parseFloat(bVal);
-      
-      if (!isNaN(aNum) && !isNaN(bNum)) {
-        return this._sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
-      }
-      
-      // String sort
-      aVal = String(aVal).toLowerCase();
-      bVal = String(bVal).toLowerCase();
-      
-      if (aVal < bVal) return this._sortDirection === 'asc' ? -1 : 1;
-      if (aVal > bVal) return this._sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
-    
-    // Emit event
-    this.dispatchEvent(new CustomEvent('sort', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        column: this._sortColumn,
-        direction: this._sortDirection
-      }
-    }));
-    
-    this.render();
-  }
-
-  _toggleRowSelection(index, forceState = null) {
-    const selectable = this.getAttribute('selectable') || 'none';
-    if (selectable === 'none') return;
-    
-    const isSelected = this._selectedRows.has(index);
-    const shouldSelect = forceState !== null ? forceState : !isSelected;
-    
-    if (selectable === 'single') {
-      // Clear all selections for single select
-      this._selectedRows.clear();
-      if (shouldSelect) {
-        this._selectedRows.add(index);
-      }
-    } else {
-      // Multi select
-      if (shouldSelect) {
-        this._selectedRows.add(index);
+      const tbody = table.querySelector('tbody');
+      if (tbody) {
+        const rows = tbody.querySelectorAll('tr');
+        this._isEmpty = rows.length === 0;
       } else {
-        this._selectedRows.delete(index);
+        // No tbody means empty
+        this._isEmpty = true;
       }
     }
-    
-    // Update visual state without full re-render
-    this._updateSelectionVisuals();
-    
-    // Emit event
-    this.dispatchEvent(new CustomEvent('selection-change', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        selectedRows: Array.from(this._selectedRows),
-        selectedData: Array.from(this._selectedRows).map(i => this._data[i])
-      }
-    }));
-  }
 
-  _toggleAllRows(selectAll) {
-    if (selectAll) {
-      this._data.forEach((_, index) => this._selectedRows.add(index));
+    // Toggle the empty attribute
+    if (this._isEmpty) {
+      this.setAttribute('empty', '');
     } else {
-      this._selectedRows.clear();
+      this.removeAttribute('empty');
     }
-    
-    this._updateSelectionVisuals();
-    
-    this.dispatchEvent(new CustomEvent('selection-change', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        selectedRows: Array.from(this._selectedRows),
-        selectedData: Array.from(this._selectedRows).map(i => this._data[i])
-      }
-    }));
   }
 
-  _updateSelectionVisuals() {
-    const rows = this.shadowRoot.querySelectorAll('tbody tr');
-    const headerCheckbox = this.shadowRoot.querySelector('.header-checkbox');
-    
-    rows.forEach((row, index) => {
-      const checkbox = row.querySelector('.row-checkbox');
-      const isSelected = this._selectedRows.has(parseInt(row.dataset.index, 10));
-      
-      row.classList.toggle('selected', isSelected);
-      if (checkbox) {
-        checkbox.checked = isSelected;
-      }
-    });
-    
-    if (headerCheckbox) {
-      const allSelected = this._data.length > 0 && this._selectedRows.size === this._data.length;
-      headerCheckbox.checked = allSelected;
-      headerCheckbox.indeterminate = this._selectedRows.size > 0 && !allSelected;
-    }
+  /**
+   * Get current column metadata
+   * @returns {Array} Array of column objects
+   */
+  get columns() {
+    return this._columns;
+  }
+
+  /**
+   * Check if table is empty
+   * @returns {boolean}
+   */
+  get isEmpty() {
+    return this._isEmpty;
   }
 
   render() {
-    const sortable = this.hasAttribute('sortable');
-    const selectable = this.getAttribute('selectable') || 'none';
-    const striped = this.hasAttribute('striped');
-    const bordered = this.hasAttribute('bordered');
-    
     this.shadowRoot.innerHTML = `
       <style>${this.styles}</style>
       
@@ -496,140 +278,26 @@ export class PilotTable extends HTMLElement {
         <slot name="header"></slot>
       </div>
       
-      <div class="table-container">
-        <table role="grid" aria-rowcount="${this._data.length + 1}">
-          <thead>
-            <tr role="row">
-              ${selectable !== 'none' ? `
-                <th class="checkbox-cell" role="columnheader" scope="col">
-                  ${selectable === 'multi' ? `
-                    <input 
-                      type="checkbox" 
-                      class="row-checkbox header-checkbox"
-                      aria-label="Select all rows"
-                      ${this._selectedRows.size === this._data.length && this._data.length > 0 ? 'checked' : ''}
-                    />
-                  ` : ''}
-                </th>
-              ` : ''}
-              
-              ${this._columns.map(col => `
-                <th 
-                  class="${sortable && col.sortable ? 'sortable' : ''} ${this._sortColumn === col.key ? 'sorted' : ''}"
-                  data-column="${col.key}"
-                  role="columnheader"
-                  scope="col"
-                  aria-sort="${this._sortColumn === col.key ? (this._sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}"
-                >
-                  <div class="th-content">
-                    <span>${col.label}</span>
-                    ${sortable && col.sortable ? `
-                      <span class="sort-indicator ${this._sortColumn === col.key ? this._sortDirection : ''}">
-                        <span class="asc">▲</span>
-                        <span class="desc">▼</span>
-                      </span>
-                    ` : ''}
-                  </div>
-                </th>
-              `).join('')}
-            </tr>
-          </thead>
-          
-          <tbody>
-            ${this._data.length === 0 ? `
-              <tr role="row">
-                <td 
-                  colspan="${this._columns.length + (selectable !== 'none' ? 1 : 0)}"
-                  class="empty-state"
-                  role="gridcell"
-                >
-                  No data available
-                </td>
-              </tr>
-            ` : this._data.map((row, index) => `
-              <tr 
-                role="row"
-                data-index="${index}"
-                class="${this._selectedRows.has(index) ? 'selected' : ''}"
-                aria-selected="${this._selectedRows.has(index)}"
-              >
-                ${selectable !== 'none' ? `
-                  <td class="checkbox-cell" role="gridcell">
-                    <input 
-                      type="checkbox" 
-                      class="row-checkbox"
-                      data-index="${index}"
-                      aria-label="Select row ${index + 1}"
-                      ${this._selectedRows.has(index) ? 'checked' : ''}
-                    />
-                  </td>
-                ` : ''}
-                
-                ${this._columns.map((col, colIndex) => `
-                  <td role="gridcell" data-column="${col.key}">
-                    ${row[`_cell_${colIndex}`] || row[col.key] || ''}
-                  </td>
-                `).join('')}
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
+      <div class="table-wrapper">
+        <slot></slot>
+        
+        <div class="empty-state" role="status" aria-live="polite">
+          No data available
+        </div>
       </div>
-      
-      <slot></slot>
     `;
-    
-    this._attachEventListeners();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
-      if (name === 'sort-column') {
-        this._sortColumn = newValue || '';
-        this.render();
-      } else if (name === 'sort-direction') {
-        this._sortDirection = newValue || 'asc';
-        this.render();
-      } else {
-        // Re-parse data when structural attributes change
-        this._parseData();
-        this.render();
+      // Re-check empty state when attributes change
+      // (might affect visual state)
+      if (name === 'empty') {
+        this._checkEmptyState();
       }
     }
   }
-
-  // Public API
-  get selectedRows() {
-    return Array.from(this._selectedRows);
-  }
-
-  set selectedRows(indices) {
-    this._selectedRows = new Set(indices);
-    this._updateSelectionVisuals();
-  }
-
-  get data() {
-    return this._data;
-  }
-
-  set data(newData) {
-    this._data = newData.map((row, index) => ({
-      ...row,
-      _index: index
-    }));
-    this._selectedRows.clear();
-    this.render();
-  }
-
-  clearSelection() {
-    this._selectedRows.clear();
-    this._updateSelectionVisuals();
-  }
-
-  selectAll() {
-    this._data.forEach((_, index) => this._selectedRows.add(index));
-    this._updateSelectionVisuals();
-  }
 }
 
+// Register the custom element
 customElements.define('pilot-table', PilotTable);
