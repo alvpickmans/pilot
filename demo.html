@@ -571,6 +571,31 @@
         </pilot-select>
       </div>
     </div>
+    
+    <div class="component-showcase" style="margin-top: var(--spacing-6);">
+      <p class="demo-subtitle">Virtual Scrolling (100+ Options)</p>
+      <pilot-select 
+        id="virtual-select"
+        label="Large Dataset"
+        placeholder="Select from 100 options"
+        searchable
+      >
+      </pilot-select>
+      <script>
+        // Generate 100 options for virtual scrolling demo
+        const virtualSelect = document.getElementById('virtual-select');
+        const options = [];
+        for (let i = 1; i <= 100; i++) {
+          const value = `item-${String(i).padStart(3, '0')}`;
+          const label = `Item ${String(i).padStart(3, '0')}: ${['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon'][i % 5]} ${['System', 'Module', 'Component', 'Unit', 'Device'][Math.floor(i / 20)]}`;
+          options.push(`<option value="${value}">${label}</option>`);
+        }
+        virtualSelect.innerHTML = options.join('');
+      </script>
+      <p style="margin-top: var(--spacing-4); font-size: var(--font-size-xs); color: var(--color-text-tertiary); font-family: var(--font-technical);">
+        Renders only visible options for performance. Scroll to see virtualization in action.
+      </p>
+    </div>
   </section>
 
   <!-- Datepicker Section -->
