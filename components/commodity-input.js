@@ -344,14 +344,19 @@ export class PilotCommodityInput extends HTMLElement {
     const input = this.shadowRoot.querySelector('input');
     
     if (symbol && input) {
+      // Get the computed style to check the actual left position
+      const wrapper = this.shadowRoot.querySelector('.input-wrapper');
+      const wrapperStyles = window.getComputedStyle(wrapper);
+      const symbolStyles = window.getComputedStyle(symbol);
+      
       // Calculate the width of the symbol plus consistent spacing
       const symbolWidth = symbol.offsetWidth;
       const basePadding = 16; // 1rem = 16px default
       const gap = 8; // 0.5rem gap between symbol and input text
       const totalPadding = basePadding + symbolWidth + gap;
       
-      // Set the CSS variable for dynamic padding
-      input.style.setProperty('--symbol-padding', `${totalPadding}px`);
+      // Directly set the padding-left on the input element
+      input.style.paddingLeft = `${totalPadding}px`;
     }
   }
 
