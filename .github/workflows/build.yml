@@ -26,11 +26,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 'latest'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Create dist directory
         run: mkdir -p dist
@@ -45,7 +49,7 @@ jobs:
         run: cp -r components dist/
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: bun run build-storybook
 
       - name: Move Storybook build to dist/storybook
         run: mv storybook-static dist/storybook

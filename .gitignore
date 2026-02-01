@@ -5,7 +5,6 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 yarn.lock
-bun.lock
 
 # Testing
 coverage/
