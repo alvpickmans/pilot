@@ -407,4 +407,144 @@ describe('PilotPagination', () => {
       expect(pagination.page).toBe(4);
     });
   });
+
+  describe('Responsive Behavior', () => {
+    it('has pagination-wrapper element for responsive layout', async () => {
+      const pagination = mount('pilot-pagination', { total: '100' });
+      await waitForRender(pagination);
+      
+      const wrapper = pagination.shadowRoot.querySelector('.pagination-wrapper');
+      expect(wrapper).toBeTruthy();
+    });
+
+    it('has pagination-meta container for per-page and info', async () => {
+      const pagination = mount('pilot-pagination', { total: '100' });
+      await waitForRender(pagination);
+      
+      const meta = pagination.shadowRoot.querySelector('.pagination-meta');
+      expect(meta).toBeTruthy();
+      
+      const perPageContainer = meta.querySelector('.per-page-container');
+      const pageInfo = meta.querySelector('.page-info');
+      expect(perPageContainer).toBeTruthy();
+      expect(pageInfo).toBeTruthy();
+    });
+
+    it('hides per-page selector when data-hide-per-page is set', async () => {
+      const pagination = mount('pilot-pagination', { total: '100' });
+      await waitForRender(pagination);
+      
+      // Manually trigger responsive state update
+      pagination.setAttribute('data-hide-per-page', 'true');
+      await waitForRender(pagination);
+      
+      const perPageSelect = pagination.shadowRoot.querySelector('.per-page-select');
+      expect(perPageSelect).toBeFalsy();
+    });
+
+    it('hides page info when data-hide-info is set', async () => {
+      const pagination = mount('pilot-pagination', { total: '100' });
+      await waitForRender(pagination);
+      
+      // Manually trigger responsive state update
+      pagination.setAttribute('data-hide-info', 'true');
+      await waitForRender(pagination);
+      
+      const pageInfo = pagination.shadowRoot.querySelector('.page-info');
+      expect(pageInfo).toBeFalsy();
+    });
+
+    it('adjusts visible page buttons based on responsive state', async () => {
+      const pagination = mount('pilot-pagination', { 
+        total: '200', 
+        'per-page': '10',
+        'max-visible': '7',
+        page: '10'
+      });
+      await waitForRender(pagination);
+      
+      // Initially shows 7 buttons
+      let pageButtons = pagination.shadowRoot.querySelectorAll('.page-btn');
+      expect(pageButtons.length).toBeLessThanOrEqual(9); // 7 visible + 2 boundary pages
+      
+      // Simulate small screen by setting currentMaxVisible
+      pagination._currentMaxVisible = 3;
+      pagination.render();
+      await waitForRender(pagination);
+      
+      pageButtons = pagination.shadowRoot.querySelectorAll('.page-btn');
+      // Should show fewer buttons: 1, ..., 10, ..., 20 (5 max with small screen)
+      expect(pageButtons.length).toBeLessThanOrEqual(5);
+    });
+
+    it('maintains ellipsis logic with fewer visible buttons', async () => {
+      const pagination = mount('pilot-pagination', { 
+        total: '200', 
+        'per-page': '10',
+        page: '10'
+      });
+      await waitForRender(pagination);
+      
+      // Force small screen behavior
+      pagination._currentMaxVisible = 3;
+      pagination.render();
+      await waitForRender(pagination);
+      
+      const ellipsis = pagination.shadowRoot.querySelectorAll('.ellipsis');
+      // Should still show ellipsis for large ranges
+      expect(ellipsis.length).toBeGreaterThan(0);
+    });
+
+    it('is responsive by default', async () => {
+      const pagination = mount('pilot-pagination', { total: '100' });
+      await waitForRender(pagination);
+      
+      expect(pagination._isResponsive).toBe(true);
+    });
+
+    it('can disable responsive behavior with responsive="false"', async () => {
+      const pagination = mount('pilot-pagination', { 
+        total: '100',
+        responsive: 'false'
+      });
+      await waitForRender(pagination);
+      
+      expect(pagination._isResponsive).toBe(false);
+    });
+
+    it('handles container resize gracefully', async () => {
+      const pagination = mount('pilot-pagination', { total: '100' });
+      await waitForRender(pagination);
+      
+      // Test that _updateResponsiveState method exists and works
+      pagination._updateResponsiveState(400); // Small screen (< 480px)
+      expect(pagination.getAttribute('data-hide-per-page')).toBe('true');
+      expect(pagination.getAttribute('data-hide-info')).toBe('true');
+      
+      pagination._updateResponsiveState(500); // Medium screen (480px - 640px)
+      expect(pagination.getAttribute('data-hide-per-page')).toBeNull();
+      expect(pagination.getAttribute('data-hide-info')).toBe('true');
+      
+      pagination._updateResponsiveState(800); // Large screen (>= 640px)
+      expect(pagination.getAttribute('data-hide-per-page')).toBeNull();
+      expect(pagination.getAttribute('data-hide-info')).toBeNull();
+    });
+
+    it('preserves user-set hide-per-page and hide-info attributes', async () => {
+      const pagination = mount('pilot-pagination', { 
+        total: '100',
+        'hide-per-page': true,
+        'hide-info': true
+      });
+      await waitForRender(pagination);
+      
+      // Even on large screens, these should remain hidden
+      pagination._updateResponsiveState(1000);
+      
+      const perPageSelect = pagination.shadowRoot.querySelector('.per-page-select');
+      const pageInfo = pagination.shadowRoot.querySelector('.page-info');
+      expect(perPageSelect).toBeFalsy();
+      expect(pageInfo).toBeFalsy();
+    });
+  });
 });

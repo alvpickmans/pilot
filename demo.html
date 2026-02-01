@@ -181,10 +181,10 @@
   <!-- Pagination Section -->
   <section class="demo-section">
     <h2 class="demo-title">Pagination</h2>
-    <p class="demo-subtitle">Page controls for navigating paginated data</p>
+    <p class="demo-subtitle">Page controls for navigating paginated data with responsive behavior</p>
     
     <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
-      <p class="demo-subtitle">Basic Pagination</p>
+      <p class="demo-subtitle">Basic Pagination (Responsive)</p>
       <pilot-pagination total="100" page="1" per-page="10"></pilot-pagination>
     </div>
     
@@ -203,9 +203,37 @@
       <pilot-pagination total="50" page="2" per-page="5" hide-per-page></pilot-pagination>
     </div>
     
-    <div class="component-showcase">
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
       <p class="demo-subtitle">Without Info Display</p>
       <pilot-pagination total="75" page="1" per-page="15" hide-info></pilot-pagination>
+    </div>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Responsive: Small Container (320px)</p>
+      <div style="max-width: 320px; border: 1px dashed var(--color-border-primary, #b3b3b3); padding: 1rem;">
+        <pilot-pagination total="200" page="10" per-page="10"></pilot-pagination>
+      </div>
+      <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.5rem;">
+        At small widths, the per-page selector and page info are hidden, and fewer page buttons are shown.
+      </p>
+    </div>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Responsive: Medium Container (500px)</p>
+      <div style="max-width: 500px; border: 1px dashed var(--color-border-primary, #b3b3b3); padding: 1rem;">
+        <pilot-pagination total="200" page="10" per-page="10"></pilot-pagination>
+      </div>
+      <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.5rem;">
+        At medium widths, the page info is hidden, and the per-page selector is shown on a second row.
+      </p>
+    </div>
+    
+    <div class="component-showcase">
+      <p class="demo-subtitle">Responsive: Large Container (Full Width)</p>
+      <pilot-pagination total="200" page="10" per-page="10"></pilot-pagination>
+      <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.5rem;">
+        At full width, all elements are visible in a single row layout.
+      </p>
     </div>
   </section>
 

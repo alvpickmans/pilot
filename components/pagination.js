@@ -13,7 +13,7 @@ import { baseStyles } from './shared.js';
 
 export class PilotPagination extends HTMLElement {
   static get observedAttributes() {
-    return ['total', 'page', 'per-page', 'max-visible', 'show-first-last', 'hide-per-page', 'hide-info', 'compact'];
+    return ['total', 'page', 'per-page', 'max-visible', 'show-first-last', 'hide-per-page', 'hide-info', 'compact', 'responsive', 'data-hide-per-page', 'data-hide-info'];
   }
 
   constructor() {
@@ -24,6 +24,12 @@ export class PilotPagination extends HTMLElement {
     this._page = parseInt(this.getAttribute('page'), 10) || 1;
     this._perPage = parseInt(this.getAttribute('per-page'), 10) || 10;
     this._maxVisible = parseInt(this.getAttribute('max-visible'), 10) || 7;
+    this._resizeObserver = null;
+    this._containerWidth = 0;
+    this._currentMaxVisible = null;
+    // Check if responsive is explicitly set to false
+    const responsiveAttr = this.getAttribute('responsive');
+    this._isResponsive = responsiveAttr !== 'false';
     this.render();
   }
 
@@ -36,12 +42,39 @@ export class PilotPagination extends HTMLElement {
         align-items: center;
         gap: var(--spacing-2, 0.5rem);
         font-family: var(--font-technical, 'JetBrains Mono', monospace);
+        width: 100%;
+        container-type: inline-size;
+        container-name: pagination;
+      }
+      
+      .pagination-wrapper {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-2, 0.5rem);
+        width: 100%;
+        flex-wrap: wrap;
       }
       
       .pagination-container {
         display: flex;
         align-items: center;
         gap: var(--spacing-1, 0.25rem);
+        flex-shrink: 0;
+      }
+      
+      .pagination-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-1, 0.25rem);
+        flex-shrink: 0;
+      }
+      
+      .pagination-meta {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-4, 1rem);
+        margin-left: auto;
+        flex-shrink: 0;
       }
       
       /* Navigation buttons */
@@ -228,15 +261,162 @@ export class PilotPagination extends HTMLElement {
         width: 36px;
         height: 36px;
       }
+      
+      /* Responsive styles using container queries */
+      @container pagination (max-width: 640px) {
+        .pagination-wrapper {
+          flex-wrap: wrap;
+          gap: var(--spacing-3, 0.75rem);
+        }
+        
+        .pagination-meta {
+          margin-left: 0;
+          width: 100%;
+          justify-content: flex-start;
+          order: 3;
+        }
+        
+        .per-page-container {
+          margin-left: 0;
+          padding-left: 0;
+          border-left: none;
+        }
+      }
+      
+      @container pagination (max-width: 480px) {
+        .pagination-wrapper {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--spacing-2, 0.5rem);
+        }
+        
+        .pagination-container {
+          flex-wrap: wrap;
+        }
+        
+        .pagination-meta {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--spacing-2, 0.5rem);
+          width: 100%;
+        }
+        
+        .per-page-container {
+          width: 100%;
+        }
+        
+        .page-info {
+          margin-left: 0;
+        }
+      }
+      
+      /* Hide elements when space is constrained */
+      :host([data-hide-per-page="true"]) .per-page-container {
+        display: none;
+      }
+      
+      :host([data-hide-info="true"]) .page-info {
+        display: none;
+      }
+      
+      /* Mobile-optimized touch targets */
+      @media (pointer: coarse) {
+        .nav-btn,
+        .page-btn {
+          min-height: 48px;
+          min-width: 48px;
+        }
+        
+        .page-btn {
+          width: 48px;
+          height: 48px;
+        }
+        
+        .ellipsis {
+          width: 48px;
+          height: 48px;
+        }
+      }
     `;
   }
 
   connectedCallback() {
     this._setupEventListeners();
+    this._setupResizeObserver();
   }
 
   disconnectedCallback() {
     this._removeEventListeners();
+    this._cleanupResizeObserver();
+  }
+
+  _setupResizeObserver() {
+    if (!this._isResponsive || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+    
+    this._resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width = entry.contentRect.width;
+        this._containerWidth = width;
+        this._updateResponsiveState(width);
+      }
+    });
+    
+    this._resizeObserver.observe(this);
+  }
+
+  _cleanupResizeObserver() {
+    if (this._resizeObserver) {
+      this._resizeObserver.disconnect();
+      this._resizeObserver = null;
+    }
+  }
+
+  _updateResponsiveState(width) {
+    const showPerPage = !this.hasAttribute('hide-per-page');
+    const showInfo = !this.hasAttribute('hide-info');
+    let needsRender = false;
+    
+    // Auto-hide per-page selector on very small screens
+    const shouldHidePerPage = width < 480 && showPerPage;
+    const currentHidePerPage = this.getAttribute('data-hide-per-page') === 'true';
+    if (shouldHidePerPage !== currentHidePerPage) {
+      if (shouldHidePerPage) {
+        this.setAttribute('data-hide-per-page', 'true');
+      } else {
+        this.removeAttribute('data-hide-per-page');
+      }
+      needsRender = true;
+    }
+    
+    // Auto-hide page info on small screens
+    const shouldHideInfo = width < 640 && showInfo;
+    const currentHideInfo = this.getAttribute('data-hide-info') === 'true';
+    if (shouldHideInfo !== currentHideInfo) {
+      if (shouldHideInfo) {
+        this.setAttribute('data-hide-info', 'true');
+      } else {
+        this.removeAttribute('data-hide-info');
+      }
+      needsRender = true;
+    }
+    
+    // Adjust max visible buttons based on width
+    let newMaxVisible = this._maxVisible;
+    if (width < 480) {
+      newMaxVisible = Math.min(this._maxVisible, 3);
+    } else if (width < 640) {
+      newMaxVisible = Math.min(this._maxVisible, 5);
+    } else {
+      newMaxVisible = this._maxVisible;
+    }
+    
+    // Re-render if max visible or visibility changed
+    if (newMaxVisible !== this._currentMaxVisible || needsRender) {
+      this._currentMaxVisible = newMaxVisible;
+      this.render();
+    }
   }
 
   _setupEventListeners() {
@@ -309,7 +489,8 @@ export class PilotPagination extends HTMLElement {
   _getVisiblePages() {
     const total = this._totalPages;
     const current = this._page;
-    const max = this._maxVisible;
+    // Use responsive max visible if available, otherwise fall back to attribute
+    const max = this._currentMaxVisible || this._maxVisible;
 
     if (total <= max) {
       return Array.from({ length: total }, (_, i) => i + 1);
@@ -364,68 +545,76 @@ export class PilotPagination extends HTMLElement {
     const hasFirstLast = this.hasAttribute('show-first-last');
     const showPerPage = !this.hasAttribute('hide-per-page');
     const showInfo = !this.hasAttribute('hide-info');
+    const isDataHidePerPage = this.getAttribute('data-hide-per-page') === 'true';
+    const isDataHideInfo = this.getAttribute('data-hide-info') === 'true';
 
     this.shadowRoot.innerHTML = `
       <style>${this.styles}</style>
-      <div class="pagination-container">
-        ${hasFirstLast ? `
-          <button class="nav-btn" data-action="first" ${this._page === 1 ? 'disabled' : ''} aria-label="First page">
-            <span>|&lt;</span>
-          </button>
-        ` : ''}
-        
-        <button class="nav-btn" data-action="prev" ${this._page === 1 ? 'disabled' : ''} aria-label="Previous page">
-          <span>&lt;</span>
-        </button>
-        
-        <span class="bracket-left">[</span>
-        
-        ${visiblePages.map(p => {
-          if (p === '...') {
-            return '<span class="ellipsis">...</span>';
-          }
-          return `
-            <button 
-              class="page-btn ${p === this._page ? 'active' : ''}" 
-              data-page="${p}"
-              aria-label="Page ${p}"
-              aria-current="${p === this._page ? 'page' : 'false'}"
-            >
-              ${p}
+      <div class="pagination-wrapper">
+        <div class="pagination-container">
+          <div class="pagination-controls">
+            ${hasFirstLast ? `
+              <button class="nav-btn" data-action="first" ${this._page === 1 ? 'disabled' : ''} aria-label="First page">
+                <span>|&lt;</span>
+              </button>
+            ` : ''}
+            
+            <button class="nav-btn" data-action="prev" ${this._page === 1 ? 'disabled' : ''} aria-label="Previous page">
+              <span>&lt;</span>
             </button>
-          `;
-        }).join('')}
-        
-        <span class="bracket-right">]</span>
-        
-        <button class="nav-btn" data-action="next" ${this._page === totalPages || totalPages === 0 ? 'disabled' : ''} aria-label="Next page">
-          <span>&gt;</span>
-        </button>
-        
-        ${hasFirstLast ? `
-          <button class="nav-btn" data-action="last" ${this._page === totalPages || totalPages === 0 ? 'disabled' : ''} aria-label="Last page">
-            <span>&gt;|</span>
-          </button>
-        ` : ''}
-        
-        ${showPerPage ? `
-          <div class="per-page-container">
-            <span class="per-page-label">Per Page</span>
-            <select class="per-page-select" aria-label="Items per page">
-              <option value="5" ${this._perPage === 5 ? 'selected' : ''}>5</option>
-              <option value="10" ${this._perPage === 10 ? 'selected' : ''}>10</option>
-              <option value="25" ${this._perPage === 25 ? 'selected' : ''}>25</option>
-              <option value="50" ${this._perPage === 50 ? 'selected' : ''}>50</option>
-              <option value="100" ${this._perPage === 100 ? 'selected' : ''}>100</option>
-            </select>
+            
+            <span class="bracket-left">[</span>
+            
+            ${visiblePages.map(p => {
+              if (p === '...') {
+                return '<span class="ellipsis">...</span>';
+              }
+              return `
+                <button 
+                  class="page-btn ${p === this._page ? 'active' : ''}" 
+                  data-page="${p}"
+                  aria-label="Page ${p}"
+                  aria-current="${p === this._page ? 'page' : 'false'}"
+                >
+                  ${p}
+                </button>
+              `;
+            }).join('')}
+            
+            <span class="bracket-right">]</span>
+            
+            <button class="nav-btn" data-action="next" ${this._page === totalPages || totalPages === 0 ? 'disabled' : ''} aria-label="Next page">
+              <span>&gt;</span>
+            </button>
+            
+            ${hasFirstLast ? `
+              <button class="nav-btn" data-action="last" ${this._page === totalPages || totalPages === 0 ? 'disabled' : ''} aria-label="Last page">
+                <span>&gt;|</span>
+              </button>
+            ` : ''}
           </div>
-        ` : ''}
+        </div>
         
-        ${showInfo && this._total > 0 ? `
-          <span class="page-info">
-            ${(this._page - 1) * this._perPage + 1}-${Math.min(this._page * this._perPage, this._total)} of ${this._total}
-          </span>
-        ` : ''}
+        <div class="pagination-meta">
+          ${showPerPage && !isDataHidePerPage ? `
+            <div class="per-page-container">
+              <span class="per-page-label">Per Page</span>
+              <select class="per-page-select" aria-label="Items per page">
+                <option value="5" ${this._perPage === 5 ? 'selected' : ''}>5</option>
+                <option value="10" ${this._perPage === 10 ? 'selected' : ''}>10</option>
+                <option value="25" ${this._perPage === 25 ? 'selected' : ''}>25</option>
+                <option value="50" ${this._perPage === 50 ? 'selected' : ''}>50</option>
+                <option value="100" ${this._perPage === 100 ? 'selected' : ''}>100</option>
+              </select>
+            </div>
+          ` : ''}
+          
+          ${showInfo && this._total > 0 && !isDataHideInfo ? `
+            <span class="page-info">
+              ${(this._page - 1) * this._perPage + 1}-${Math.min(this._page * this._perPage, this._total)} of ${this._total}
+            </span>
+          ` : ''}
+        </div>
       </div>
     `;
   }
@@ -441,7 +630,15 @@ export class PilotPagination extends HTMLElement {
         this._perPage = parseInt(newValue, 10) || 10;
       } else if (name === 'max-visible') {
         this._maxVisible = parseInt(newValue, 10) || 7;
+      } else if (name === 'responsive') {
+        this._isResponsive = newValue !== 'false';
+        // Re-setup resize observer if responsive state changes
+        if (this.isConnected) {
+          this._cleanupResizeObserver();
+          this._setupResizeObserver();
+        }
       }
+      // data-hide-per-page and data-hide-info are handled in render() - just trigger re-render
       this.render();
     }
   }
