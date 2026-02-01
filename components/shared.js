@@ -162,6 +162,30 @@ export const technicalBracketStyles = `
 `;
 
 // ============================================
+// BACKDROP STYLES (for modal, nav-menu, etc.)
+// ============================================
+
+export const backdropStyles = `
+  .backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-backdrop-overlay, rgba(0, 0, 0, 0.3));
+    background-image: radial-gradient(circle, var(--color-backdrop-dots, rgba(0, 0, 0, 0.4)) 1px, transparent 1px);
+    background-size: 4px 4px;
+    opacity: 0;
+    transition: opacity var(--duration-normal, 250ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+  }
+  
+  :host([open]) .backdrop,
+  .backdrop.open {
+    opacity: 1;
+  }
+`;
+
+// ============================================
 // DROPDOWN BASE STYLES
 // ============================================
 

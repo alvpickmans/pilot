@@ -5,7 +5,7 @@
  * Supports nested items, keyboard navigation, and accessibility features.
  */
 
-import { baseStyles } from './shared.js';
+import { baseStyles, backdropStyles } from './shared.js';
 
 // ============================================
 // NAVIGATION MENU COMPONENT
@@ -296,6 +296,7 @@ export class PilotNavMenu extends HTMLElement {
 
     return `
       ${baseStyles}
+      ${backdropStyles}
 
       :host {
         display: block;
@@ -496,23 +497,15 @@ export class PilotNavMenu extends HTMLElement {
         transform: rotate(-45deg) translate(7px, -6px);
       }
 
-      /* Mobile Menu Overlay */
+      /* Mobile Menu Overlay - uses shared backdrop styles */
       .mobile-menu-overlay {
         display: none;
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
         z-index: var(--pilot-nav-overlay-z-index, 99);
-        opacity: 0;
-        transition: opacity var(--duration-normal, 250ms);
       }
 
       .mobile-menu-overlay.open {
         display: block;
-        opacity: 1;
       }
 
       /* Mobile Menu Panel */
@@ -767,7 +760,7 @@ export class PilotNavMenu extends HTMLElement {
       </nav>
 
       <!-- Mobile Menu Overlay -->
-      <div class="mobile-menu-overlay" part="overlay" aria-hidden="true"></div>
+      <div class="mobile-menu-overlay backdrop" part="overlay" aria-hidden="true"></div>
 
       <!-- Mobile Menu Panel -->
       <div

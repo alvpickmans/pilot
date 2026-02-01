@@ -4,7 +4,7 @@
  * Dialog overlay with technical corner bracket styling.
  */
 
-import { baseStyles } from './shared.js';
+import { baseStyles, backdropStyles } from './shared.js';
 
 // ============================================
 // TECHNICAL MODAL COMPONENT
@@ -28,6 +28,7 @@ export class PilotModal extends HTMLElement {
   get styles() {
     return `
       ${baseStyles}
+      ${backdropStyles}
       
       :host {
         display: none;
@@ -41,23 +42,6 @@ export class PilotModal extends HTMLElement {
       
       :host([open]) {
         display: block;
-      }
-      
-      .backdrop {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.3);
-        background-image: radial-gradient(circle, rgba(0, 0, 0, 0.4) 1px, transparent 1px);
-        background-size: 4px 4px;
-        opacity: 0;
-        transition: opacity var(--duration-normal, 250ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
-      }
-      
-      :host([open]) .backdrop {
-        opacity: 1;
       }
       
       .modal-container {

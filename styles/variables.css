@@ -118,6 +118,10 @@
   --color-pilot-annotation: var(--color-gray-600);
   --color-pilot-highlight: var(--color-amber-300);
   
+  /* Backdrop/Overlay */
+  --color-backdrop-overlay: rgba(0, 0, 0, 0.3);
+  --color-backdrop-dots: rgba(0, 0, 0, 0.4);
+  
   /* ============================================
      TYPOGRAPHY
      ============================================ */
@@ -318,17 +322,22 @@
   --color-border-technical: var(--color-gray-500);
   --color-border-dashed: var(--color-gray-600);
   
-  /* Technical */
-  --color-pilot-grid: var(--color-gray-800);
-  --color-pilot-measurement: var(--color-gray-600);
-  --color-pilot-annotation: var(--color-gray-400);
-  
-  /* Shadows */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
-  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+    /* Technical */
+    --color-pilot-grid: var(--color-gray-800);
+    --color-pilot-measurement: var(--color-gray-600);
+    --color-pilot-annotation: var(--color-gray-400);
+    
+    /* Backdrop/Overlay */
+    --color-backdrop-overlay: rgba(0, 0, 0, 0.5);
+    --color-backdrop-dots: rgba(255, 255, 255, 0.3);
+    
+    /* Shadows */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+    --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  }
 }
 
 /* ============================================
@@ -363,6 +372,10 @@
     --color-pilot-grid: var(--color-gray-800);
     --color-pilot-measurement: var(--color-gray-600);
     --color-pilot-annotation: var(--color-gray-400);
+    
+    /* Backdrop/Overlay */
+    --color-backdrop-overlay: rgba(0, 0, 0, 0.5);
+    --color-backdrop-dots: rgba(255, 255, 255, 0.3);
     
     /* Shadows */
     --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
