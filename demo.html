@@ -178,6 +178,37 @@
     </div>
   </section>
 
+  <!-- Pagination Section -->
+  <section class="demo-section">
+    <h2 class="demo-title">Pagination</h2>
+    <p class="demo-subtitle">Page controls for navigating paginated data</p>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Basic Pagination</p>
+      <pilot-pagination total="100" page="1" per-page="10"></pilot-pagination>
+    </div>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">With First/Last Buttons</p>
+      <pilot-pagination total="200" page="5" per-page="10" show-first-last></pilot-pagination>
+    </div>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Compact Mode</p>
+      <pilot-pagination total="150" page="3" per-page="25" compact></pilot-pagination>
+    </div>
+    
+    <div class="component-showcase" style="margin-bottom: var(--spacing-6);">
+      <p class="demo-subtitle">Without Per-Page Selector</p>
+      <pilot-pagination total="50" page="2" per-page="5" hide-per-page></pilot-pagination>
+    </div>
+    
+    <div class="component-showcase">
+      <p class="demo-subtitle">Without Info Display</p>
+      <pilot-pagination total="75" page="1" per-page="15" hide-info></pilot-pagination>
+    </div>
+  </section>
+
   <!-- Buttons Section -->
   <section class="demo-section">
     <h2 class="demo-title">Buttons</h2>
@@ -1044,7 +1075,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          18 Web Components
+          19 Web Components
         </p>
       </div>
       <div>
