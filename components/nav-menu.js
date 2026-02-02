@@ -218,13 +218,13 @@ export class PilotNavMenu extends HTMLElement {
         }
         
         /* Nested mobile nav items (added by JS via _processMobileSubmenu) */
-        .mobile-nav-item {
+        .nav-item--mobile {
           border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
           list-style: none;
         }
-        
-        .mobile-nav-item > a,
-        .mobile-nav-item > button {
+
+        .nav-item--mobile > a,
+        .nav-item--mobile > button {
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -243,37 +243,37 @@ export class PilotNavMenu extends HTMLElement {
           text-align: left;
           transition: background 150ms;
         }
-        
-        .mobile-nav-item > a:hover,
-        .mobile-nav-item > button:hover {
+
+        .nav-item--mobile > a:hover,
+        .nav-item--mobile > button:hover {
           background: var(--color-background-secondary, #f5f5f5);
         }
-        
-        .mobile-nav-item > a:focus-visible,
-        .mobile-nav-item > button:focus-visible {
+
+        .nav-item--mobile > a:focus-visible,
+        .nav-item--mobile > button:focus-visible {
           outline: 2px solid var(--color-brand-accent, #f59e0b);
           outline-offset: -2px;
         }
-        
-        .mobile-nav-item > a.active,
-        .mobile-nav-item > button.active {
+
+        .nav-item--mobile > a.active,
+        .nav-item--mobile > button.active {
           background: var(--color-background-secondary, #f5f5f5);
           border-left: 3px solid var(--color-border-technical, #1a1a1a);
         }
-        
+
         /* Nested submenu items with increased indentation */
-        .mobile-nav-submenu .mobile-nav-item > a,
-        .mobile-nav-submenu .mobile-nav-item > button {
+        .mobile-nav-submenu .nav-item--mobile > a,
+        .mobile-nav-submenu .nav-item--mobile > button {
           padding-left: 2rem;
           text-transform: none;
           font-size: 0.875rem;
         }
-        
-        .mobile-nav-submenu .mobile-nav-submenu .mobile-nav-item > a,
-        .mobile-nav-submenu .mobile-nav-submenu .mobile-nav-item > button {
+
+        .mobile-nav-submenu .mobile-nav-submenu .nav-item--mobile > a,
+        .mobile-nav-submenu .mobile-nav-submenu .nav-item--mobile > button {
           padding-left: 3rem;
         }
-        
+
         /* Mobile submenu container */
         .mobile-nav-submenu {
           display: none;
@@ -282,8 +282,8 @@ export class PilotNavMenu extends HTMLElement {
           padding: 0;
           background: var(--color-background-secondary, #f5f5f5);
         }
-        
-        .mobile-nav-item.expanded > .mobile-nav-submenu {
+
+        .nav-item--mobile.expanded > .mobile-nav-submenu {
           display: block;
         }
       `;
@@ -368,37 +368,33 @@ export class PilotNavMenu extends HTMLElement {
         text-transform: uppercase;
         text-decoration: none;
         color: var(--color-text-primary, #1a1a1a);
-        border: 1px solid transparent;
-        transition: all var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
-        cursor: pointer;
         background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        transition: background var(--duration-fast, 150ms);
       }
 
       :host([variant="technical"]) .nav-link {
-        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
-        border: 1px solid transparent;
+        font-family: var(--font-technical, 'JetBrains Mono', monospace);
       }
 
       .nav-link:hover {
-        color: var(--color-brand-primary, #1a1a1a);
         background: var(--color-background-secondary, #f5f5f5);
-        border-color: var(--color-border-primary, #b3b3b3);
       }
 
       :host([variant="technical"]) .nav-link:hover {
-        background: var(--color-background-primary, #ffffff);
-        border-color: var(--color-border-technical, #1a1a1a);
+        background: var(--color-background-secondary, #f5f5f5);
       }
 
       .nav-link:focus-visible {
         outline: 2px solid var(--color-brand-accent, #f59e0b);
-        outline-offset: 2px;
+        outline-offset: -2px;
       }
 
       .nav-link.active {
-        color: var(--color-brand-primary, #1a1a1a);
         background: var(--color-background-secondary, #f5f5f5);
-        border-color: var(--color-border-technical, #1a1a1a);
+        border-left: 3px solid var(--color-brand-primary, #1a1a1a);
       }
 
       /* Nested Menu Indicator */
@@ -669,15 +665,15 @@ export class PilotNavMenu extends HTMLElement {
         border-top: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
       }
 
-      .mobile-nav-item {
+      .nav-item--mobile {
         border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
       }
 
-      :host([variant="technical"]) .mobile-nav-item {
+      :host([variant="technical"]) .nav-item--mobile {
         border-bottom: 1px solid var(--color-border-primary, #b3b3b3);
       }
 
-      .mobile-nav-link {
+      .nav-link--mobile {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -697,16 +693,16 @@ export class PilotNavMenu extends HTMLElement {
         transition: background var(--duration-fast, 150ms);
       }
 
-      .mobile-nav-link:hover {
+      .nav-link--mobile:hover {
         background: var(--color-background-secondary, #f5f5f5);
       }
 
-      .mobile-nav-link:focus-visible {
+      .nav-link--mobile:focus-visible {
         outline: 2px solid var(--color-brand-accent, #f59e0b);
         outline-offset: -2px;
       }
 
-      .mobile-nav-link.active {
+      .nav-link--mobile.active {
         background: var(--color-background-secondary, #f5f5f5);
         border-left: 3px solid var(--color-brand-primary, #1a1a1a);
       }
@@ -724,17 +720,17 @@ export class PilotNavMenu extends HTMLElement {
         background: var(--color-gray-100, #e5e5e5);
       }
 
-      .mobile-nav-item.expanded > .mobile-nav-submenu {
+      .nav-item--mobile.expanded > .mobile-nav-submenu {
         display: block;
       }
 
-      .mobile-nav-submenu .mobile-nav-link {
+      .mobile-nav-submenu .nav-link--mobile {
         padding-left: var(--spacing-8, 2rem);
         text-transform: none;
         font-size: var(--font-size-sm, 0.875rem);
       }
 
-      .mobile-nav-submenu .mobile-nav-submenu .mobile-nav-link {
+      .mobile-nav-submenu .mobile-nav-submenu .nav-link--mobile {
         padding-left: var(--spacing-12, 3rem);
       }
 
@@ -743,7 +739,7 @@ export class PilotNavMenu extends HTMLElement {
         transition: transform var(--duration-fast, 150ms);
       }
 
-      .mobile-nav-item.expanded > .mobile-nav-link .expand-icon {
+      .nav-item--mobile.expanded > .nav-link--mobile .expand-icon {
         transform: rotate(180deg);
       }
 
@@ -1014,11 +1010,11 @@ export class PilotNavMenu extends HTMLElement {
         }
         this._processedMobileNavItems.add(item);
 
-        item.classList.add('mobile-nav-item');
+        item.classList.add('nav-item--mobile');
 
         const link = item.querySelector('a, button');
         if (link) {
-          link.classList.add('mobile-nav-link');
+          link.classList.add('nav-link--mobile');
 
           // Check for nested menu
           const submenu = item.querySelector('ul');
@@ -1058,11 +1054,11 @@ export class PilotNavMenu extends HTMLElement {
   _processMobileSubmenu(submenu, depth) {
     const items = submenu.querySelectorAll(':scope > li');
     items.forEach(item => {
-      item.classList.add('mobile-nav-item');
+      item.classList.add('nav-item--mobile');
 
       const link = item.querySelector('a, button');
       if (link) {
-        link.classList.add('mobile-nav-link');
+        link.classList.add('nav-link--mobile');
 
         const nestedSubmenu = item.querySelector('ul');
         if (nestedSubmenu) {
@@ -1157,13 +1153,13 @@ export class PilotNavMenu extends HTMLElement {
     document.addEventListener('keydown', this._keydownHandler);
     document.addEventListener('click', this._clickOutsideHandler);
 
-    // Focus first menu item
-    setTimeout(() => {
-      const firstLink = this.shadowRoot.querySelector('.mobile-nav-link');
-      if (firstLink) {
-        firstLink.focus();
-      }
-    }, 100);
+      // Focus first menu item
+      setTimeout(() => {
+        const firstLink = this.shadowRoot.querySelector('.nav-link--mobile');
+        if (firstLink) {
+          firstLink.focus();
+        }
+      }, 100);
   }
 
   _closeMenu() {
