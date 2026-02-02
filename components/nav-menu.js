@@ -144,39 +144,13 @@ export class PilotNavMenu extends HTMLElement {
         
         li[slot="mobile-nav-items"] > a,
         li[slot="mobile-nav-items"] > button {
-          display: flex;
-          align-items: center;
           justify-content: space-between;
           width: 100%;
           padding: 1rem 1.5rem;
-          font-family: var(--font-technical, 'JetBrains Mono', monospace);
-          font-size: 0.875rem;
-          font-weight: 500;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          text-decoration: none;
-          color: var(--color-text-primary, #1a1a1a);
-          background: none;
-          border: none;
-          cursor: pointer;
-          text-align: left;
-          transition: background 150ms;
-        }
-        
-        li[slot="mobile-nav-items"] > a:hover,
-        li[slot="mobile-nav-items"] > button:hover {
-          background: var(--color-background-secondary, #f5f5f5);
-        }
-        
-        li[slot="mobile-nav-items"] > a:focus-visible,
-        li[slot="mobile-nav-items"] > button:focus-visible {
-          outline: 2px solid var(--color-brand-accent, #f59e0b);
-          outline-offset: -2px;
         }
         
         li[slot="mobile-nav-items"] > a.active,
         li[slot="mobile-nav-items"] > button.active {
-          background: var(--color-background-secondary, #f5f5f5);
           border-left: 3px solid var(--color-border-technical, #1a1a1a);
         }
         
@@ -225,39 +199,13 @@ export class PilotNavMenu extends HTMLElement {
 
         .nav-item--mobile > a,
         .nav-item--mobile > button {
-          display: flex;
-          align-items: center;
           justify-content: space-between;
           width: 100%;
           padding: 1rem 1.5rem;
-          font-family: var(--font-technical, 'JetBrains Mono', monospace);
-          font-size: 0.875rem;
-          font-weight: 500;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          text-decoration: none;
-          color: var(--color-text-primary, #1a1a1a);
-          background: none;
-          border: none;
-          cursor: pointer;
-          text-align: left;
-          transition: background 150ms;
-        }
-
-        .nav-item--mobile > a:hover,
-        .nav-item--mobile > button:hover {
-          background: var(--color-background-secondary, #f5f5f5);
-        }
-
-        .nav-item--mobile > a:focus-visible,
-        .nav-item--mobile > button:focus-visible {
-          outline: 2px solid var(--color-brand-accent, #f59e0b);
-          outline-offset: -2px;
         }
 
         .nav-item--mobile > a.active,
         .nav-item--mobile > button.active {
-          background: var(--color-background-secondary, #f5f5f5);
           border-left: 3px solid var(--color-border-technical, #1a1a1a);
         }
 
@@ -674,37 +622,13 @@ export class PilotNavMenu extends HTMLElement {
       }
 
       .nav-link--mobile {
-        display: flex;
-        align-items: center;
         justify-content: space-between;
         width: 100%;
         padding: var(--spacing-4, 1rem) var(--spacing-6, 1.5rem);
-        font-family: var(--font-technical, 'JetBrains Mono', monospace);
-        font-size: var(--font-size-sm, 0.875rem);
-        font-weight: var(--font-weight-medium, 500);
-        letter-spacing: var(--letter-spacing-technical, 0.05em);
-        text-transform: uppercase;
-        text-decoration: none;
-        color: var(--color-text-primary, #1a1a1a);
-        background: none;
-        border: none;
-        cursor: pointer;
-        text-align: left;
-        transition: background var(--duration-fast, 150ms);
-      }
-
-      .nav-link--mobile:hover {
-        background: var(--color-background-secondary, #f5f5f5);
-      }
-
-      .nav-link--mobile:focus-visible {
-        outline: 2px solid var(--color-brand-accent, #f59e0b);
-        outline-offset: -2px;
       }
 
       .nav-link--mobile.active {
-        background: var(--color-background-secondary, #f5f5f5);
-        border-left: 3px solid var(--color-brand-primary, #1a1a1a);
+        border-left: 3px solid var(--color-border-technical, #1a1a1a);
       }
 
       /* Mobile Nested Menu */
@@ -1010,11 +934,11 @@ export class PilotNavMenu extends HTMLElement {
         }
         this._processedMobileNavItems.add(item);
 
-        item.classList.add('nav-item--mobile');
+        item.classList.add('nav-item', 'nav-item--mobile');
 
         const link = item.querySelector('a, button');
         if (link) {
-          link.classList.add('nav-link--mobile');
+          link.classList.add('nav-link', 'nav-link--mobile');
 
           // Check for nested menu
           const submenu = item.querySelector('ul');
@@ -1054,11 +978,11 @@ export class PilotNavMenu extends HTMLElement {
   _processMobileSubmenu(submenu, depth) {
     const items = submenu.querySelectorAll(':scope > li');
     items.forEach(item => {
-      item.classList.add('nav-item--mobile');
+      item.classList.add('nav-item', 'nav-item--mobile');
 
       const link = item.querySelector('a, button');
       if (link) {
-        link.classList.add('nav-link--mobile');
+        link.classList.add('nav-link', 'nav-link--mobile');
 
         const nestedSubmenu = item.querySelector('ul');
         if (nestedSubmenu) {
