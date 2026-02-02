@@ -428,6 +428,14 @@ export class PilotNavMenu extends HTMLElement {
         outline-offset: -2px;
       }
 
+      ::slotted(li[slot="nav-items"] > a.active),
+      ::slotted(li[slot="nav-items"] > button.active),
+      ::slotted(li[slot="nav-items"] > ul > li > a.active),
+      ::slotted(li[slot="nav-items"] > ul > li > button.active) {
+        background: var(--color-background-secondary, #f5f5f5);
+        border-left: 3px solid var(--color-brand-primary, #1a1a1a);
+      }
+
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > a),
@@ -440,6 +448,13 @@ export class PilotNavMenu extends HTMLElement {
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > a:hover),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button:hover) {
         background: var(--color-background-secondary, #f5f5f5);
+      }
+
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a.active),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button.active),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > a.active),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button.active) {
+        border-left-color: var(--color-border-technical, #1a1a1a);
       }
 
       /* Slotted content styles for nested menus */
