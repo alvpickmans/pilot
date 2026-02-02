@@ -392,7 +392,9 @@ export class PilotNavMenu extends HTMLElement {
 
       /* Slotted content styles for main nav items */
       ::slotted(li[slot="nav-items"] > a),
-      ::slotted(li[slot="nav-items"] > button) {
+      ::slotted(li[slot="nav-items"] > button),
+      ::slotted(li[slot="nav-items"] > ul > li > a),
+      ::slotted(li[slot="nav-items"] > ul > li > button) {
         display: flex;
         align-items: center;
         gap: var(--spacing-1, 0.25rem);
@@ -412,23 +414,31 @@ export class PilotNavMenu extends HTMLElement {
       }
 
       ::slotted(li[slot="nav-items"] > a:hover),
-      ::slotted(li[slot="nav-items"] > button:hover) {
+      ::slotted(li[slot="nav-items"] > button:hover),
+      ::slotted(li[slot="nav-items"] > ul > li > a:hover),
+      ::slotted(li[slot="nav-items"] > ul > li > button:hover) {
         background: var(--color-background-secondary, #f5f5f5);
       }
 
       ::slotted(li[slot="nav-items"] > a:focus-visible),
-      ::slotted(li[slot="nav-items"] > button:focus-visible) {
+      ::slotted(li[slot="nav-items"] > button:focus-visible),
+      ::slotted(li[slot="nav-items"] > ul > li > a:focus-visible),
+      ::slotted(li[slot="nav-items"] > ul > li > button:focus-visible) {
         outline: 2px solid var(--color-brand-accent, #f59e0b);
         outline-offset: -2px;
       }
 
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a),
-      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button) {
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > a),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button) {
         font-family: var(--font-technical, 'JetBrains Mono', monospace);
       }
 
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a:hover),
-      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button:hover) {
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button:hover),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > a:hover),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button:hover) {
         background: var(--color-background-secondary, #f5f5f5);
       }
 
