@@ -18,11 +18,15 @@
   <style>
     body {
       margin: 0;
-      padding: var(--spacing-8, 2rem);
+      padding: 0;
       font-family: var(--font-body, 'IBM Plex Sans', sans-serif);
       background: var(--color-background-primary, #ffffff);
       color: var(--color-text-primary, #1a1a1a);
       line-height: var(--line-height-normal, 1.5);
+    }
+    
+    .main-content {
+      padding: var(--spacing-8, 2rem);
     }
     
     .demo-section {
@@ -81,35 +85,81 @@
       border: 1px solid var(--color-border-secondary, #d4d4d4);
     }
     
-    .dark-mode-section {
-      background: var(--color-black-300, #1a1a1a);
-      padding: var(--spacing-8, 2rem);
-      margin: var(--spacing-8, 2rem) calc(-1 * var(--spacing-8, 2rem));
-    }
+
   </style>
 </head>
 <body>
   <!-- Global Navigation -->
-  <pilot-nav-menu sticky variant="technical" style="margin-bottom: var(--spacing-8);">
+  <pilot-nav-menu sticky variant="technical" style="width: 100%;">
     <div slot="brand" style="font-family: var(--font-technical); font-weight: 600; letter-spacing: var(--letter-spacing-technical); text-transform: uppercase;">
       PILOT DS
     </div>
-    <li slot="nav-items"><a href="#buttons">Buttons</a></li>
-    <li slot="nav-items"><a href="#cards">Cards</a></li>
-    <li slot="nav-items"><a href="#inputs">Inputs</a></li>
-    <li slot="nav-items"><a href="#components">Components</a></li>
-    <li slot="nav-items"><a href="#about">About</a></li>
+    <li slot="nav-items">
+      <a href="/storybook">Storybook</a>
+    </li>
+    <li slot="nav-items">
+      <a href="#sections">Sections</a>
+      <ul>
+        <li><a href="#nav-menu">Navigation</a></li>
+        <li><a href="#buttons">Buttons</a></li>
+        <li><a href="#cards">Cards</a></li>
+        <li><a href="#modal">Modal</a></li>
+        <li><a href="#form-elements">Form Elements</a></li>
+        <li><a href="#commodity-input">Commodity Input</a></li>
+        <li><a href="#toggle">Toggle</a></li>
+        <li><a href="#select">Select</a></li>
+        <li><a href="#datepicker">Datepicker</a></li>
+        <li><a href="#search">Search</a></li>
+        <li><a href="#badges">Badges & Labels</a></li>
+        <li><a href="#status">Status</a></li>
+        <li><a href="#terminal">Terminal</a></li>
+        <li><a href="#code">Code Blocks</a></li>
+        <li><a href="#panels">Panels</a></li>
+        <li><a href="#annotations">Annotations</a></li>
+        <li><a href="#grid">Grid</a></li>
+        <li><a href="#dividers">Dividers</a></li>
+        <li><a href="#measurements">Measurements</a></li>
+        <li><a href="#tabs">Tabs</a></li>
+        <li><a href="#patterns">CSS Patterns</a></li>
+        <li><a href="#typography">Typography</a></li>
+      </ul>
+    </li>
     
-    <div slot="actions">
+    <div slot="actions" style="margin-left: auto;">
       <pilot-theme-toggle show-label></pilot-theme-toggle>
     </div>
     
-    <li slot="mobile-nav-items"><a href="#buttons">Buttons</a></li>
-    <li slot="mobile-nav-items"><a href="#cards">Cards</a></li>
-    <li slot="mobile-nav-items"><a href="#inputs">Inputs</a></li>
-    <li slot="mobile-nav-items"><a href="#components">Components</a></li>
-    <li slot="mobile-nav-items"><a href="#about">About</a></li>
+    <li slot="mobile-nav-items"><a href="/storybook">Storybook</a></li>
+    <li slot="mobile-nav-items">
+      <a href="#sections">Sections</a>
+      <ul>
+        <li><a href="#nav-menu">Navigation</a></li>
+        <li><a href="#buttons">Buttons</a></li>
+        <li><a href="#cards">Cards</a></li>
+        <li><a href="#modal">Modal</a></li>
+        <li><a href="#form-elements">Form Elements</a></li>
+        <li><a href="#commodity-input">Commodity Input</a></li>
+        <li><a href="#toggle">Toggle</a></li>
+        <li><a href="#select">Select</a></li>
+        <li><a href="#datepicker">Datepicker</a></li>
+        <li><a href="#search">Search</a></li>
+        <li><a href="#badges">Badges & Labels</a></li>
+        <li><a href="#status">Status</a></li>
+        <li><a href="#terminal">Terminal</a></li>
+        <li><a href="#code">Code Blocks</a></li>
+        <li><a href="#panels">Panels</a></li>
+        <li><a href="#annotations">Annotations</a></li>
+        <li><a href="#grid">Grid</a></li>
+        <li><a href="#dividers">Dividers</a></li>
+        <li><a href="#measurements">Measurements</a></li>
+        <li><a href="#tabs">Tabs</a></li>
+        <li><a href="#patterns">CSS Patterns</a></li>
+        <li><a href="#typography">Typography</a></li>
+      </ul>
+    </li>
   </pilot-nav-menu>
+
+  <div class="main-content">
 
   <!-- Header -->
   <header class="demo-section">
@@ -124,7 +174,7 @@
   </header>
 
   <!-- Navigation Menu Section -->
-  <section class="demo-section">
+  <section id="nav-menu" class="demo-section">
     <h2 class="demo-title">Navigation Menu</h2>
     <p class="demo-subtitle">Responsive navigation with mobile hamburger menu</p>
     
@@ -203,7 +253,7 @@
 
 
   <!-- Buttons Section -->
-  <section class="demo-section">
+  <section id="buttons" class="demo-section">
     <h2 class="demo-title">Buttons</h2>
     <p class="demo-subtitle">Interactive controls with industrial styling</p>
     
@@ -236,7 +286,7 @@
   </section>
 
   <!-- Cards Section -->
-  <section class="demo-section">
+  <section id="cards" class="demo-section">
     <h2 class="demo-title">Cards</h2>
     <p class="demo-subtitle">Container components with technical frames</p>
     
@@ -262,7 +312,7 @@
   </section>
 
   <!-- Modal Section -->
-  <section class="demo-section">
+  <section id="modal" class="demo-section">
     <h2 class="demo-title">Modal</h2>
     <p class="demo-subtitle">Dialog overlays with technical corner brackets</p>
     
@@ -349,7 +399,7 @@
   </section>
 
   <!-- Form Elements Section -->
-  <section class="demo-section">
+  <section id="form-elements" class="demo-section">
     <h2 class="demo-title">Form Elements</h2>
     <p class="demo-subtitle">Inputs with machine-readable styling</p>
     
@@ -382,7 +432,7 @@
   </section>
 
   <!-- Commodity Input Section -->
-  <section class="demo-section">
+  <section id="commodity-input" class="demo-section">
     <h2 class="demo-title">Commodity Input</h2>
     <p class="demo-subtitle">Financial input with currency symbol and decimal formatting</p>
 
@@ -494,7 +544,7 @@
   </section>
 
   <!-- Toggle Component Section -->
-  <section class="demo-section">
+  <section id="toggle" class="demo-section">
     <h2 class="demo-title">Toggle</h2>
     <p class="demo-subtitle">Switch toggle for settings with industrial on/off styling</p>
     
@@ -548,7 +598,7 @@
   </section>
 
   <!-- Select Component Section -->
-  <section class="demo-section">
+  <section id="select" class="demo-section">
     <h2 class="demo-title">Select Components</h2>
     <p class="demo-subtitle">Dropdown selection with technical bracket styling</p>
     
@@ -644,7 +694,7 @@
   </section>
 
   <!-- Datepicker Section -->
-  <section class="demo-section">
+  <section id="datepicker" class="demo-section">
     <h2 class="demo-title">Datepicker</h2>
     <p class="demo-subtitle">Date selection with grid-based calendar</p>
     
@@ -686,7 +736,7 @@
   </section>
 
   <!-- Search Component Section -->
-  <section class="demo-section">
+  <section id="search" class="demo-section">
     <h2 class="demo-title">Search</h2>
     <p class="demo-subtitle">Autocomplete search with keyboard navigation</p>
     
@@ -798,7 +848,7 @@
   </section>
 
   <!-- Badges & Labels Section -->
-  <section class="demo-section">
+  <section id="badges" class="demo-section">
     <h2 class="demo-title">Badges & Labels</h2>
     <p class="demo-subtitle">Status indicators and technical labels</p>
     
@@ -830,7 +880,7 @@
   </section>
 
   <!-- Status Indicators Section -->
-  <section class="demo-section">
+  <section id="status" class="demo-section">
     <h2 class="demo-title">Status Indicators</h2>
     <p class="demo-subtitle">System status with animated indicators</p>
     
@@ -851,7 +901,7 @@
   </section>
 
   <!-- Terminal Section -->
-  <section class="demo-section">
+  <section id="terminal" class="demo-section">
     <h2 class="demo-title">Terminal</h2>
     <p class="demo-subtitle">Console and command-line interfaces</p>
     
@@ -868,7 +918,7 @@
   </section>
 
   <!-- Code Block Section -->
-  <section class="demo-section">
+  <section id="code" class="demo-section">
     <h2 class="demo-title">Code Blocks</h2>
     <p class="demo-subtitle">Syntax-highlighted code display</p>
     
@@ -902,7 +952,7 @@ echo "Installation complete"
   </section>
 
   <!-- Panels Section -->
-  <section class="demo-section">
+  <section id="panels" class="demo-section">
     <h2 class="demo-title">Panels</h2>
     <p class="demo-subtitle">Collapsible container components</p>
     
@@ -925,7 +975,7 @@ echo "Installation complete"
   </section>
 
   <!-- Annotations Section -->
-  <section class="demo-section">
+  <section id="annotations" class="demo-section">
     <h2 class="demo-title">Annotations</h2>
     <p class="demo-subtitle">Callout boxes for technical notes</p>
     
@@ -949,7 +999,7 @@ echo "Installation complete"
   </section>
 
   <!-- Grid System Section -->
-  <section class="demo-section">
+  <section id="grid" class="demo-section">
     <h2 class="demo-title">Grid System</h2>
     <p class="demo-subtitle">Technical grid layouts with optional overlays</p>
     
@@ -966,7 +1016,7 @@ echo "Installation complete"
   </section>
 
   <!-- Dividers Section -->
-  <section class="demo-section">
+  <section id="dividers" class="demo-section">
     <h2 class="demo-title">Dividers</h2>
     <p class="demo-subtitle">Section separators with technical styling</p>
     
@@ -990,7 +1040,7 @@ echo "Installation complete"
   </section>
 
   <!-- Measurements Section -->
-  <section class="demo-section">
+  <section id="measurements" class="demo-section">
     <h2 class="demo-title">Measurements</h2>
     <p class="demo-subtitle">Technical measurement displays</p>
     
@@ -1009,7 +1059,7 @@ echo "Installation complete"
   </section>
 
   <!-- Tabs Section -->
-  <section class="demo-section">
+  <section id="tabs" class="demo-section">
     <h2 class="demo-title">Tabs</h2>
     <p class="demo-subtitle">Tab navigation for content sections</p>
     
@@ -1045,7 +1095,7 @@ echo "Installation complete"
   </section>
 
   <!-- CSS Patterns Section -->
-  <section class="demo-section">
+  <section id="patterns" class="demo-section">
     <h2 class="demo-title">CSS Patterns</h2>
     <p class="demo-subtitle">Utility classes for technical styling</p>
     
@@ -1081,36 +1131,8 @@ echo "Installation complete"
     </div>
   </section>
 
-  <!-- Dark Mode Section -->
-  <section class="demo-section dark-mode-section" data-theme="dark">
-    <h2 class="demo-title" style="color: var(--color-text-primary);">Dark Mode</h2>
-    <p class="demo-subtitle" style="color: var(--color-text-secondary);">All components adapt automatically</p>
-    
-    <div class="demo-grid demo-grid-3">
-      <pilot-button variant="primary" size="md">Primary Button</pilot-button>
-      <pilot-button variant="technical" size="md">Technical Button</pilot-button>
-      <pilot-button variant="outline" size="md">Outline Button</pilot-button>
-    </div>
-    
-    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
-      <pilot-card variant="technical" padding="lg">
-        <h3 slot="header" style="margin: 0; font-family: var(--font-technical); font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: var(--letter-spacing-technical); color: var(--color-text-primary);">Dark Mode Card</h3>
-        <p style="margin: 0; color: var(--color-text-secondary);">Card component automatically adapts to dark theme.</p>
-      </pilot-card>
-      
-      <pilot-terminal show-header title="console" show-prompt>
-        systemctl status design-system
-      </pilot-terminal>
-    </div>
-    
-    <div style="margin-top: var(--spacing-6);">
-      <pilot-status variant="success" pulse>System Online</pilot-status>
-      <pilot-badge variant="technical" size="md" style="margin-left: var(--spacing-4);">DARK-MODE</pilot-badge>
-    </div>
-  </section>
-
   <!-- Typography Showcase -->
-  <section class="demo-section">
+  <section id="typography" class="demo-section">
     <h2 class="demo-title">Typography</h2>
     <p class="demo-subtitle">Font families and styling</p>
     
@@ -1132,6 +1154,8 @@ echo "Installation complete"
       </p>
     </div>
   </section>
+
+  </div>
 
   <!-- Footer -->
   <footer style="margin-top: var(--spacing-16); padding-top: var(--spacing-8); border-top: var(--border-width-technical) solid var(--color-border-technical);">
