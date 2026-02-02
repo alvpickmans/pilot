@@ -44,7 +44,9 @@ export class PilotNavMenu extends HTMLElement {
         }
         
         li[slot="nav-items"] > a,
-        li[slot="nav-items"] > button {
+        li[slot="nav-items"] > button,
+        li[slot="nav-items"] > ul > li > a,
+        li[slot="nav-items"] > ul > li > button {
           display: flex;
           align-items: center;
           gap: 0.25rem;
@@ -63,20 +65,26 @@ export class PilotNavMenu extends HTMLElement {
         }
         
         li[slot="nav-items"] > a:hover,
-        li[slot="nav-items"] > button:hover {
+        li[slot="nav-items"] > button:hover,
+        li[slot="nav-items"] > ul > li > a:hover,
+        li[slot="nav-items"] > ul > li > button:hover {
           color: var(--color-text-primary, #1a1a1a);
           background: var(--color-background-secondary, #f5f5f5);
           border-color: var(--color-border-primary, #b3b3b3);
         }
         
         li[slot="nav-items"] > a:focus-visible,
-        li[slot="nav-items"] > button:focus-visible {
+        li[slot="nav-items"] > button:focus-visible,
+        li[slot="nav-items"] > ul > li > a:focus-visible,
+        li[slot="nav-items"] > ul > li > button:focus-visible {
           outline: 2px solid var(--color-brand-accent, #f59e0b);
           outline-offset: 2px;
         }
         
         li[slot="nav-items"] > a.active,
-        li[slot="nav-items"] > button.active {
+        li[slot="nav-items"] > button.active,
+        li[slot="nav-items"] > ul > li > a.active,
+        li[slot="nav-items"] > ul > li > button.active {
           color: var(--color-text-primary, #1a1a1a);
           background: var(--color-background-secondary, #f5f5f5);
           border-color: var(--color-border-technical, #1a1a1a);
@@ -84,7 +92,9 @@ export class PilotNavMenu extends HTMLElement {
         
         /* Nested menu indicator */
         li[slot="nav-items"] > a[data-has-children]::after,
-        li[slot="nav-items"] > button[data-has-children]::after {
+        li[slot="nav-items"] > button[data-has-children]::after,
+        li[slot="nav-items"] > ul > li > a[data-has-children]::after,
+        li[slot="nav-items"] > ul > li > button[data-has-children]::after {
           content: '▼';
           font-size: 0.6em;
           margin-left: 0.25rem;
@@ -92,7 +102,9 @@ export class PilotNavMenu extends HTMLElement {
         }
         
         li[slot="nav-items"].expanded > a[data-has-children]::after,
-        li[slot="nav-items"].expanded > button[data-has-children]::after {
+        li[slot="nav-items"].expanded > button[data-has-children]::after,
+        li[slot="nav-items"] > ul > li.expanded > a[data-has-children]::after,
+        li[slot="nav-items"] > ul > li.expanded > button[data-has-children]::after {
           transform: rotate(180deg);
         }
         
@@ -103,6 +115,8 @@ export class PilotNavMenu extends HTMLElement {
           top: 100%;
           left: 0;
           min-width: 200px;
+          max-height: 320px;
+          overflow-y: auto;
           background: var(--color-background-primary, #ffffff);
           border: 1px solid var(--color-border-secondary, #d4d4d4);
           box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -124,7 +138,9 @@ export class PilotNavMenu extends HTMLElement {
         }
         
         li[slot="nav-items"] > ul > li > a,
-        li[slot="nav-items"] > ul > li > button {
+        li[slot="nav-items"] > ul > li > button,
+        li[slot="nav-items"] > ul > li > ul > li > a,
+        li[slot="nav-items"] > ul > li > ul > li > button {
           padding: 0.5rem 1rem;
           border: none;
           text-transform: none;
@@ -132,7 +148,9 @@ export class PilotNavMenu extends HTMLElement {
         }
         
         li[slot="nav-items"] > ul > li > a:hover,
-        li[slot="nav-items"] > ul > li > button:hover {
+        li[slot="nav-items"] > ul > li > button:hover,
+        li[slot="nav-items"] > ul > li > ul > li > a:hover,
+        li[slot="nav-items"] > ul > li > ul > li > button:hover {
           background: var(--color-background-secondary, #f5f5f5);
         }
         
@@ -140,18 +158,82 @@ export class PilotNavMenu extends HTMLElement {
         li[slot="mobile-nav-items"] {
           list-style: none;
           border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
+          position: relative;
+          z-index: 100;
+          max-width: 100%;
         }
         
         li[slot="mobile-nav-items"] > a,
-        li[slot="mobile-nav-items"] > button {
+        li[slot="mobile-nav-items"] > button,
+        li[slot="mobile-nav-items"] > ul > li > a,
+        li[slot="mobile-nav-items"] > ul > li > button {
+          display: flex;
+          align-items: center;
           justify-content: space-between;
           width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          gap: 0.25rem;
           padding: 1rem 1.5rem;
+          font-family: var(--font-technical, 'JetBrains Mono', monospace);
+          font-size: 0.875rem;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          text-decoration: none;
+          color: var(--color-text-primary, #1a1a1a);
+          border: 1px solid transparent;
+          border-left: 3px solid transparent;
+          transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          background: none;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        
+        li[slot="mobile-nav-items"] > a:hover,
+        li[slot="mobile-nav-items"] > button:hover,
+        li[slot="mobile-nav-items"] > ul > li > a:hover,
+        li[slot="mobile-nav-items"] > ul > li > button:hover {
+          color: var(--color-text-primary, #1a1a1a);
+          background: var(--color-background-secondary, #f5f5f5);
+          border-color: var(--color-border-primary, #b3b3b3);
+        }
+        
+        li[slot="mobile-nav-items"] > a:focus-visible,
+        li[slot="mobile-nav-items"] > button:focus-visible,
+        li[slot="mobile-nav-items"] > ul > li > a:focus-visible,
+        li[slot="mobile-nav-items"] > ul > li > button:focus-visible {
+          outline: 2px solid var(--color-brand-accent, #f59e0b);
+          outline-offset: 2px;
         }
         
         li[slot="mobile-nav-items"] > a.active,
-        li[slot="mobile-nav-items"] > button.active {
+        li[slot="mobile-nav-items"] > button.active,
+        li[slot="mobile-nav-items"] > ul > li > a.active,
+        li[slot="mobile-nav-items"] > ul > li > button.active {
+          color: var(--color-text-primary, #1a1a1a);
+          background: var(--color-background-secondary, #f5f5f5);
           border-left: 3px solid var(--color-border-technical, #1a1a1a);
+        }
+        
+        /* Mobile nested menu indicator */
+        li[slot="mobile-nav-items"] > a[data-has-children]::after,
+        li[slot="mobile-nav-items"] > button[data-has-children]::after,
+        li[slot="mobile-nav-items"] > ul > li > a[data-has-children]::after,
+        li[slot="mobile-nav-items"] > ul > li > button[data-has-children]::after {
+          content: '▼';
+          font-size: 0.6em;
+          margin-left: 0.25rem;
+          transition: transform 150ms;
+        }
+        
+        li[slot="mobile-nav-items"].expanded > a[data-has-children]::after,
+        li[slot="mobile-nav-items"].expanded > button[data-has-children]::after,
+        li[slot="mobile-nav-items"] > ul > li.expanded > a[data-has-children]::after,
+        li[slot="mobile-nav-items"] > ul > li.expanded > button[data-has-children]::after {
+          transform: rotate(180deg);
         }
         
         /* Mobile expand icon */
@@ -167,27 +249,49 @@ export class PilotNavMenu extends HTMLElement {
         }
         
         /* Mobile submenu styles */
-        li[slot="mobile-nav-items"] > ul {
+        li[slot="mobile-nav-items"] > ul,
+        li[slot="mobile-nav-items"] li > ul {
           display: none;
           list-style: none;
           margin: 0;
           padding: 0;
           background: var(--color-background-secondary, #f5f5f5);
+          max-height: 320px;
+          overflow-y: auto;
+          max-width: 100%;
+          width: 100%;
+          box-sizing: border-box;
         }
         
-        li[slot="mobile-nav-items"].expanded > ul {
+        li[slot="mobile-nav-items"].expanded > ul,
+        li[slot="mobile-nav-items"] > ul.expanded,
+        li[slot="mobile-nav-items"] li.expanded > ul {
           display: block;
         }
         
+        li[slot="mobile-nav-items"] > ul > li,
+        li[slot="mobile-nav-items"] li > ul > li {
+          max-width: 100%;
+        }
+        
         li[slot="mobile-nav-items"] > ul > li > a,
-        li[slot="mobile-nav-items"] > ul > li > button {
+        li[slot="mobile-nav-items"] > ul > li > button,
+        li[slot="mobile-nav-items"] li > ul > li > a,
+        li[slot="mobile-nav-items"] li > ul > li > button {
           padding-left: 2rem;
           text-transform: none;
           font-size: 0.875rem;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         
         li[slot="mobile-nav-items"] > ul > li > ul > li > a,
-        li[slot="mobile-nav-items"] > ul > li > ul > li > button {
+        li[slot="mobile-nav-items"] > ul > li > ul > li > button,
+        li[slot="mobile-nav-items"] li > ul > li > ul > li > a,
+        li[slot="mobile-nav-items"] li > ul > li > ul > li > button {
           padding-left: 3rem;
         }
         
@@ -195,13 +299,19 @@ export class PilotNavMenu extends HTMLElement {
         .nav-item--mobile {
           border-bottom: 1px solid var(--color-border-secondary, #d4d4d4);
           list-style: none;
+          max-width: 100%;
         }
 
         .nav-item--mobile > a,
         .nav-item--mobile > button {
           justify-content: space-between;
           width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
           padding: 1rem 1.5rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .nav-item--mobile > a.active,
@@ -229,6 +339,15 @@ export class PilotNavMenu extends HTMLElement {
           margin: 0;
           padding: 0;
           background: var(--color-background-secondary, #f5f5f5);
+          max-width: 100%;
+          width: 100%;
+          box-sizing: border-box;
+          max-height: 320px;
+          overflow-y: auto;
+        }
+
+        .mobile-nav-submenu .nav-item--mobile {
+          max-width: 100%;
         }
 
         .nav-item--mobile.expanded > .mobile-nav-submenu {
@@ -394,7 +513,9 @@ export class PilotNavMenu extends HTMLElement {
       ::slotted(li[slot="nav-items"] > a),
       ::slotted(li[slot="nav-items"] > button),
       ::slotted(li[slot="nav-items"] > ul > li > a),
-      ::slotted(li[slot="nav-items"] > ul > li > button) {
+      ::slotted(li[slot="nav-items"] > ul > li > button),
+      ::slotted(li[slot="nav-items"] > ul > li > ul > li > a),
+      ::slotted(li[slot="nav-items"] > ul > li > ul > li > button) {
         display: flex;
         align-items: center;
         gap: var(--spacing-1, 0.25rem);
@@ -416,14 +537,18 @@ export class PilotNavMenu extends HTMLElement {
       ::slotted(li[slot="nav-items"] > a:hover),
       ::slotted(li[slot="nav-items"] > button:hover),
       ::slotted(li[slot="nav-items"] > ul > li > a:hover),
-      ::slotted(li[slot="nav-items"] > ul > li > button:hover) {
+      ::slotted(li[slot="nav-items"] > ul > li > button:hover),
+      ::slotted(li[slot="nav-items"] > ul > li > ul > li > a:hover),
+      ::slotted(li[slot="nav-items"] > ul > li > ul > li > button:hover) {
         background: var(--color-background-secondary, #f5f5f5);
       }
 
       ::slotted(li[slot="nav-items"] > a:focus-visible),
       ::slotted(li[slot="nav-items"] > button:focus-visible),
       ::slotted(li[slot="nav-items"] > ul > li > a:focus-visible),
-      ::slotted(li[slot="nav-items"] > ul > li > button:focus-visible) {
+      ::slotted(li[slot="nav-items"] > ul > li > button:focus-visible),
+      ::slotted(li[slot="nav-items"] > ul > li > ul > li > a:focus-visible),
+      ::slotted(li[slot="nav-items"] > ul > li > ul > li > button:focus-visible) {
         outline: 2px solid var(--color-brand-accent, #f59e0b);
         outline-offset: -2px;
       }
@@ -431,7 +556,9 @@ export class PilotNavMenu extends HTMLElement {
       ::slotted(li[slot="nav-items"] > a.active),
       ::slotted(li[slot="nav-items"] > button.active),
       ::slotted(li[slot="nav-items"] > ul > li > a.active),
-      ::slotted(li[slot="nav-items"] > ul > li > button.active) {
+      ::slotted(li[slot="nav-items"] > ul > li > button.active),
+      ::slotted(li[slot="nav-items"] > ul > li > ul > li > a.active),
+      ::slotted(li[slot="nav-items"] > ul > li > ul > li > button.active) {
         background: var(--color-background-secondary, #f5f5f5);
         border-left: 3px solid var(--color-brand-primary, #1a1a1a);
       }
@@ -439,21 +566,27 @@ export class PilotNavMenu extends HTMLElement {
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > a),
-      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button) {
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > ul > li > a),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > ul > li > button) {
         font-family: var(--font-technical, 'JetBrains Mono', monospace);
       }
 
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a:hover),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button:hover),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > a:hover),
-      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button:hover) {
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button:hover),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > ul > li > a:hover),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > ul > li > button:hover) {
         background: var(--color-background-secondary, #f5f5f5);
       }
 
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a.active),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button.active),
       :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > a.active),
-      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button.active) {
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > button.active),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > ul > li > a.active),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > ul > li > ul > li > button.active) {
         border-left-color: var(--color-border-technical, #1a1a1a);
       }
 
@@ -464,6 +597,8 @@ export class PilotNavMenu extends HTMLElement {
         top: 100%;
         left: 0;
         min-width: 200px;
+        max-height: 320px;
+        overflow-y: auto;
         background: var(--color-background-primary, #ffffff);
         border: var(--border-width-1, 1px) solid var(--color-border-secondary, #d4d4d4);
         box-shadow: var(--shadow-md, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
@@ -490,7 +625,9 @@ export class PilotNavMenu extends HTMLElement {
       }
 
       ::slotted(li[slot="nav-items"] ul li a),
-      ::slotted(li[slot="nav-items"] ul li button) {
+      ::slotted(li[slot="nav-items"] ul li button),
+      ::slotted(li[slot="nav-items"] ul li ul li a),
+      ::slotted(li[slot="nav-items"] ul li ul li button) {
         display: flex;
         align-items: center;
         gap: var(--spacing-1, 0.25rem);
@@ -511,12 +648,133 @@ export class PilotNavMenu extends HTMLElement {
       }
 
       ::slotted(li[slot="nav-items"] ul li a:hover),
-      ::slotted(li[slot="nav-items"] ul li button:hover) {
+      ::slotted(li[slot="nav-items"] ul li button:hover),
+      ::slotted(li[slot="nav-items"] ul li ul li a:hover),
+      ::slotted(li[slot="nav-items"] ul li ul li button:hover) {
         background: var(--color-background-secondary, #f5f5f5);
       }
 
       ::slotted(li[slot="nav-items"] ul li a:focus-visible),
-      ::slotted(li[slot="nav-items"] ul li button:focus-visible) {
+      ::slotted(li[slot="nav-items"] ul li button:focus-visible),
+      ::slotted(li[slot="nav-items"] ul li ul li a:focus-visible),
+      ::slotted(li[slot="nav-items"] ul li ul li button:focus-visible) {
+        outline: 2px solid var(--color-brand-accent, #f59e0b);
+        outline-offset: -2px;
+      }
+
+      /* Slotted content styles for mobile nav items - mirrors nav-items styles */
+      ::slotted(li[slot="mobile-nav-items"] > a),
+      ::slotted(li[slot="mobile-nav-items"] > button),
+      ::slotted(li[slot="mobile-nav-items"] > ul > li > a),
+      ::slotted(li[slot="mobile-nav-items"] > ul > li > button) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        gap: var(--spacing-1, 0.25rem);
+        padding: var(--spacing-4, 1rem) var(--spacing-6, 1.5rem);
+        font-family: var(--font-technical, 'JetBrains Mono', monospace);
+        font-size: var(--font-size-sm, 0.875rem);
+        font-weight: var(--font-weight-medium, 500);
+        letter-spacing: var(--letter-spacing-technical, 0.05em);
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--color-text-primary, #1a1a1a);
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        transition: all var(--duration-fast, 150ms);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] > a:hover),
+      ::slotted(li[slot="mobile-nav-items"] > button:hover),
+      ::slotted(li[slot="mobile-nav-items"] > ul > li > a:hover),
+      ::slotted(li[slot="mobile-nav-items"] > ul > li > button:hover) {
+        background: var(--color-background-secondary, #f5f5f5);
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] > a:focus-visible),
+      ::slotted(li[slot="mobile-nav-items"] > button:focus-visible),
+      ::slotted(li[slot="mobile-nav-items"] > ul > li > a:focus-visible),
+      ::slotted(li[slot="mobile-nav-items"] > ul > li > button:focus-visible) {
+        outline: 2px solid var(--color-brand-accent, #f59e0b);
+        outline-offset: -2px;
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] > a.active),
+      ::slotted(li[slot="mobile-nav-items"] > button.active),
+      ::slotted(li[slot="mobile-nav-items"] > ul > li > a.active),
+      ::slotted(li[slot="mobile-nav-items"] > ul > li > button.active) {
+        background: var(--color-background-secondary, #f5f5f5);
+        border-left: 3px solid var(--color-brand-primary, #1a1a1a);
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] ul) {
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        background: var(--color-background-secondary, #f5f5f5);
+        max-height: 320px;
+        overflow-y: auto;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      ::slotted(li[slot="mobile-nav-items"].expanded ul),
+      ::slotted(li[slot="mobile-nav-items"] > ul.expanded) {
+        display: block;
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] li.expanded > ul) {
+        display: block;
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] ul li) {
+        max-width: 100%;
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] ul li a),
+      ::slotted(li[slot="mobile-nav-items"] ul li button) {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-1, 0.25rem);
+        padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
+        padding-left: var(--spacing-8, 2rem);
+        font-family: var(--font-technical, 'JetBrains Mono', monospace);
+        font-size: var(--font-size-sm, 0.875rem);
+        font-weight: var(--font-weight-medium, 500);
+        letter-spacing: var(--letter-spacing-technical, 0.05em);
+        text-transform: none;
+        text-decoration: none;
+        color: var(--color-text-primary, #1a1a1a);
+        border: none;
+        background: none;
+        cursor: pointer;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        text-align: left;
+        transition: all var(--duration-fast, 150ms);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] ul li a:hover),
+      ::slotted(li[slot="mobile-nav-items"] ul li button:hover) {
+        background: var(--color-background-secondary, #f5f5f5);
+      }
+
+      ::slotted(li[slot="mobile-nav-items"] ul li a:focus-visible),
+      ::slotted(li[slot="mobile-nav-items"] ul li button:focus-visible) {
         outline: 2px solid var(--color-brand-accent, #f59e0b);
         outline-offset: -2px;
       }
@@ -599,6 +857,8 @@ export class PilotNavMenu extends HTMLElement {
         transform: translateX(100%);
         transition: transform var(--duration-normal, 250ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
         overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
       }
 
       :host([variant="technical"]) .mobile-menu {
@@ -939,7 +1199,7 @@ export class PilotNavMenu extends HTMLElement {
             submenu.setAttribute('role', 'menu');
 
             // Process submenu items
-            const subItems = submenu.querySelectorAll('li');
+            const subItems = submenu.querySelectorAll(':scope > li');
             subItems.forEach(subItem => {
               subItem.classList.add('nav-item');
               subItem.setAttribute('role', 'none');
@@ -947,6 +1207,28 @@ export class PilotNavMenu extends HTMLElement {
               if (subLink) {
                 subLink.classList.add('nav-link');
                 subLink.setAttribute('role', 'menuitem');
+                
+                // Process nested submenus recursively
+                const nestedSubmenu = subItem.querySelector('ul');
+                if (nestedSubmenu) {
+                  subLink.setAttribute('data-has-children', 'true');
+                  subLink.setAttribute('aria-haspopup', 'true');
+                  subLink.setAttribute('aria-expanded', 'false');
+                  nestedSubmenu.classList.add('nav-submenu');
+                  nestedSubmenu.setAttribute('role', 'menu');
+                  
+                  subLink.addEventListener('click', (e) => {
+                    if (nestedSubmenu) {
+                      e.preventDefault();
+                      this._toggleSubmenu(subItem, subLink);
+                    }
+                  });
+                } else {
+                  // Close submenu when clicking a submenu item link (no children)
+                  subLink.addEventListener('click', () => {
+                    this._closeAllSubmenus();
+                  });
+                }
               }
             });
 
@@ -1068,6 +1350,11 @@ export class PilotNavMenu extends HTMLElement {
           link.addEventListener('click', (e) => {
             e.preventDefault();
             this._toggleMobileSubmenu(item, link);
+          });
+        } else {
+          // Close menu when clicking a submenu item link (no children)
+          link.addEventListener('click', () => {
+            this._closeMenu();
           });
         }
       }
