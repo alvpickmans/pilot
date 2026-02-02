@@ -390,6 +390,48 @@ export class PilotNavMenu extends HTMLElement {
         background: var(--color-background-secondary, #f5f5f5);
       }
 
+      /* Slotted content styles for main nav items */
+      ::slotted(li[slot="nav-items"] > a),
+      ::slotted(li[slot="nav-items"] > button) {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-1, 0.25rem);
+        padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
+        font-family: var(--font-technical, 'JetBrains Mono', monospace);
+        font-size: var(--font-size-sm, 0.875rem);
+        font-weight: var(--font-weight-medium, 500);
+        letter-spacing: var(--letter-spacing-technical, 0.05em);
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--color-text-primary, #1a1a1a);
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        transition: background var(--duration-fast, 150ms);
+      }
+
+      ::slotted(li[slot="nav-items"] > a:hover),
+      ::slotted(li[slot="nav-items"] > button:hover) {
+        background: var(--color-background-secondary, #f5f5f5);
+      }
+
+      ::slotted(li[slot="nav-items"] > a:focus-visible),
+      ::slotted(li[slot="nav-items"] > button:focus-visible) {
+        outline: 2px solid var(--color-brand-accent, #f59e0b);
+        outline-offset: -2px;
+      }
+
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button) {
+        font-family: var(--font-technical, 'JetBrains Mono', monospace);
+      }
+
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > a:hover),
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] > button:hover) {
+        background: var(--color-background-secondary, #f5f5f5);
+      }
+
       /* Slotted content styles for nested menus */
       ::slotted(li[slot="nav-items"] ul) {
         display: none;
