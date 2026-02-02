@@ -446,6 +446,70 @@ export class PilotNavMenu extends HTMLElement {
         background: var(--color-background-secondary, #f5f5f5);
       }
 
+      /* Slotted content styles for nested menus */
+      ::slotted(li[slot="nav-items"] ul) {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 200px;
+        background: var(--color-background-primary, #ffffff);
+        border: var(--border-width-1, 1px) solid var(--color-border-secondary, #d4d4d4);
+        box-shadow: var(--shadow-md, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+        list-style: none;
+        margin: var(--spacing-1, 0.25rem) 0 0 0;
+        padding: var(--spacing-2, 0.5rem) 0;
+        z-index: 1000;
+      }
+
+      :host([variant="technical"]) ::slotted(li[slot="nav-items"] ul) {
+        background: var(--color-background-technical, #f5f5f5);
+        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+        box-shadow: var(--shadow-lg, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
+      }
+
+      ::slotted(li[slot="nav-items"].expanded ul) {
+        display: block;
+      }
+
+      ::slotted(li[slot="nav-items"] ul li) {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      ::slotted(li[slot="nav-items"] ul li a),
+      ::slotted(li[slot="nav-items"] ul li button) {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-1, 0.25rem);
+        padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
+        font-family: var(--font-technical, 'JetBrains Mono', monospace);
+        font-size: var(--font-size-sm, 0.875rem);
+        font-weight: var(--font-weight-medium, 500);
+        letter-spacing: var(--letter-spacing-technical, 0.05em);
+        text-transform: none;
+        text-decoration: none;
+        color: var(--color-text-primary, #1a1a1a);
+        border: none;
+        background: none;
+        cursor: pointer;
+        width: 100%;
+        text-align: left;
+        transition: all var(--duration-fast, 150ms);
+      }
+
+      ::slotted(li[slot="nav-items"] ul li a:hover),
+      ::slotted(li[slot="nav-items"] ul li button:hover) {
+        background: var(--color-background-secondary, #f5f5f5);
+      }
+
+      ::slotted(li[slot="nav-items"] ul li a:focus-visible),
+      ::slotted(li[slot="nav-items"] ul li button:focus-visible) {
+        outline: 2px solid var(--color-brand-accent, #f59e0b);
+        outline-offset: -2px;
+      }
+
       /* Hamburger Button (Mobile) */
       .hamburger-button {
         display: none;
