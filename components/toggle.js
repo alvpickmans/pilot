@@ -56,7 +56,7 @@ export class PilotToggle extends HTMLElement {
       }
       
       .toggle-label.active {
-        color: var(--color-brand-primary, #1a1a1a);
+        color: var(--color-text-primary, #1a1a1a);
         font-weight: var(--font-weight-semibold, 600);
       }
       
@@ -65,7 +65,7 @@ export class PilotToggle extends HTMLElement {
         width: 48px;
         height: 24px;
         background: var(--color-background-secondary, #f5f5f5);
-        border: var(--border-width-technical, 1.5px) solid var(--color-border-technical, #1a1a1a);
+        border: var(--border-width-technical, 1.5px) solid var(--color-text-primary, #1a1a1a);
         border-radius: var(--border-radius-none, 0);
         cursor: pointer;
         transition: background-color 150ms var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1)),
@@ -81,7 +81,7 @@ export class PilotToggle extends HTMLElement {
         position: absolute;
         width: 4px;
         height: 4px;
-        border: 1px solid var(--color-border-technical, #1a1a1a);
+        border: 1px solid var(--color-text-primary, #1a1a1a);
         transition: all var(--duration-technical, 200ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
       }
       
@@ -100,22 +100,22 @@ export class PilotToggle extends HTMLElement {
       }
       
       .toggle-track:hover {
-        border-color: var(--color-brand-primary, #1a1a1a);
+        border-color: var(--color-text-primary, #1a1a1a);
       }
       
       .toggle-track:hover::before,
       .toggle-track:hover::after {
-        border-color: var(--color-brand-primary, #1a1a1a);
+        border-color: var(--color-text-primary, #1a1a1a);
       }
       
       .toggle-track.checked {
-        background: var(--color-brand-primary, #1a1a1a);
-        border-color: var(--color-brand-primary, #1a1a1a);
+        background: var(--color-text-primary, #1a1a1a);
+        border-color: var(--color-text-primary, #1a1a1a);
       }
       
       .toggle-track.checked::before,
       .toggle-track.checked::after {
-        border-color: var(--color-text-inverse, #ffffff);
+        border-color: var(--color-background-primary, #ffffff);
       }
       
       .toggle-thumb {
@@ -124,7 +124,7 @@ export class PilotToggle extends HTMLElement {
         left: 2px;
         width: 18px;
         height: 18px;
-        background: var(--color-brand-primary, #1a1a1a);
+        background: var(--color-text-primary, #1a1a1a);
         border-radius: var(--border-radius-none, 0);
         transition: transform 150ms var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -140,7 +140,7 @@ export class PilotToggle extends HTMLElement {
         transform: translate(-50%, -50%);
         width: 6px;
         height: 6px;
-        border: 1px solid var(--color-text-inverse, #ffffff);
+        border: 1px solid var(--color-background-primary, #ffffff);
         opacity: 0.5;
       }
       
@@ -150,7 +150,7 @@ export class PilotToggle extends HTMLElement {
       }
       
       .toggle-track.checked .toggle-thumb::before {
-        border-color: var(--color-brand-primary, #1a1a1a);
+        border-color: var(--color-text-primary, #1a1a1a);
       }
       
       /* Disabled state */

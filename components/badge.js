@@ -60,25 +60,25 @@ export class PilotBadge extends HTMLElement {
       .badge[variant="primary"] {
         background: var(--color-brand-primary, #1a1a1a);
         border-color: var(--color-brand-primary, #1a1a1a);
-        color: var(--color-text-inverse, #ffffff);
+        color: #ffffff;
       }
       
       .badge[variant="success"] {
         background: var(--color-feedback-success, #16a34a);
         border-color: var(--color-feedback-success, #16a34a);
-        color: var(--color-text-inverse, #ffffff);
+        color: #ffffff;
       }
       
       .badge[variant="warning"] {
         background: var(--color-feedback-warning, #d97706);
         border-color: var(--color-feedback-warning, #d97706);
-        color: var(--color-text-inverse, #ffffff);
+        color: #ffffff;
       }
       
       .badge[variant="error"] {
         background: var(--color-feedback-error, #dc2626);
         border-color: var(--color-feedback-error, #dc2626);
-        color: var(--color-text-inverse, #ffffff);
+        color: #ffffff;
       }
       
       .badge[variant="outline"] {
