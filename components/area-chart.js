@@ -192,7 +192,7 @@ export class PilotAreaChart extends HTMLElement {
       .tooltip {
         position: absolute;
         background: var(--color-brand-primary, #1a1a1a);
-        color: var(--color-text-primary, #1a1a1a);
+        color: var(--color-white-100, #ffffff);
         padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
         font-size: var(--font-size-xs, 0.75rem);
         font-family: var(--font-technical, 'JetBrains Mono', monospace);
@@ -227,7 +227,7 @@ export class PilotAreaChart extends HTMLElement {
         font-family: var(--font-mono, 'IBM Plex Mono', monospace);
         font-size: var(--font-size-xs, 0.75rem);
         font-weight: var(--font-weight-semibold, 600);
-        color: var(--color-text-primary, #1a1a1a);
+        fill: var(--color-text-primary, #1a1a1a);
         text-anchor: middle;
         dominant-baseline: bottom;
         opacity: 0;
@@ -247,7 +247,7 @@ export class PilotAreaChart extends HTMLElement {
         font-weight: var(--font-weight-medium, 500);
         letter-spacing: var(--letter-spacing-technical, 0.05em);
         text-transform: uppercase;
-        color: var(--color-text-secondary, #525252);
+        fill: var(--color-text-primary, #1a1a1a);
         text-anchor: middle;
       }
 
@@ -258,7 +258,7 @@ export class PilotAreaChart extends HTMLElement {
         font-family: var(--font-technical, 'JetBrains Mono', monospace);
         font-size: var(--font-size-xs, 0.75rem);
         font-weight: var(--font-weight-medium, 500);
-        color: var(--color-text-secondary, #525252);
+        fill: var(--color-text-primary, #1a1a1a);
         text-anchor: end;
         dominant-baseline: middle;
       }
@@ -652,6 +652,9 @@ export class PilotAreaChart extends HTMLElement {
       contentHTML = `
         <svg class="chart-svg" viewBox="0 0 ${width} ${height}">
           <defs>
+            <clipPath id="area-clip-${this._data[0]?.color || 'primary'}">
+              <path d="${areaPath}"/>
+            </clipPath>
             <pattern id="area-pattern-${this._data[0]?.color || 'primary'}" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
               <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
             </pattern>
@@ -665,13 +668,12 @@ export class PilotAreaChart extends HTMLElement {
           />
           <rect
             class="area-fill"
-            d="${areaPath}"
             fill="url(#area-pattern-${this._data[0]?.color || 'primary'})"
             x="${padding.left}"
             y="${padding.top}"
             width="${chartWidth}"
             height="${chartHeight}"
-            mask="url(#area-mask)"
+            clip-path="url(#area-clip-${this._data[0]?.color || 'primary'})"
           />
           <path
             class="area-line ${animated ? 'animated' : ''}"
