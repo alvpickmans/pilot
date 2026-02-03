@@ -208,6 +208,44 @@ _updateVisualState() {
 - Document all attributes and slots
 - **MANDATORY**: Add Storybook stories in `stories/{component-name}.stories.js` with examples for all variants, sizes, and states
 
+## Post-Component Creation Checklist
+
+After creating a new component, you MUST complete these steps:
+
+### 1. Update demo.html Navigation
+Add a link to the new component section in BOTH desktop and mobile navigation:
+
+```html
+<!-- Desktop navigation (around line 100-125) -->
+<li slot="nav-items">
+  <a href="#sections">Sections</a>
+  <ul>
+    ...existing links...
+    <li><a href="#new-component">New Component</a></li>
+  </ul>
+</li>
+
+<!-- Mobile navigation (around line 133-158) -->
+<li slot="mobile-nav-items">
+  <a href="#sections">Sections</a>
+  <ul>
+    ...existing links...
+    <li><a href="#new-component">New Component</a></li>
+  </ul>
+</li>
+```
+
+### 2. Create Storybook Story
+Create `stories/{component-name}.stories.js` with comprehensive examples:
+- Default story with all attributes
+- Individual attribute stories (one per main feature)
+- Combined feature story showing all options
+- Real-world examples demonstrating practical usage
+- Documentation in the component parameter describing features, data format, and events
+
+### 3. Update Component Count
+If demo.html displays a component count in the footer, increment it by 1.
+
 ## Git Conventions
 ```
 feat: add pilot-new-component
