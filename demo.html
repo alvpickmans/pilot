@@ -104,6 +104,7 @@
         <li><a href="#buttons">Buttons</a></li>
         <li><a href="#cards">Cards</a></li>
         <li><a href="#stat-cards">Stat Cards</a></li>
+        <li><a href="#progress">Progress</a></li>
         <li><a href="#modal">Modal</a></li>
         <li><a href="#form-elements">Form Elements</a></li>
         <li><a href="#commodity-input">Commodity Input</a></li>
@@ -142,6 +143,7 @@
         <li><a href="#buttons">Buttons</a></li>
         <li><a href="#cards">Cards</a></li>
         <li><a href="#stat-cards">Stat Cards</a></li>
+        <li><a href="#progress">Progress</a></li>
         <li><a href="#modal">Modal</a></li>
         <li><a href="#form-elements">Form Elements</a></li>
         <li><a href="#commodity-input">Commodity Input</a></li>
@@ -392,6 +394,54 @@
           loading="true"
           icon="⏳">
         </pilot-stat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Progress Section -->
+  <section id="progress" class="demo-section">
+    <h2 class="demo-title">Progress</h2>
+    <p class="demo-subtitle">Linear progress bars for budgets and goals with percentage labels</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <pilot-progress value="75" label="Budget Spent" max="100"></pilot-progress>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-progress value="45" label="Goal Progress" max="100" variant="success"></pilot-progress>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-progress value="85" label="High Usage Alert" max="100" variant="warning"></pilot-progress>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-progress value="98" label="Budget Critical" max="100" variant="error"></pilot-progress>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-progress value="60" label="Striped Animation" max="100" striped animated></pilot-progress>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-progress value="30" label="Custom Label Slot" max="100">
+          <span style="font-size: var(--font-size-xs); color: var(--color-text-secondary);">Additional info below progress</span>
+        </pilot-progress>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-progress value="55" max="100" show-percentage="false"></pilot-progress>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-progress value="150" max="200" label="Custom Max Value"></pilot-progress>
       </div>
     </div>
   </section>
