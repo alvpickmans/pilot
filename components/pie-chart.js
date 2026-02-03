@@ -492,6 +492,7 @@ export class PilotPieChart extends HTMLElement {
           class="value-label" 
           x="${pos.x}" 
           y="${pos.y}"
+          transform="rotate(90, ${pos.x}, ${pos.y})"
         >${this._formatPercentage(slice.item.value, total)}%</text>`;
       }).join('') : '';
       
