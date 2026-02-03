@@ -192,7 +192,7 @@ export class PilotAreaChart extends HTMLElement {
       .tooltip {
         position: absolute;
         background: var(--color-brand-primary, #1a1a1a);
-        color: var(--color-background-primary, #ffffff);
+        color: var(--color-text-primary, #1a1a1a);
         padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
         font-size: var(--font-size-xs, 0.75rem);
         font-family: var(--font-technical, 'JetBrains Mono', monospace);
@@ -211,11 +211,13 @@ export class PilotAreaChart extends HTMLElement {
       .tooltip-label {
         font-weight: var(--font-weight-medium, 500);
         margin-bottom: var(--spacing-1, 0.25rem);
+        color: inherit;
       }
 
       .tooltip-value {
         font-family: var(--font-mono, 'IBM Plex Mono', monospace);
         font-weight: var(--font-weight-semibold, 600);
+        color: inherit;
       }
 
       /* ============================================
