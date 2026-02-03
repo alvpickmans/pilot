@@ -61,7 +61,7 @@ export class PilotChartData extends HTMLElement {
    */
   _notifyParent() {
     // Find the closest parent chart component
-    const parentChart = this.closest('pilot-bar-chart');
+    const parentChart = this.closest('pilot-bar-chart') || this.closest('pilot-pie-chart');
     if (parentChart && typeof parentChart._parseSlottedData === 'function') {
       parentChart._parseSlottedData();
     }

@@ -123,6 +123,7 @@
         <li><a href="#patterns">CSS Patterns</a></li>
         <li><a href="#bar-chart">Bar Chart</a></li>
         <li><a href="#vertical-bar-chart">Vertical Bar Chart</a></li>
+        <li><a href="#pie-chart">Pie Chart</a></li>
         <li><a href="#typography">Typography</a></li>
       </ul>
     </li>
@@ -158,6 +159,7 @@
         <li><a href="#patterns">CSS Patterns</a></li>
         <li><a href="#bar-chart">Bar Chart</a></li>
         <li><a href="#vertical-bar-chart">Vertical Bar Chart</a></li>
+        <li><a href="#pie-chart">Pie Chart</a></li>
         <li><a href="#typography">Typography</a></li>
       </ul>
     </li>
@@ -1278,6 +1280,83 @@ echo "Installation complete"
     </script>
   </section>
 
+  <!-- Pie Chart -->
+  <section id="pie-chart" class="demo-section">
+    <h2 class="demo-title">Pie Chart</h2>
+    <p class="demo-subtitle">Circular charts for displaying categorical data proportions with technical styling</p>
+    
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Slot-Based Data (Recommended)</pilot-label>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+        Use <code>pilot-chart-data</code> elements for a more readable, maintainable API
+      </p>
+      <pilot-pie-chart style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Housing" value="1200" color="error"></pilot-chart-data>
+        <pilot-chart-data label="Food" value="450" color="warning"></pilot-chart-data>
+        <pilot-chart-data label="Transport" value="300" color="info"></pilot-chart-data>
+        <pilot-chart-data label="Utilities" value="200" color="success"></pilot-chart-data>
+      </pilot-pie-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">With Legend & Animation</pilot-label>
+      <pilot-pie-chart show-values show-legend animated style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Q1" value="85" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Q2" value="120" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Q3" value="95" color="warning"></pilot-chart-data>
+        <pilot-chart-data label="Q4" value="140" color="success"></pilot-chart-data>
+      </pilot-pie-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Interactive (Clickable Slices)</pilot-label>
+      <pilot-pie-chart id="interactive-pie-chart" show-values style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Category A" value="2500"></pilot-chart-data>
+        <pilot-chart-data label="Category B" value="1800"></pilot-chart-data>
+        <pilot-chart-data label="Category C" value="3200"></pilot-chart-data>
+        <pilot-chart-data label="Category D" value="900"></pilot-chart-data>
+      </pilot-pie-chart>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
+        Click any slice to see event detail in console
+      </p>
+    </div>
+
+    <script>
+      document.getElementById('interactive-pie-chart').addEventListener('slice-click', (e) => {
+        console.log('Pie slice clicked:', e.detail);
+      });
+    </script>
+
+    <div class="demo-grid demo-grid-3">
+      <div class="component-showcase">
+        <pilot-label variant="technical" size="sm">Small Size</pilot-label>
+        <pilot-pie-chart size="sm" style="margin-top: var(--spacing-4);">
+          <pilot-chart-data label="A" value="35" color="success"></pilot-chart-data>
+          <pilot-chart-data label="B" value="42" color="success"></pilot-chart-data>
+          <pilot-chart-data label="C" value="23" color="warning"></pilot-chart-data>
+        </pilot-pie-chart>
+      </div>
+
+      <div class="component-showcase">
+        <pilot-label variant="technical" size="sm">Default Size</pilot-label>
+        <pilot-pie-chart style="margin-top: var(--spacing-4);">
+          <pilot-chart-data label="A" value="35" color="success"></pilot-chart-data>
+          <pilot-chart-data label="B" value="42" color="success"></pilot-chart-data>
+          <pilot-chart-data label="C" value="23" color="warning"></pilot-chart-data>
+        </pilot-pie-chart>
+      </div>
+
+      <div class="component-showcase">
+        <pilot-label variant="technical" size="sm">Large Size</pilot-label>
+        <pilot-pie-chart size="lg" style="margin-top: var(--spacing-4);">
+          <pilot-chart-data label="A" value="35" color="success"></pilot-chart-data>
+          <pilot-chart-data label="B" value="42" color="success"></pilot-chart-data>
+          <pilot-chart-data label="C" value="23" color="warning"></pilot-chart-data>
+        </pilot-pie-chart>
+      </div>
+    </div>
+  </section>
+
   </div>
 
   <!-- Footer -->
@@ -1292,7 +1371,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          23 Web Components
+          24 Web Components
         </p>
       </div>
       <div>

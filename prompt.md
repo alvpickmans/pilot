@@ -18,14 +18,9 @@ Use this prompt when creating a new Web Component for the Pilot Design System.
    When multiple tasks are ready, pick the highest priority one.
 
 2. **Show task details:**
-   ```bash
-   bd show <task-id>
-   ```
-
-3. **Set task to in_progress:**
-   ```bash
-   bd set-state <task-id> status=in_progress --reason "Starting work on this task"
-   ```
+    ```bash
+    bd show <task-id>
+    ```
 
 ## Component Development Workflow
 
