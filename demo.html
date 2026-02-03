@@ -122,6 +122,7 @@
         <li><a href="#tabs">Tabs</a></li>
         <li><a href="#patterns">CSS Patterns</a></li>
         <li><a href="#bar-chart">Bar Chart</a></li>
+        <li><a href="#vertical-bar-chart">Vertical Bar Chart</a></li>
         <li><a href="#typography">Typography</a></li>
       </ul>
     </li>
@@ -156,6 +157,7 @@
         <li><a href="#tabs">Tabs</a></li>
         <li><a href="#patterns">CSS Patterns</a></li>
         <li><a href="#bar-chart">Bar Chart</a></li>
+        <li><a href="#vertical-bar-chart">Vertical Bar Chart</a></li>
         <li><a href="#typography">Typography</a></li>
       </ul>
     </li>
@@ -1163,41 +1165,35 @@ echo "Installation complete"
     <p class="demo-subtitle">Horizontal bar charts for category comparison with technical styling</p>
     
     <div class="component-showcase">
-      <pilot-label variant="technical" size="sm">Basic Bar Chart</pilot-label>
-      <pilot-bar-chart 
-        data='[{"label": "Housing", "value": 1200}, {"label": "Food", "value": 450}, {"label": "Transport", "value": 300}, {"label": "Utilities", "value": 200}]'
-        style="margin-top: var(--spacing-4);">
-      </pilot-bar-chart>
-    </div>
-
-    <div class="component-showcase">
-      <pilot-label variant="technical" size="sm">With Values & Colors</pilot-label>
-      <pilot-bar-chart 
-        data='[{"label": "Income", "value": 5000, "color": "success"}, {"label": "Expenses", "value": 2150, "color": "error"}, {"label": "Savings", "value": 2850, "color": "info"}]'
-        show-values
-        style="margin-top: var(--spacing-4);">
+      <pilot-label variant="technical" size="sm">Slot-Based Data (Recommended)</pilot-label>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+        Use <code>pilot-chart-data</code> elements for a more readable, maintainable API
+      </p>
+      <pilot-bar-chart show-values style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Housing" value="1200" color="error"></pilot-chart-data>
+        <pilot-chart-data label="Food" value="450" color="warning"></pilot-chart-data>
+        <pilot-chart-data label="Transport" value="300" color="info"></pilot-chart-data>
+        <pilot-chart-data label="Utilities" value="200" color="success"></pilot-chart-data>
       </pilot-bar-chart>
     </div>
 
     <div class="component-showcase">
       <pilot-label variant="technical" size="sm">With Legend & Animation</pilot-label>
-      <pilot-bar-chart 
-        data='[{"label": "Q1", "value": 85, "color": "success"}, {"label": "Q2", "value": 120, "color": "success"}, {"label": "Q3", "value": 95, "color": "warning"}, {"label": "Q4", "value": 140, "color": "success"}]'
-        max="150"
-        show-values
-        show-legend
-        animated
-        style="margin-top: var(--spacing-4);">
+      <pilot-bar-chart max="150" show-values show-legend animated style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Q1" value="85" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Q2" value="120" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Q3" value="95" color="warning"></pilot-chart-data>
+        <pilot-chart-data label="Q4" value="140" color="success"></pilot-chart-data>
       </pilot-bar-chart>
     </div>
 
     <div class="component-showcase">
       <pilot-label variant="technical" size="sm">Interactive (Clickable Bars)</pilot-label>
-      <pilot-bar-chart 
-        id="interactive-chart"
-        data='[{"label": "Category A", "value": 2500}, {"label": "Category B", "value": 1800}, {"label": "Category C", "value": 3200}, {"label": "Category D", "value": 900}]'
-        show-values
-        style="margin-top: var(--spacing-4);">
+      <pilot-bar-chart id="interactive-chart" show-values style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Category A" value="2500"></pilot-chart-data>
+        <pilot-chart-data label="Category B" value="1800"></pilot-chart-data>
+        <pilot-chart-data label="Category C" value="3200"></pilot-chart-data>
+        <pilot-chart-data label="Category D" value="900"></pilot-chart-data>
       </pilot-bar-chart>
       <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
         Click any bar to see the event detail in console
@@ -1207,6 +1203,77 @@ echo "Installation complete"
     <script>
       document.getElementById('interactive-chart').addEventListener('bar-click', (e) => {
         console.log('Bar clicked:', e.detail);
+      });
+    </script>
+  </section>
+
+  <!-- Vertical Bar Chart -->
+  <section id="vertical-bar-chart" class="demo-section">
+    <h2 class="demo-title">Vertical Bar Chart</h2>
+    <p class="demo-subtitle">Column chart style with bars growing bottom-to-top using orientation="vertical"</p>
+    
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Basic Vertical Chart</pilot-label>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+        Use <code>orientation="vertical"</code> to display bars as columns
+      </p>
+      <pilot-bar-chart orientation="vertical" show-values style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Jan" value="35" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Feb" value="42" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Mar" value="38" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Apr" value="45" color="success"></pilot-chart-data>
+        <pilot-chart-data label="May" value="48" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Jun" value="32" color="warning"></pilot-chart-data>
+      </pilot-bar-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Vertical with All Features</pilot-label>
+      <pilot-bar-chart orientation="vertical" max="100" show-values show-legend animated style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Q1" value="85" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Q2" value="120" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Q3" value="95" color="warning"></pilot-chart-data>
+        <pilot-chart-data label="Q4" value="140" color="success"></pilot-chart-data>
+      </pilot-bar-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Comparison: Horizontal vs Vertical</pilot-label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-6); margin-top: var(--spacing-4);">
+        <div>
+          <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">Horizontal (Default)</p>
+          <pilot-bar-chart show-values>
+            <pilot-chart-data label="A" value="75" color="primary"></pilot-chart-data>
+            <pilot-chart-data label="B" value="50" color="success"></pilot-chart-data>
+            <pilot-chart-data label="C" value="90" color="warning"></pilot-chart-data>
+          </pilot-bar-chart>
+        </div>
+        <div>
+          <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">Vertical</p>
+          <pilot-bar-chart orientation="vertical" show-values>
+            <pilot-chart-data label="A" value="75" color="primary"></pilot-chart-data>
+            <pilot-chart-data label="B" value="50" color="success"></pilot-chart-data>
+            <pilot-chart-data label="C" value="90" color="warning"></pilot-chart-data>
+          </pilot-bar-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Interactive Vertical Chart</pilot-label>
+      <pilot-bar-chart id="interactive-vertical-chart" orientation="vertical" show-values show-legend style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Revenue" value="2500000" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Expenses" value="1800000" color="error"></pilot-chart-data>
+        <pilot-chart-data label="Profit" value="700000" color="info"></pilot-chart-data>
+      </pilot-bar-chart>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
+        Click any bar to see the event detail in console
+      </p>
+    </div>
+
+    <script>
+      document.getElementById('interactive-vertical-chart').addEventListener('bar-click', (e) => {
+        console.log('Vertical bar clicked:', e.detail);
       });
     </script>
   </section>
@@ -1225,7 +1292,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          21 Web Components
+          23 Web Components
         </p>
       </div>
       <div>

@@ -13,7 +13,7 @@ import { baseStyles } from './shared.js';
 
 export class PilotBarChart extends HTMLElement {
   static get observedAttributes() {
-    return ['data', 'max', 'animated', 'show-values', 'show-legend'];
+    return ['max', 'animated', 'show-values', 'show-legend', 'orientation'];
   }
 
   constructor() {
@@ -26,6 +26,7 @@ export class PilotBarChart extends HTMLElement {
 
   connectedCallback() {
     this._setupEventListeners();
+    this._setupSlotListener();
     // Trigger animation after mount if animated
     if (this.hasAttribute('animated') && !this._animationTriggered) {
       requestAnimationFrame(() => {
@@ -36,6 +37,49 @@ export class PilotBarChart extends HTMLElement {
 
   disconnectedCallback() {
     this._removeEventListeners();
+  }
+
+  // ============================================
+  // SLOT HANDLING
+  // ============================================
+
+  _setupSlotListener() {
+    // Use a mutation observer to watch for changes in light DOM children
+    this._mutationObserver = new MutationObserver((mutations) => {
+      // Check if pilot-chart-data elements were added/removed/changed
+      const hasChartDataChanges = mutations.some(mutation => 
+        Array.from(mutation.addedNodes).some(node => 
+          node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PILOT-CHART-DATA'
+        ) ||
+        Array.from(mutation.removedNodes).some(node => 
+          node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PILOT-CHART-DATA'
+        )
+      );
+      
+      if (hasChartDataChanges) {
+        this._parseSlottedData();
+      }
+    });
+    
+    this._mutationObserver.observe(this, { childList: true });
+    
+    // Initial parse
+    this._parseSlottedData();
+  }
+
+  /**
+   * Parse pilot-chart-data elements from slotted content
+   */
+  _parseSlottedData() {
+    const dataElements = this.querySelectorAll('pilot-chart-data');
+    
+    this._data = Array.from(dataElements).map(el => ({
+      label: el.getAttribute('label') || '',
+      value: parseFloat(el.getAttribute('value')) || 0,
+      color: el.getAttribute('color') || 'primary'
+    }));
+    
+    this.render();
   }
 
   // ============================================
@@ -116,13 +160,18 @@ export class PilotBarChart extends HTMLElement {
       .bar-fill {
         height: 100%;
         background: var(--color-brand-primary, #1a1a1a);
-        width: 0;
+        width: var(--bar-width, 0%);
         transition: width var(--duration-slow, 500ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
         position: relative;
       }
       
       .bar-fill.animated {
-        width: var(--bar-width, 0%);
+        width: 0;
+        animation: barGrow var(--duration-slow, 500ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+      }
+
+      @keyframes barGrow {
+        to { width: var(--bar-width, 0%); }
       }
       
       /* Technical pattern overlay */
@@ -221,8 +270,127 @@ export class PilotBarChart extends HTMLElement {
       }
       
       /* ============================================
-         RESPONSIVE
-         ============================================ */
+          VERTICAL ORIENTATION (Column Chart)
+          ============================================ */
+      .bars-container.vertical {
+        flex-direction: row;
+        align-items: flex-end;
+        height: 300px;
+        gap: var(--spacing-4, 1rem);
+      }
+      
+      .bar-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        height: 100%;
+        cursor: pointer;
+        transition: opacity var(--duration-fast, 150ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+      }
+      
+      .bar-column:hover {
+        opacity: 0.8;
+      }
+      
+      .bar-column:active {
+        opacity: 0.6;
+      }
+      
+      .bar-track-vertical {
+        flex: 1;
+        width: 100%;
+        min-width: 40px;
+        max-width: 80px;
+        background: var(--color-background-secondary, #f5f5f5);
+        border: var(--border-width-1, 1px) solid var(--color-border-primary, #b3b3b3);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+      }
+      
+      .bar-fill-vertical {
+        width: 100%;
+        background: var(--color-brand-primary, #1a1a1a);
+        height: var(--bar-height, 0%);
+        transition: height var(--duration-slow, 500ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1));
+        position: relative;
+      }
+      
+      .bar-fill-vertical.animated {
+        height: 0;
+        animation: barGrowVertical var(--duration-slow, 500ms) var(--easing-technical, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+      }
+
+      @keyframes barGrowVertical {
+        to { height: var(--bar-height, 0%); }
+      }
+      
+      /* Technical pattern overlay for vertical */
+      .bar-fill-vertical::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.1) 2px,
+          rgba(255, 255, 255, 0.1) 4px
+        );
+        pointer-events: none;
+      }
+      
+      .bar-value-vertical {
+        font-size: var(--font-size-sm, 0.875rem);
+        font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+        font-weight: var(--font-weight-semibold, 600);
+        color: var(--color-text-primary, #1a1a1a);
+        text-align: center;
+        margin-bottom: var(--spacing-2, 0.5rem);
+        min-height: 1.25rem;
+      }
+      
+      .bar-label-vertical {
+        font-size: var(--font-size-xs, 0.75rem);
+        font-weight: var(--font-weight-medium, 500);
+        letter-spacing: var(--letter-spacing-technical, 0.05em);
+        text-transform: uppercase;
+        color: var(--color-text-secondary, #525252);
+        text-align: center;
+        margin-top: var(--spacing-2, 0.5rem);
+        max-width: 100px;
+        word-wrap: break-word;
+      }
+      
+      /* Color variants for vertical bars */
+      .bar-fill-vertical[data-color="primary"] {
+        background: var(--color-brand-primary, #1a1a1a);
+      }
+      
+      .bar-fill-vertical[data-color="success"] {
+        background: var(--color-feedback-success, #16a34a);
+      }
+      
+      .bar-fill-vertical[data-color="warning"] {
+        background: var(--color-feedback-warning, #d97706);
+      }
+      
+      .bar-fill-vertical[data-color="error"] {
+        background: var(--color-feedback-error, #dc2626);
+      }
+      
+      .bar-fill-vertical[data-color="info"] {
+        background: var(--color-feedback-info, #525252);
+      }
+      
+      /* ============================================
+          RESPONSIVE
+          ============================================ */
       @media (max-width: 480px) {
         .bar-label {
           min-width: 80px;
@@ -240,6 +408,25 @@ export class PilotBarChart extends HTMLElement {
         
         .bar-row {
           gap: var(--spacing-2, 0.5rem);
+        }
+        
+        /* Mobile vertical chart adjustments */
+        .bars-container.vertical {
+          height: 250px;
+          gap: var(--spacing-2, 0.5rem);
+        }
+        
+        .bar-track-vertical {
+          min-width: 30px;
+        }
+        
+        .bar-label-vertical {
+          font-size: var(--font-size-2xs, 0.625rem);
+          max-width: 60px;
+        }
+        
+        .bar-value-vertical {
+          font-size: var(--font-size-xs, 0.75rem);
         }
       }
     `;
@@ -261,9 +448,9 @@ export class PilotBarChart extends HTMLElement {
   }
 
   _handleBarClick(e) {
-    const barRow = e.target.closest('.bar-row');
-    if (barRow) {
-      const index = parseInt(barRow.dataset.index, 10);
+    const barElement = e.target.closest('.bar-row') || e.target.closest('.bar-column');
+    if (barElement) {
+      const index = parseInt(barElement.dataset.index, 10);
       const item = this._data[index];
       if (item) {
         this.dispatchEvent(new CustomEvent('bar-click', {
@@ -276,7 +463,9 @@ export class PilotBarChart extends HTMLElement {
   }
 
   _triggerAnimation() {
-    const barFills = this.shadowRoot.querySelectorAll('.bar-fill');
+    const isVertical = this.getAttribute('orientation') === 'vertical';
+    const selector = isVertical ? '.bar-fill-vertical' : '.bar-fill';
+    const barFills = this.shadowRoot.querySelectorAll(selector);
     barFills.forEach((fill, index) => {
       // Stagger animations slightly
       setTimeout(() => {
@@ -289,29 +478,6 @@ export class PilotBarChart extends HTMLElement {
   // ============================================
   // DATA PARSING
   // ============================================
-
-  _parseData() {
-    const dataAttr = this.getAttribute('data');
-    if (!dataAttr) {
-      this._data = [];
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(dataAttr);
-      if (Array.isArray(parsed)) {
-        this._data = parsed.map(item => ({
-          label: item.label || '',
-          value: typeof item.value === 'number' ? item.value : 0,
-          color: item.color || 'primary'
-        }));
-      } else {
-        this._data = [];
-      }
-    } catch (e) {
-      this._data = [];
-    }
-  }
 
   _getMaxValue() {
     const maxAttr = this.getAttribute('max');
@@ -333,12 +499,12 @@ export class PilotBarChart extends HTMLElement {
   // ============================================
 
   render() {
-    this._parseData();
     
     const maxValue = this._getMaxValue();
     const showValues = this.hasAttribute('show-values');
     const showLegend = this.hasAttribute('show-legend');
     const animated = this.hasAttribute('animated');
+    const isVertical = this.getAttribute('orientation') === 'vertical';
 
     // Build legend if needed
     let legendHTML = '';
@@ -364,7 +530,32 @@ export class PilotBarChart extends HTMLElement {
           NO DATA AVAILABLE
         </div>
       `;
+    } else if (isVertical) {
+      // Vertical orientation (column chart)
+      barsHTML = `
+        <div class="bars-container vertical">
+          ${this._data.map((item, index) => {
+            const percentage = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
+            const color = item.color || 'primary';
+            
+            return `
+              <div class="bar-column" data-index="${index}" role="button" tabindex="0" aria-label="${item.label}: ${item.value}">
+                ${showValues ? `<div class="bar-value-vertical">${this._formatValue(item.value)}</div>` : '<div class="bar-value-vertical"></div>'}
+                <div class="bar-track-vertical">
+                  <div 
+                    class="bar-fill-vertical" 
+                    data-color="${color}"
+                    style="--bar-height: ${percentage}%;"
+                  ></div>
+                </div>
+                <div class="bar-label-vertical">${item.label}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
     } else {
+      // Horizontal orientation (default)
       barsHTML = `
         <div class="bars-container">
           ${this._data.map((item, index) => {
@@ -376,9 +567,9 @@ export class PilotBarChart extends HTMLElement {
                 <div class="bar-label">${item.label}</div>
                 <div class="bar-track">
                   <div 
-                    class="bar-fill ${animated ? 'animated' : ''}" 
+                    class="bar-fill" 
                     data-color="${color}"
-                    style="--bar-width: ${percentage}%; width: ${animated ? percentage : 0}%;"
+                    style="--bar-width: ${percentage}%;"
                   ></div>
                 </div>
                 ${showValues ? `<div class="bar-value">${this._formatValue(item.value)}</div>` : ''}
@@ -395,6 +586,7 @@ export class PilotBarChart extends HTMLElement {
         ${barsHTML}
         ${legendHTML}
       </div>
+      <slot style="display: none;"></slot>
     `;
 
     // If animated and already connected, trigger animation
@@ -436,10 +628,6 @@ export class PilotBarChart extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
-      // Reset animation flag when data changes
-      if (name === 'data') {
-        this._animationTriggered = false;
-      }
       this.render();
     }
   }

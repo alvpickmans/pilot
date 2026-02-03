@@ -171,6 +171,69 @@ _updateVisualState() {
 - `footer`: Component footer content
 - default (unnamed): Main content
 
+## Architectural Patterns
+
+### Slot-Based Data Components
+
+For chart and data-driven components, use a composable slot-based architecture with separate data container components:
+
+**Pattern Example - Charts:**
+```javascript
+// chart-data.js - Simple data container
+export class PilotChartData extends HTMLElement {
+  static get observedAttributes() {
+    return ['label', 'value', 'color'];
+  }
+
+  getData() {
+    return {
+      label: this.getAttribute('label') || '',
+      value: parseFloat(this.getAttribute('value')) || 0,
+      color: this.getAttribute('color') || 'primary'
+    };
+  }
+}
+
+// bar-chart.js - Container that reads slotted data
+export class PilotBarChart extends HTMLElement {
+  _setupSlotListener() {
+    // Use MutationObserver to watch for data element changes
+    this._mutationObserver = new MutationObserver(() => {
+      this._parseSlottedData();
+    });
+    this._mutationObserver.observe(this, { childList: true });
+    this._parseSlottedData();
+  }
+
+  _parseSlottedData() {
+    const dataElements = this.querySelectorAll('pilot-chart-data');
+    if (dataElements.length > 0) {
+      this._useSlotData = true;
+      this._data = Array.from(dataElements).map(el => el.getData());
+      this.render();
+    }
+  }
+}
+```
+
+**Benefits:**
+- More readable and maintainable HTML
+- Data is visible in DOM for debugging
+- Progressive enhancement possible
+- Enables CSS styling of individual data items
+- Creates reusable building blocks for different chart types
+- Follows Web Components best practices
+
+**Usage:**
+Use slot-based approach with `pilot-chart-data` elements:
+
+```html
+<pilot-bar-chart show-values>
+  <pilot-chart-data label="A" value="100" color="success"></pilot-chart-data>
+  <pilot-chart-data label="B" value="50" color="error"></pilot-chart-data>
+</pilot-bar-chart>
+```
+
 ## Design System Conventions
 
 ### Typography
