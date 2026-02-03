@@ -45,3 +45,4 @@ export { PilotAreaChart } from './area-chart.js';
 export { PilotChartData } from './chart-data.js';
 export { PilotStatCard } from './stat-card.js';
 export { PilotProgress } from './progress.js';
+export { PilotContainer } from './container.js';

@@ -117,6 +117,7 @@
         <li><a href="#terminal">Terminal</a></li>
         <li><a href="#code">Code Blocks</a></li>
         <li><a href="#panels">Panels</a></li>
+        <li><a href="#container">Container</a></li>
         <li><a href="#annotations">Annotations</a></li>
         <li><a href="#grid">Grid</a></li>
         <li><a href="#dividers">Dividers</a></li>
@@ -125,9 +126,6 @@
         <li><a href="#patterns">CSS Patterns</a></li>
         <li><a href="#bar-chart">Bar Chart</a></li>
         <li><a href="#vertical-bar-chart">Vertical Bar Chart</a></li>
-        <li><a href="#pie-chart">Pie Chart</a></li>
-        <li><a href="#area-chart">Area Chart</a></li>
-        <li><a href="#typography">Typography</a></li>
       </ul>
     </li>
 
@@ -156,6 +154,7 @@
         <li><a href="#terminal">Terminal</a></li>
         <li><a href="#code">Code Blocks</a></li>
         <li><a href="#panels">Panels</a></li>
+        <li><a href="#container">Container</a></li>
         <li><a href="#annotations">Annotations</a></li>
         <li><a href="#grid">Grid</a></li>
         <li><a href="#dividers">Dividers</a></li>
@@ -1266,6 +1265,92 @@ echo "Installation complete"
     </div>
   </section>
 
+  <!-- Container Section -->
+  <section id="container" class="demo-section">
+    <h2 class="demo-title">Container</h2>
+    <p class="demo-subtitle">Max-width wrapper with technical borders for page sections</p>
+    
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase" style="background: transparent; border: none; padding: 0;">
+        <pilot-label variant="technical" size="sm">Small Container (640px)</pilot-label>
+        <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+          size="sm" with default padding
+        </p>
+        <pilot-container size="sm">
+          <pilot-card>
+            <h3 slot="header">Content in Small Container</h3>
+            <p>This container has a max-width of 640px and is centered.</p>
+          </pilot-card>
+        </pilot-container>
+      </div>
+      
+      <div class="component-showcase" style="background: transparent; border: none; padding: 0;">
+        <pilot-label variant="technical" size="sm">Medium Container with Borders</pilot-label>
+        <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+          size="md" bordered with technical corners
+        </p>
+        <pilot-container size="md" bordered padding="lg">
+          <pilot-card>
+            <h3 slot="header">Bordered Container</h3>
+            <p>This container features technical corner brackets and larger padding.</p>
+          </pilot-card>
+        </pilot-container>
+      </div>
+    </div>
+    
+    <div class="component-showcase" style="background: transparent; border: none; padding: 0;">
+      <pilot-label variant="technical" size="sm">Large Container (1024px) - Default</pilot-label>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+        size="lg" is the default, perfect for main content sections
+      </p>
+      <pilot-container size="lg">
+        <pilot-card>
+          <h3 slot="header">Main Content Container</h3>
+          <p>This is the default container size with 1024px max-width. Ideal for most page content sections.</p>
+          <pilot-divider variant="dashed" style="margin: var(--spacing-4) 0;"></pilot-divider>
+          <pilot-grid columns="3" gap="4">
+            <pilot-card padding="sm">Card 1</pilot-card>
+            <pilot-card padding="sm">Card 2</pilot-card>
+            <pilot-card padding="sm">Card 3</pilot-card>
+          </pilot-grid>
+        </pilot-card>
+      </pilot-container>
+    </div>
+    
+    <div class="component-showcase" style="background: transparent; border: none; padding: 0;">
+      <pilot-label variant="technical" size="sm">Extra Large Container (1280px) - With Technical Borders</pilot-label>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+        size="xl" bordered padding="xl" - Maximum width with technical styling
+      </p>
+      <pilot-container size="xl" bordered padding="xl">
+        <pilot-card>
+          <h3 slot="header">Wide Container with Technical Borders</h3>
+          <p>This extra-wide container (1280px) with technical corner brackets and XL padding is perfect for dashboards and data-heavy layouts.</p>
+          <pilot-divider variant="technical" style="margin: var(--spacing-4) 0;"></pilot-divider>
+          <pilot-grid columns="4" gap="4">
+            <pilot-stat-card value="95%" label="UPTIME" trend="up" trend-value="2.4%"></pilot-stat-card>
+            <pilot-stat-card value="2.4s" label="LATENCY" trend="down" trend-value="12%"></pilot-stat-card>
+            <pilot-stat-card value="1.2K" label="REQUESTS" trend="up" trend-value="8.1%"></pilot-stat-card>
+            <pilot-stat-card value="99.9%" label="SUCCESS" trend="up" trend-value="0.1%"></pilot-stat-card>
+          </pilot-grid>
+        </pilot-card>
+      </pilot-container>
+    </div>
+    
+    <div class="component-showcase" style="background: transparent; border: none; padding: 0;">
+      <pilot-label variant="technical" size="sm">Full Width Container (100%)</pilot-label>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+        size="full" bordered - Spans entire width of parent
+      </p>
+      <pilot-container size="full" bordered>
+        <pilot-card>
+          <h3 slot="header">Full-Width Layout</h3>
+          <p>This container spans 100% of its parent width with technical borders and default padding.</p>
+        </pilot-card>
+      </pilot-container>
+    </div>
+  </section>
+
   <!-- Typography Showcase -->
   <section id="typography" class="demo-section">
     <h2 class="demo-title">Typography</h2>
@@ -1587,7 +1672,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          25 Web Components
+          26 Web Components
         </p>
       </div>
       <div>
