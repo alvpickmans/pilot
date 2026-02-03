@@ -1155,6 +1155,60 @@ echo "Installation complete"
     </div>
   </section>
 
+  <!-- Bar Chart -->
+  <section id="bar-chart" class="demo-section">
+    <h2 class="demo-title">Bar Chart</h2>
+    <p class="demo-subtitle">Horizontal bar charts for category comparison with technical styling</p>
+    
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Basic Bar Chart</pilot-label>
+      <pilot-bar-chart 
+        data='[{"label": "Housing", "value": 1200}, {"label": "Food", "value": 450}, {"label": "Transport", "value": 300}, {"label": "Utilities", "value": 200}]'
+        style="margin-top: var(--spacing-4);">
+      </pilot-bar-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">With Values & Colors</pilot-label>
+      <pilot-bar-chart 
+        data='[{"label": "Income", "value": 5000, "color": "success"}, {"label": "Expenses", "value": 2150, "color": "error"}, {"label": "Savings", "value": 2850, "color": "info"}]'
+        show-values
+        style="margin-top: var(--spacing-4);">
+      </pilot-bar-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">With Legend & Animation</pilot-label>
+      <pilot-bar-chart 
+        data='[{"label": "Q1", "value": 85, "color": "success"}, {"label": "Q2", "value": 120, "color": "success"}, {"label": "Q3", "value": 95, "color": "warning"}, {"label": "Q4", "value": 140, "color": "success"}]'
+        max="150"
+        show-values
+        show-legend
+        animated
+        style="margin-top: var(--spacing-4);">
+      </pilot-bar-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Interactive (Clickable Bars)</pilot-label>
+      <pilot-bar-chart 
+        id="interactive-chart"
+        data='[{"label": "Category A", "value": 2500}, {"label": "Category B", "value": 1800}, {"label": "Category C", "value": 3200}, {"label": "Category D", "value": 900}]'
+        show-values
+        style="margin-top: var(--spacing-4);">
+      </pilot-bar-chart>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
+        Click any bar to see the event detail in console
+      </p>
+    </div>
+
+    <script>
+      document.getElementById('interactive-chart').addEventListener('bar-click', (e) => {
+        console.log('Bar clicked:', e.detail);
+      });
+    </script>
+  </section>
+
   </div>
 
   <!-- Footer -->
@@ -1169,7 +1223,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          20 Web Components
+          21 Web Components
         </p>
       </div>
       <div>
