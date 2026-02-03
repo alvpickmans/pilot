@@ -128,14 +128,14 @@ describe('PilotPieChart', () => {
       
       const data1 = document.createElement('pilot-chart-data');
       data1.setAttribute('label', 'A');
-      data1.setAttribute('value', '1234');
+      data1.setAttribute('value', '50');
       chart.appendChild(data1);
       
       await waitForRender(chart);
       
       const valueLabels = chart.shadowRoot.querySelectorAll('.value-label');
       expect(valueLabels.length).toBeGreaterThan(0);
-      expect(valueLabels[0].textContent).toBe('1,234');
+      expect(valueLabels[0].textContent).toBe('100.0%');
     });
 
     it('hides values when show-values is not set', async () => {
@@ -152,32 +152,61 @@ describe('PilotPieChart', () => {
       expect(valueLabels.length).toBe(0);
     });
 
-    it('formats large values with k suffix', async () => {
+    it('shows percentage values on pie slices', async () => {
       const chart = mount('pilot-pie-chart', { 'show-values': true });
       
       const data1 = document.createElement('pilot-chart-data');
       data1.setAttribute('label', 'A');
-      data1.setAttribute('value', '1500');
+      data1.setAttribute('value', '50');
       chart.appendChild(data1);
+      
+      const data2 = document.createElement('pilot-chart-data');
+      data2.setAttribute('label', 'B');
+      data2.setAttribute('value', '50');
+      chart.appendChild(data2);
       
       await waitForRender(chart);
       
       const valueLabels = chart.shadowRoot.querySelectorAll('.value-label');
-      expect(valueLabels[0].textContent).toBe('1.5k');
+      expect(valueLabels.length).toBe(2);
+      expect(valueLabels[0].textContent).toBe('50.0%');
+      expect(valueLabels[1].textContent).toBe('50.0%');
     });
 
-    it('formats very large values with M suffix', async () => {
+    it('displays percentages that sum to 100%', async () => {
       const chart = mount('pilot-pie-chart', { 'show-values': true });
       
       const data1 = document.createElement('pilot-chart-data');
       data1.setAttribute('label', 'A');
-      data1.setAttribute('value', '2500000');
+      data1.setAttribute('value', '75');
+      chart.appendChild(data1);
+      
+      const data2 = document.createElement('pilot-chart-data');
+      data2.setAttribute('label', 'B');
+      data2.setAttribute('value', '25');
+      chart.appendChild(data2);
+      
+      await waitForRender(chart);
+      
+      const valueLabels = chart.shadowRoot.querySelectorAll('.value-label');
+      expect(valueLabels.length).toBe(2);
+      expect(valueLabels[0].textContent).toBe('75.0%');
+      expect(valueLabels[1].textContent).toBe('25.0%');
+    });
+
+    it('handles zero total value gracefully', async () => {
+      const chart = mount('pilot-pie-chart', { 'show-values': true });
+      
+      const data1 = document.createElement('pilot-chart-data');
+      data1.setAttribute('label', 'A');
+      data1.setAttribute('value', '0');
       chart.appendChild(data1);
       
       await waitForRender(chart);
       
       const valueLabels = chart.shadowRoot.querySelectorAll('.value-label');
-      expect(valueLabels[0].textContent).toBe('2.5M');
+      expect(valueLabels.length).toBe(1);
+      expect(valueLabels[0].textContent).toBe('0%');
     });
   });
 

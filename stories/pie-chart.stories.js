@@ -45,13 +45,14 @@ A circular chart component for displaying categorical data proportions with tech
 ### Features
 - **Circular display**: Intuitive representation of proportions
 - **Animations**: Animated sector expansion on component load
-- **Value labels**: Optional value labels displayed on pie slices
+- **Value labels**: Optional percentage labels displayed on pie slices (matching legend)
 - **Color coding**: Five semantic colors for data categorization
 - **Legend support**: Optional legend showing labels and percentages
 - **Click events**: Interactive slices with custom events for drill-down
 - **Responsive**: Mobile-friendly with adjusted sizing
 - **Slot-based data**: Use \`pilot-chart-data\` elements for an HTML-native API
 - **Size variants**: Small (200px), medium (300px), and large (400px) options
+- **Striped pattern**: Technical diagonal stripes overlay on pie slices for visual consistency with bar chart
 
 ### Data Format
 
@@ -92,7 +93,7 @@ Use \`pilot-chart-data\` elements as children:
   <pilot-chart-data label="B" value="100"></pilot-chart-data>
 </pilot-pie-chart>
 
-<!-- With all features -->
+<!-- With all features (shows percentages on slices and in legend) -->
 <pilot-pie-chart show-values show-legend animated size="lg">
   <pilot-chart-data label="Q1" value="85" color="success"></pilot-chart-data>
   <pilot-chart-data label="Q2" value="120" color="success"></pilot-chart-data>
@@ -220,7 +221,7 @@ WithValues.args = {
 WithValues.parameters = {
   docs: {
     description: {
-      story: 'Pie chart with value labels displayed on each slice. Large numbers are automatically formatted with k/M suffixes.',
+      story: 'Pie chart with percentage labels displayed on each slice. Percentages match those shown in the legend for consistency.',
     },
   },
 };
@@ -391,7 +392,7 @@ export const LargeNumbers = () => html`
 LargeNumbers.parameters = {
   docs: {
     description: {
-      story: 'Large numbers are automatically formatted: 1500 becomes 1.5k, 2500000 becomes 2.5M.',
+      story: 'Pie chart showing percentages regardless of raw value magnitude. Values are displayed as consistent percentages on slices and in legend.',
     },
   },
 };

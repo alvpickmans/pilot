@@ -156,21 +156,21 @@ export class PilotPieChart extends HTMLElement {
       }
       
       /* Technical pattern overlay for slices */
-      .pie-slice::after {
-        content: '';
-        position: absolute;
+      .pie-slice-pattern {
         pointer-events: none;
+        opacity: 0.4;
       }
       
       /* ============================================
-         VALUE LABELS
-         ============================================ */
+          VALUE LABELS
+          ============================================ */
       .value-label {
         font-family: var(--font-mono, 'IBM Plex Mono', monospace);
         font-size: var(--font-size-xs, 0.75rem);
         font-weight: var(--font-weight-semibold, 600);
         color: var(--color-text-primary, #1a1a1a);
         text-anchor: middle;
+        dominant-baseline: middle;
         pointer-events: none;
         fill: var(--color-text-primary, #1a1a1a);
       }
@@ -422,6 +422,13 @@ export class PilotPieChart extends HTMLElement {
     return String(value);
   }
 
+  _formatPercentage(value, total) {
+    if (total > 0 && typeof value === 'number') {
+      return ((value / total) * 100).toFixed(1);
+    }
+    return '0';
+  }
+
   _calculateLabelPosition(angle, radius, cx, cy) {
     const rad = (angle * Math.PI) / 180;
     const labelRadius = radius * 0.7;
@@ -469,6 +476,15 @@ export class PilotPieChart extends HTMLElement {
         />`;
       }).join('');
       
+      const patternOverlayPaths = slices.map(slice => {
+        const pathData = this._createSlicePath(slice.startAngle, slice.endAngle, radius - 2, cx, cy);
+        return `<path 
+          class="pie-slice-pattern" 
+          d="${pathData}"
+          fill="url(#stripe-pattern)"
+        />`;
+      }).join('');
+      
       const valueLabels = showValues ? slices.map(slice => {
         const midAngle = (slice.startAngle + slice.endAngle) / 2;
         const pos = this._calculateLabelPosition(midAngle, radius, cx, cy);
@@ -476,15 +492,20 @@ export class PilotPieChart extends HTMLElement {
           class="value-label" 
           x="${pos.x}" 
           y="${pos.y}"
-          dy="0.35em"
-        >${this._formatValue(slice.item.value)}</text>`;
+        >${this._formatPercentage(slice.item.value, total)}%</text>`;
       }).join('') : '';
       
       contentHTML = `
         <div class="pie-chart-wrapper">
           <div class="pie-chart ${sizeClass}">
             <svg class="pie-svg" viewBox="0 0 ${pieSize} ${pieSize}">
+              <defs>
+                <pattern id="stripe-pattern" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+                </pattern>
+              </defs>
               ${slicePaths}
+              ${patternOverlayPaths}
               ${valueLabels}
             </svg>
           </div>
