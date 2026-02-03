@@ -103,6 +103,7 @@
         <li><a href="#nav-menu">Navigation</a></li>
         <li><a href="#buttons">Buttons</a></li>
         <li><a href="#cards">Cards</a></li>
+        <li><a href="#stat-cards">Stat Cards</a></li>
         <li><a href="#modal">Modal</a></li>
         <li><a href="#form-elements">Form Elements</a></li>
         <li><a href="#commodity-input">Commodity Input</a></li>
@@ -140,6 +141,7 @@
         <li><a href="#nav-menu">Navigation</a></li>
         <li><a href="#buttons">Buttons</a></li>
         <li><a href="#cards">Cards</a></li>
+        <li><a href="#stat-cards">Stat Cards</a></li>
         <li><a href="#modal">Modal</a></li>
         <li><a href="#form-elements">Form Elements</a></li>
         <li><a href="#commodity-input">Commodity Input</a></li>
@@ -316,6 +318,81 @@
       <pilot-card padding="md">
         <p style="margin: 0; color: var(--color-text-secondary);">Minimal card without header or footer slots.</p>
       </pilot-card>
+    </div>
+  </section>
+
+  <!-- Stat Cards Section -->
+  <section id="stat-cards" class="demo-section">
+    <h2 class="demo-title">Stat Cards</h2>
+    <p class="demo-subtitle">Metric display cards with trend indicators for financial KPIs</p>
+    
+    <div class="demo-grid demo-grid-3">
+      <div class="component-showcase">
+        <pilot-stat-card 
+          value="$124,500" 
+          label="Total Revenue" 
+          trend="12.5" 
+          trend-label="vs last month"
+          icon="💰">
+        </pilot-stat-card>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-stat-card 
+          value="1,248" 
+          label="Active Users" 
+          trend="8.3" 
+          trend-label="vs last week"
+          icon="👥">
+        </pilot-stat-card>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-stat-card 
+          value="$8,420" 
+          label="Monthly Expenses" 
+          trend="-5.2" 
+          trend-label="vs last month"
+          icon="💸">
+        </pilot-stat-card>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-2" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-stat-card 
+          value="99.9%" 
+          label="System Uptime" 
+          trend="0.1" 
+          trend-label="vs last month"
+          variant="technical"
+          icon="🖥️">
+        </pilot-stat-card>
+      </div>
+      
+      <div class="component-showcase">
+        <pilot-stat-card 
+          value="23" 
+          label="Open Issues" 
+          trend="-12.5" 
+          trend-label="vs last week"
+          variant="technical"
+          icon="🐛">
+        </pilot-stat-card>
+      </div>
+    </div>
+    
+    <div class="demo-grid demo-grid-4" style="margin-top: var(--spacing-6);">
+      <div class="component-showcase">
+        <pilot-stat-card 
+          value="$85,000" 
+          label="Loading Example" 
+          trend="5.0" 
+          trend-label="vs yesterday"
+          loading="true"
+          icon="⏳">
+        </pilot-stat-card>
+      </div>
     </div>
   </section>
 

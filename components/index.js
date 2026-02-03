@@ -43,3 +43,4 @@ export { PilotBarChart } from './bar-chart.js';
 export { PilotPieChart } from './pie-chart.js';
 export { PilotAreaChart } from './area-chart.js';
 export { PilotChartData } from './chart-data.js';
+export { PilotStatCard } from './stat-card.js';
