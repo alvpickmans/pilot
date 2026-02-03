@@ -124,10 +124,11 @@
         <li><a href="#bar-chart">Bar Chart</a></li>
         <li><a href="#vertical-bar-chart">Vertical Bar Chart</a></li>
         <li><a href="#pie-chart">Pie Chart</a></li>
+        <li><a href="#area-chart">Area Chart</a></li>
         <li><a href="#typography">Typography</a></li>
       </ul>
     </li>
-    
+
     <div slot="actions" style="margin-left: auto;">
       <pilot-theme-toggle show-label></pilot-theme-toggle>
     </div>
@@ -160,6 +161,7 @@
         <li><a href="#bar-chart">Bar Chart</a></li>
         <li><a href="#vertical-bar-chart">Vertical Bar Chart</a></li>
         <li><a href="#pie-chart">Pie Chart</a></li>
+        <li><a href="#area-chart">Area Chart</a></li>
         <li><a href="#typography">Typography</a></li>
       </ul>
     </li>
@@ -1357,6 +1359,93 @@ echo "Installation complete"
     </div>
   </section>
 
+  <!-- Area Chart Section -->
+  <section id="area-chart" class="demo-section">
+    <h2 class="demo-title">Area Chart</h2>
+    <p class="demo-subtitle">Line charts with filled area below for displaying trends over time</p>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Slot-Based Data (Recommended)</pilot-label>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: var(--spacing-2);">
+        Use <code>pilot-chart-data</code> elements for a more readable, maintainable API
+      </p>
+      <pilot-area-chart style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Jan" value="50" color="primary"></pilot-chart-data>
+        <pilot-chart-data label="Feb" value="75" color="primary"></pilot-chart-data>
+        <pilot-chart-data label="Mar" value="60" color="primary"></pilot-chart-data>
+        <pilot-chart-data label="Apr" value="90" color="primary"></pilot-chart-data>
+        <pilot-chart-data label="May" value="110" color="primary"></pilot-chart-data>
+        <pilot-chart-data label="Jun" value="85" color="primary"></pilot-chart-data>
+      </pilot-area-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">With Values & Animation</pilot-label>
+      <pilot-area-chart show-values animated style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Jan" value="200" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Feb" value="350" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Mar" value="280" color="warning"></pilot-chart-data>
+        <pilot-chart-data label="Apr" value="450" color="success"></pilot-chart-data>
+        <pilot-chart-data label="May" value="520" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Jun" value="380" color="warning"></pilot-chart-data>
+      </pilot-area-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">With Legend & Values</pilot-label>
+      <pilot-area-chart show-values show-legend style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Q1" value="1000" color="primary"></pilot-chart-data>
+        <pilot-chart-data label="Q2" value="1500" color="primary"></pilot-chart-data>
+        <pilot-chart-data label="Q3" value="1200" color="primary"></pilot-chart-data>
+        <pilot-chart-data label="Q4" value="1800" color="primary"></pilot-chart-data>
+      </pilot-area-chart>
+    </div>
+
+    <div class="component-showcase">
+      <pilot-label variant="technical" size="sm">Interactive (Hover & Click)</pilot-label>
+      <pilot-area-chart id="interactive-area-chart" style="margin-top: var(--spacing-4);">
+        <pilot-chart-data label="Week 1" value="3200" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Week 2" value="4100" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Week 3" value="2800" color="warning"></pilot-chart-data>
+        <pilot-chart-data label="Week 4" value="5200" color="success"></pilot-chart-data>
+        <pilot-chart-data label="Week 5" value="4600" color="success"></pilot-chart-data>
+      </pilot-area-chart>
+      <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
+        Hover over points for tooltips, click for event details in console
+      </p>
+    </div>
+
+    <script>
+      document.getElementById('interactive-area-chart').addEventListener('point-click', (e) => {
+        console.log('Area chart point clicked:', e.detail);
+      });
+    </script>
+
+    <div class="demo-grid demo-grid-2">
+      <div class="component-showcase">
+        <pilot-label variant="technical" size="sm">Error Trend</pilot-label>
+        <pilot-area-chart show-values animated style="margin-top: var(--spacing-4);">
+          <pilot-chart-data label="00:00" value="5" color="error"></pilot-chart-data>
+          <pilot-chart-data label="04:00" value="12" color="error"></pilot-chart-data>
+          <pilot-chart-data label="08:00" value="8" color="error"></pilot-chart-data>
+          <pilot-chart-data label="12:00" value="25" color="error"></pilot-chart-data>
+          <pilot-chart-data label="16:00" value="15" color="error"></pilot-chart-data>
+          <pilot-chart-data label="20:00" value="7" color="error"></pilot-chart-data>
+        </pilot-area-chart>
+      </div>
+
+      <div class="component-showcase">
+        <pilot-label variant="technical" size="sm">Performance Metrics</pilot-label>
+        <pilot-area-chart show-values show-legend animated style="margin-top: var(--spacing-4);">
+          <pilot-chart-data label="Server A" value="95" color="success"></pilot-chart-data>
+          <pilot-chart-data label="Server B" value="88" color="success"></pilot-chart-data>
+          <pilot-chart-data label="Server C" value="72" color="warning"></pilot-chart-data>
+          <pilot-chart-data label="Server D" value="91" color="success"></pilot-chart-data>
+        </pilot-area-chart>
+      </div>
+    </div>
+  </section>
+
   </div>
 
   <!-- Footer -->
@@ -1371,7 +1460,7 @@ echo "Installation complete"
       <div>
         <pilot-label variant="technical" size="sm">Components</pilot-label>
         <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-top: var(--spacing-2);">
-          24 Web Components
+          25 Web Components
         </p>
       </div>
       <div>
